@@ -17,8 +17,6 @@
 class Resistor {
 public:
     Resistor();
-    Resistor(const Resistor& orig);
-    virtual ~Resistor();
 private:
 
 };

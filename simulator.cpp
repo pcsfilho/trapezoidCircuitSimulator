@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: paulo
+ * Author: Paulo Cezar dos Santos Filho
  *
  * Created on 21 de Setembro de 2017, 23:24
  */

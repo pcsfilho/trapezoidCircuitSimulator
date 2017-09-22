@@ -11,8 +11,7 @@
 class Capacitor {
 public:
     Capacitor();
-    Capacitor(const Capacitor& orig);
-    virtual ~Capacitor();
+
 private:
 
 };

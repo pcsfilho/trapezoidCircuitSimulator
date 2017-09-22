@@ -17,8 +17,6 @@
 class Inductor {
 public:
     Inductor();
-    Inductor(const Inductor& orig);
-    virtual ~Inductor();
 private:
 
 };

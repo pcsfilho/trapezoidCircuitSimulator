@@ -17,8 +17,6 @@
 class Source {
 public:
     Source();
-    Source(const Source& orig);
-    virtual ~Source();
 private:
 
 };

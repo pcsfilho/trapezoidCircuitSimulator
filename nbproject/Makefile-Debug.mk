@@ -40,7 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Inductor.o \
 	${OBJECTDIR}/Resistor.o \
 	${OBJECTDIR}/Source.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/simulator.o
 
 
 # C Compiler Flags
@@ -92,10 +92,10 @@ ${OBJECTDIR}/Source.o: Source.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Source.o Source.cpp
 
-${OBJECTDIR}/main.o: main.cpp
+${OBJECTDIR}/simulator.o: simulator.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/simulator.o simulator.cpp
 
 # Subprojects
 .build-subprojects:
