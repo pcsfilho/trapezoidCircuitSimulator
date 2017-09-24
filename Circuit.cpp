@@ -1,24 +1,41 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   Circuit.cpp
- * Author: paulo
- * 
- * Created on 21 de Setembro de 2017, 23:33
- */
-
+#include "Element.h"
 #include "Circuit.h"
+#include <iostream>
+using namespace std;
 
-Circuit::Circuit() {
+Circuit::Circuit()
+{
+  numElements=0;
+    numNodes=0;
+    name="circuit";
 }
 
-Circuit::Circuit(const Circuit& orig) {
+Circuit::Circuit(string name, int numElements, int numNodes, vector<Element> elements)
+{
+
 }
 
-Circuit::~Circuit() {
+string Circuit::get_name()
+{
+  return name;
 }
 
+void Circuit::add_element(vector<string> tokens)
+{
+  Element element(tokens);
+  elements.push_back(element);
+}
+
+vector<Element> Circuit::get_elements()
+{
+  return elements;
+}
+
+void Circuit::set_name(string n)
+{
+  name=n;
+}
+void Circuit::set_num_nodes(int n)
+{
+  numNodes=n;
+}
