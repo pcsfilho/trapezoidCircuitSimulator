@@ -17,14 +17,20 @@ public:
     float get_end_time();
     float get_step_time();
     Circuit get_circuit();
-    TYPE_SIMULATION get_type_simulation();
+    
+    void set_initial_time(int i_time);
+    void set_end_time(int e_time);
+    void set_step_time(float s_time);
+    
+    void set_config_simulation(vector<string> data);
+    string get_type_simulation();
 
 private:
   Circuit circuit;
   float initial_time;
   float end_time;
   float step_time;
-  TYPE_SIMULATION type_simulation;
+  string type_simulation;
 };
 
 #endif

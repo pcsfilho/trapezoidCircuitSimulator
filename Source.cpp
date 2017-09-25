@@ -15,10 +15,3 @@
 
 Source::Source() {
 }
-
-Source::Source(const Source& orig) {
-}
-
-Source::~Source() {
-}
-

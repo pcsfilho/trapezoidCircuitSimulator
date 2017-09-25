@@ -9,10 +9,3 @@
 
 Capacitor::Capacitor() {
 }
-
-Capacitor::Capacitor(const Capacitor& orig) {
-}
-
-Capacitor::~Capacitor() {
-}
-

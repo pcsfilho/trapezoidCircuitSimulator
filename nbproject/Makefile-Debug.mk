@@ -37,10 +37,13 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Capacitor.o \
 	${OBJECTDIR}/Circuit.o \
+	${OBJECTDIR}/Element.o \
 	${OBJECTDIR}/Inductor.o \
 	${OBJECTDIR}/Resistor.o \
+	${OBJECTDIR}/Simulation.o \
+	${OBJECTDIR}/Simulator.o \
 	${OBJECTDIR}/Source.o \
-	${OBJECTDIR}/simulator.o
+	${OBJECTDIR}/main.o
 
 
 # C Compiler Flags
@@ -77,6 +80,11 @@ ${OBJECTDIR}/Circuit.o: Circuit.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Circuit.o Circuit.cpp
 
+${OBJECTDIR}/Element.o: Element.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Element.o Element.cpp
+
 ${OBJECTDIR}/Inductor.o: Inductor.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -87,15 +95,25 @@ ${OBJECTDIR}/Resistor.o: Resistor.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Resistor.o Resistor.cpp
 
+${OBJECTDIR}/Simulation.o: Simulation.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Simulation.o Simulation.cpp
+
+${OBJECTDIR}/Simulator.o: Simulator.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Simulator.o Simulator.cpp
+
 ${OBJECTDIR}/Source.o: Source.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Source.o Source.cpp
 
-${OBJECTDIR}/simulator.o: simulator.cpp
+${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/simulator.o simulator.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

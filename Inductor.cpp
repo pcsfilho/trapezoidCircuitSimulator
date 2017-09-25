@@ -15,10 +15,3 @@
 
 Inductor::Inductor() {
 }
-
-Inductor::Inductor(const Inductor& orig) {
-}
-
-Inductor::~Inductor() {
-}
-

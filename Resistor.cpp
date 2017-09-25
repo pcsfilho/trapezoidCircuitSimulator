@@ -15,10 +15,3 @@
 
 Resistor::Resistor() {
 }
-
-Resistor::Resistor(const Resistor& orig) {
-}
-
-Resistor::~Resistor() {
-}
-

@@ -17,6 +17,8 @@
 class Source {
 public:
     Source();
+protected:
+    int var;
 private:
 
 };

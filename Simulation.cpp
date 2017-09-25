@@ -18,6 +18,18 @@ Simulation::Simulation(Circuit circuit, float init_time, float end_time, float s
 
 }
 
+void Simulation::set_config_simulation(vector<string> data)
+{
+    type_simulation=data[1];
+    
+    if(type_simulation=="TRAN")
+    {
+        cout<<"Passo: "<<data[2]<<endl;
+        cout<<"Tempo Inicial: "<<data[3]<<endl;
+        cout<<"Tempo final: "<<data[4]<<endl;
+    }
+}
+
 float Simulation::get_initial_time()
 {
   return initial_time;
@@ -34,7 +46,7 @@ Circuit Simulation::get_circuit()
 {
   return circuit;
 }
-TYPE_SIMULATION Simulation::get_type_simulation()
+string Simulation::get_type_simulation()
 {
   return type_simulation;
 }

@@ -16,15 +16,25 @@ class Circuit{
     public:
         Circuit();
         Circuit(string name, int numElements, int numNodes, vector<Element> elements);
-        void add_element(vector<string> element);
+        void add_element(vector<string> tokens);
         string get_name();
+        int get_num_vars();
+        int get_num_nodes();
+        int get_num_elements();
         vector<Element> get_elements();
+        vector<string> get_vars();
         void set_name(string n);
-        void set_num_nodes(int n);
+        void add_node(string var);
+        
     private:
-      int numElements;
+        //atributtes
+        int numElements;
+        int numVars;
         int numNodes;
         string name;
         vector<Element> elements;
+        vector<string> vars;
+        //methods
+        void add_var(string var);
 };
 #endif
