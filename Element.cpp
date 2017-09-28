@@ -3,7 +3,7 @@
 #include <string>
 #include "CONSTANTES.h"
 #include <iostream>
-#include <stdlib.h>     /* atoi */
+#include <string.h>     /* atoi */
 
 using namespace std;
 
@@ -33,7 +33,7 @@ void Element::set_type(string t)
 
 void Element::set_name(string n)
 {
-  name=n;
+    name=n;
 }
 
 void Element::set_nodes(string n1,string n2)

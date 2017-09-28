@@ -2,6 +2,7 @@
 #define ELEMENT_H_
 #include <vector>
 #include <string>
+#include <stdlib.h>
 #include "CONSTANTES.h"
 
 using namespace std;
@@ -16,15 +17,16 @@ class Element{
         int get_node_1();
         int get_node_2();
         int get_var();
-        
+        virtual void set_stamp(double** Yn)=0;
         void set_num_var(int num_var);
-    private:
+    protected:
         string name;
         string type;
         float value;
         int node_1;
         int node_2;
         int var;
+    private:
         void set_nodes(string n1,string n2);
         void set_type(string t);
         void set_name(string n);

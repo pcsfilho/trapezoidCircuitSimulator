@@ -21,10 +21,14 @@ int main(int argc, char **argv)
   ifstream netlistFile;
   Simulation simulation;
   Simulator simulator;
-
+  
   print();
   readNetlistFile(argc, argv, netlistFile);
-  simulator = Simulator(netlistFile, simulation);
+  simulator = Simulator(netlistFile, &simulation);
+
+  simulator.init_matrix_mna();
+  simulator.run_mna_analysis();
+
 
   return 0;
 }

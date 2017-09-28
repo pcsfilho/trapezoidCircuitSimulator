@@ -13,5 +13,13 @@
 
 #include "Resistor.h"
 
-Resistor::Resistor() {
+Resistor::Resistor() 
+{
+}
+
+Resistor::Resistor(vector<string> element):Element(element)
+{}
+
+void Resistor::set_stamp(double** Yn)
+{
 }

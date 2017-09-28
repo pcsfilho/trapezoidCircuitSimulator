@@ -11,26 +11,36 @@ class Simulation
 public:
     Simulation();
 
-    Simulation(Circuit circuit, float init_time, float end_time, float step_time);
+    Simulation(Circuit circuit, double init_time, double end_time, double step_time);
 
-    float get_initial_time();
-    float get_end_time();
-    float get_step_time();
-    Circuit get_circuit();
+    double get_initial_time();
+    double get_end_time();
+    double get_step_time();
+    double get_current_time();
+    Circuit* get_circuit();
     
     void set_initial_time(int i_time);
     void set_end_time(int e_time);
     void set_step_time(float s_time);
-    
     void set_config_simulation(vector<string> data);
     string get_type_simulation();
-
+    double** get_matrix_mna();
+    
+    void create_matrix_mna();
+    void run_analysis();
+    
 private:
   Circuit circuit;
-  float initial_time;
-  float end_time;
-  float step_time;
+  double initial_time;
+  double end_time;
+  double step_time;
   string type_simulation;
+  double current_time;
+  double** matrix_mna;
+  double get_parsed_value(string s);
+  
+  void build_matriz_mna();
+  void update_matriz_mna();
 };
 
 #endif

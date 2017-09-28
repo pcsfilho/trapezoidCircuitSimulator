@@ -13,6 +13,7 @@
       <itemPath>Simulation.h</itemPath>
       <itemPath>Simulator.h</itemPath>
       <itemPath>Source.h</itemPath>
+      <itemPath>matrix.h</itemPath>
       <itemPath>utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
@@ -27,6 +28,7 @@
       <itemPath>Simulator.cpp</itemPath>
       <itemPath>Source.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>matrix.cpp</itemPath>
       <itemPath>simples.net</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -91,6 +93,10 @@
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="matrix.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="simples.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="utils.h" ex="false" tool="3" flavor2="0">
@@ -151,6 +157,10 @@
       <item path="Source.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="matrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="simples.net" ex="false" tool="3" flavor2="0">
       </item>

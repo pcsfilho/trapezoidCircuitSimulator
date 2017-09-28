@@ -14,9 +14,12 @@
 #ifndef RESISTOR_H
 #define RESISTOR_H
 
-class Resistor {
+#include "Element.h"
+class Resistor:public Element {
 public:
     Resistor();
+    Resistor(vector<string> element);
+    void set_stamp(double** Yn);
 private:
 
 };

@@ -43,7 +43,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/Simulation.o \
 	${OBJECTDIR}/Simulator.o \
 	${OBJECTDIR}/Source.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/matrix.o
 
 
 # C Compiler Flags
@@ -114,6 +115,11 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/matrix.o: matrix.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/matrix.o matrix.cpp
 
 # Subprojects
 .build-subprojects:

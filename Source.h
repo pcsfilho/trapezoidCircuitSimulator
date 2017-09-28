@@ -14,13 +14,16 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
-class Source {
+#include "Element.h"
+
+
+class Source:public Element{
 public:
     Source();
-protected:
-    int var;
+    Source(vector<string> element);
+    virtual void set_stamp(double** Yn);
 private:
-
+    string current_type;
 };
 
 #endif /* SOURCE_H */
