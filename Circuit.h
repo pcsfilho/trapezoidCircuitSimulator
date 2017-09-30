@@ -7,7 +7,11 @@
 #define CIRCUIT_H_
 #include <vector>
 #include <string>
-#include "Element.h"
+#include "Capacitor.h"
+#include "Inductor.h"
+#include "Source.h"
+#include "Resistor.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -15,11 +19,13 @@ class Circuit{
     public:
         Circuit();
         Circuit(string name, int numElements, int numNodes, vector<Element*> elements);
-        void add_element(vector<string> tokens);
+        void add_element(vector<string> tokens, double step_t);
         string get_name();
         int get_num_vars();
         int get_num_nodes();
         int get_num_elements();
+        vector<Node*> get_nodes();
+        Element* get_element_by_index(int index);
         vector<Element*> get_elements();
         vector<string> get_vars();
         void set_name(string n);
@@ -32,6 +38,7 @@ class Circuit{
         string name;
         vector<Element*> elements;
         vector<string> vars;
+        vector<Node*> nodes;
         //methods
         void add_var(string var);
 };

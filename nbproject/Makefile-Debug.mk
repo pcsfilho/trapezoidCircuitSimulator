@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Circuit.o \
 	${OBJECTDIR}/Element.o \
 	${OBJECTDIR}/Inductor.o \
+	${OBJECTDIR}/Node.o \
 	${OBJECTDIR}/Resistor.o \
 	${OBJECTDIR}/Simulation.o \
 	${OBJECTDIR}/Simulator.o \
@@ -90,6 +91,11 @@ ${OBJECTDIR}/Inductor.o: Inductor.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Inductor.o Inductor.cpp
+
+${OBJECTDIR}/Node.o: Node.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Node.o Node.cpp
 
 ${OBJECTDIR}/Resistor.o: Resistor.cpp
 	${MKDIR} -p ${OBJECTDIR}

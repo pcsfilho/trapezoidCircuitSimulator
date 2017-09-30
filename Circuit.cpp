@@ -1,9 +1,4 @@
-#include "Element.h"
 #include "Circuit.h"
-#include "Capacitor.h"
-#include "Inductor.h"
-#include "Source.h"
-#include "Resistor.h"
 #include <iostream>
 #include <sstream>  // for string streams
 #include <string>  // for string
@@ -25,7 +20,7 @@ Circuit::Circuit(string name, int numElements, int numNodes, vector<Element*> el
 
 //methods
 
-void Circuit::add_element(vector<string> tokens)
+void Circuit::add_element(vector<string> tokens, double step_time)
 {
   //Element *element = new Element(tokens);
   Element *element;
@@ -33,18 +28,29 @@ void Circuit::add_element(vector<string> tokens)
   if(tokens[0]=="V"||tokens[0]=="I")
   {
      element= new Source(tokens);
+     element->set_resistance(0);
   }
   else if(tokens[0]=="C")
   {
     element = new Capacitor(tokens);
+    double temp=2*(element->get_value());
+    double rc = step_time/temp;
+    element->set_resistance(rc);
+    cout<<"Get resistance: "<< element->get_resistance()<<endl;
+    element->set_num_var(numVars);
   }
   else if(tokens[0]=="L")
   {
     element = new Inductor(tokens);
+    double temp=2*(element->get_value());
+    double rl =  temp/step_time;
+    element->set_resistance(rl);
+    element->set_num_var(numVars);
   }
   else if(tokens[0]=="R")
   {
     element = new Resistor(tokens);
+    element->set_resistance(element->get_value());
   }
   else
   {
@@ -62,7 +68,6 @@ void Circuit::add_element(vector<string> tokens)
 
 void Circuit::add_var(string var)
 {
-    cout<<"Variavel: "<<var<<endl;
     numVars++;
     if(elements.back()->get_type()=="V")
     {
@@ -74,7 +79,9 @@ void Circuit::add_var(string var)
 //Sets
 void Circuit::add_node(string var)
 {
+    Node* node=  new Node(var);
     add_var(var);
+    nodes.push_back(node);
     numNodes++;
 }
 
@@ -110,4 +117,9 @@ int Circuit::get_num_nodes()
 vector<string> Circuit::get_vars()
 {
     return vars;
+}
+
+Element* Circuit::get_element_by_index(int index)
+{
+    return elements[index];
 }

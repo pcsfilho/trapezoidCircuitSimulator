@@ -4,6 +4,9 @@
 #include "CONSTANTES.h"
 #include <iostream>
 #include <string.h>     /* atoi */
+#include <sstream>
+
+
 
 using namespace std;
 
@@ -36,6 +39,17 @@ void Element::set_name(string n)
     name=n;
 }
 
+void Element::set_resistance(double r)
+{
+    resistance=r;   
+}
+
+double Element::get_resistance()
+{
+  return resistance;   
+}
+
+
 void Element::set_nodes(string n1,string n2)
 {
   node_1=atoi(n1.c_str());
@@ -44,7 +58,7 @@ void Element::set_nodes(string n1,string n2)
 
 void Element::set_value(string v)
 {
-  value=atof(v.c_str());
+  value=get_parsed_value(v);
 }
 
 void Element::set_num_var(int num_var)
@@ -60,7 +74,7 @@ string Element::get_type()
 {
   return type;
 }
-float Element::get_value()
+double Element::get_value()
 {
   return value;
 }
@@ -75,4 +89,13 @@ int Element::get_node_2()
 int Element::get_var()
 {
     return var;
+}
+
+double Element::get_parsed_value(string s)
+{
+    istringstream os(s);
+    
+    double d;
+    os >> d;
+    return d;
 }

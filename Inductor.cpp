@@ -20,21 +20,13 @@ Inductor::Inductor()
 }
 
 Inductor::Inductor(vector<string> element):Element(element)
-{}
-
-Inductor::Inductor(double step_time)
 {
     current=0;
     current_historic=0;
-    resistance = 2*value/step_time;
 }
 
-double Inductor:: get_resistance()
-{
-    return resistance;
-}
 
-void Inductor::calculate_current(double* nodal_solution)
+void Inductor::update_current(vector<double> nodal_solution)
 {
     if(node_2==REFERENCIA)
     {
@@ -46,9 +38,9 @@ void Inductor::calculate_current(double* nodal_solution)
     }
 }
 
-void Inductor::calculate_historic(double* nodal_solution)
+void Inductor::update_historic(vector<double> nodal_solution)
 {
-    calculate_current(nodal_solution);
+    update_current(nodal_solution);
     if(node_2==REFERENCIA)
     {
        current_historic = - current-((1/resistance)*nodal_solution[node_1]);
@@ -59,19 +51,31 @@ void Inductor::calculate_historic(double* nodal_solution)
     }
 }
 
-void Inductor::set_stamp(double** Yn)
+void Inductor::set_stamp(double** Yn, vector<double> nodal_solution, int num_vars)
 {
+    cout<<"ESTAMPA INDUTOR"<<endl;
     if(get_node_1()!=REFERENCIA)
     {
-        Yn[get_node_1()][get_node_1()] = Yn[get_node_1()][get_node_1()]+(1/get_resistance());
+        Yn[get_node_1()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_1()-1]+(1/get_resistance());
     }
     if(get_node_2()!=REFERENCIA)
     {
-        Yn[get_node_2()][get_node_2()] = Yn[get_node_2()][get_node_2()]+(1/get_resistance());
+        Yn[get_node_2()-1][get_node_2()-1] = Yn[get_node_2()-1][get_node_2()-1]+(1/get_resistance());
     }
     if(get_node_1()!= REFERENCIA && get_node_2()!=REFERENCIA)
     {
-        Yn[get_node_1()][get_node_2()] = Yn[get_node_1()][get_node_2()]-(1/get_resistance());
-        Yn[get_node_2()][get_node_1()] = Yn[get_node_1()][get_node_2()];
+        Yn[get_node_1()-1][get_node_2()-1] = Yn[get_node_1()-1][get_node_2()-1]-(1/get_resistance());
+        Yn[get_node_2()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_2()-1];
+    }
+    update_historic(nodal_solution);
+    
+    if(get_node_1()!=REFERENCIA)
+    {
+        Yn[get_node_1()-1][num_vars] = Yn[get_var()-1][num_vars] - current_historic;
+    }
+
+    if(get_node_2()!=REFERENCIA)
+    {
+        Yn[get_node_2()-1][num_vars] = Yn[get_var()-1][num_vars] + current_historic;
     }
 }

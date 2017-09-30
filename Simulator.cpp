@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <string>
 #include <algorithm>
-#include <set>
 #include "Simulation.h"
 #include "Simulator.h"
 #include "matrix.h"
@@ -66,7 +65,8 @@ void Simulator::parser_simulator(ifstream &netlistFile)
             }
             if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" || tokens[0]=="I" || tokens[0]=="V")
             {
-                circuit->add_element(tokens);
+                circuit->add_element(tokens, simulation->get_step_time());
+                
                 string node_1;
                 string node_2;
                 if(tokens[0]=="V" || tokens[0]=="I")

@@ -20,6 +20,20 @@ Resistor::Resistor()
 Resistor::Resistor(vector<string> element):Element(element)
 {}
 
-void Resistor::set_stamp(double** Yn)
+void Resistor::set_stamp(double** Yn,vector<double> nodal_solution,int num_vars)
 {
+    cout<<"ESTAMPA RESISTOR"<<endl;
+    if(get_node_1()!=REFERENCIA)
+    {
+        Yn[get_node_1()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_1()-1]+(1/get_resistance());
+    }
+    if(get_node_2()!=REFERENCIA)
+    {
+        Yn[get_node_2()-1][get_node_2()-1] = Yn[get_node_2()-1][get_node_2()-1]+(1/get_resistance());
+    }
+    if(get_node_1()!= REFERENCIA && get_node_2()!=REFERENCIA)
+    {
+        Yn[get_node_1()-1][get_node_2()-1] = Yn[get_node_1()-1][get_node_2()-1]-(1/get_resistance());
+        Yn[get_node_2()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_2()-1];
+    }
 }

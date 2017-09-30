@@ -25,7 +25,7 @@ public:
     void set_config_simulation(vector<string> data);
     string get_type_simulation();
     double** get_matrix_mna();
-    
+    vector<double> get_current_nodal_solution();
     void create_matrix_mna();
     void run_analysis();
     
@@ -37,10 +37,12 @@ private:
   string type_simulation;
   double current_time;
   double** matrix_mna;
+  vector<double> current_nodal_solution;
   double get_parsed_value(string s);
   
   void build_matriz_mna();
   void update_matriz_mna();
+  void init_nodal_solution();
 };
 
 #endif

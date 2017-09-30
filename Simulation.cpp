@@ -41,7 +41,15 @@ void Simulation::create_matrix_mna()
 
 void Simulation::build_matriz_mna()
 {
-    cout<<"Contruir matriz mna"<<endl;
+    Element* element;
+    print_matrix(circuit.get_num_vars(), get_matrix_mna());
+    for(int i=0; i<circuit.get_num_elements();i++)
+    {
+        element = circuit.get_element_by_index(i);        
+        element->set_stamp(get_matrix_mna(),get_current_nodal_solution(),get_circuit()->get_num_vars());      
+        print_matrix(circuit.get_num_vars(), get_matrix_mna());
+    }
+    
 }
 
 void Simulation::update_matriz_mna()
@@ -53,10 +61,8 @@ void Simulation::update_matriz_mna()
 
 void Simulation::run_analysis()
 {
-    cout<<"Rodando MNA"<<endl;
-    cout<<"Inicio: "<< current_time<<endl;
-    cout<<"Fim: "<< end_time<<endl;
-    
+    int iteration=0;
+    init_nodal_solution();
     while(current_time<=end_time)
     {
         cout<<"tempo: "<< current_time<<endl;
@@ -69,6 +75,8 @@ void Simulation::run_analysis()
             update_matriz_mna();
         }
         current_time = current_time + step_time;
+        print_matrix(get_circuit()->get_num_vars(),get_matrix_mna());
+        iteration++;
     }
 }
 
@@ -79,17 +87,16 @@ double** Simulation::get_matrix_mna()
   return matrix_mna;
 }
 
-double Simulation::get_parsed_value(string s)
-{
-    istringstream os(s);
-    double d;
-    os >> d;
-    return d;
-}
+
 
 double Simulation::get_initial_time()
 {
   return initial_time;
+}
+
+vector<double> Simulation::get_current_nodal_solution()
+{
+    return current_nodal_solution;
 }
 
 double Simulation::get_current_time()
@@ -113,4 +120,20 @@ Circuit* Simulation::get_circuit()
 string Simulation::get_type_simulation()
 {
   return type_simulation;
+}
+
+double Simulation::get_parsed_value(string s)
+{
+    istringstream os(s);
+    double d;
+    os >> d;
+    return d;
+}
+
+void Simulation::init_nodal_solution()
+{
+    for(int i=0;i<circuit.get_num_vars();i++)
+    {
+        current_nodal_solution.push_back(0);
+    }
 }

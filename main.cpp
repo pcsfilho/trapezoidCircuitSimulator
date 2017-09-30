@@ -10,8 +10,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include "utils.h"
 #include "Simulator.h"
+#include "utils.h"
 
 using namespace std;
 

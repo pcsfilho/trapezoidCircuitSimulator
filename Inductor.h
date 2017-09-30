@@ -20,18 +20,17 @@ class Inductor: public Element{
 public:
     Inductor();
     Inductor(vector<string> element);
-    Inductor(double step_time);
-    double get_resistance();
-    void calculate_historic(double* nodal_solution);
+    
     double get_current_historic();
     double get_current();
-    void set_stamp(double** Yn);
+    void set_stamp(double** Yn,vector<double> nodal_solution,int num_vars);
 private:
     double resistance;
     double current_historic;
     double current;
     
-    void calculate_current(double* nodal_solution);
+    void update_historic(vector<double> nodal_solution);
+    void update_current(vector<double> nodal_solution);
 };
 
 #endif /* INDUCTOR_H */
