@@ -21,7 +21,9 @@ class Source:public Element{
 public:
     Source();
     Source(vector<string> element);
-    void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
+    
+    //void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
+    void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
 private:
     string current_type;
 };

@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Simulation.o \
 	${OBJECTDIR}/Simulator.o \
 	${OBJECTDIR}/Source.o \
+	${OBJECTDIR}/Switch.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/matrix.o
 
@@ -116,6 +117,11 @@ ${OBJECTDIR}/Source.o: Source.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Source.o Source.cpp
+
+${OBJECTDIR}/Switch.o: Switch.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Switch.o Switch.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

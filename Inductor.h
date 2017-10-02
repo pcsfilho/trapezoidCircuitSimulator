@@ -19,18 +19,18 @@
 class Inductor: public Element{
 public:
     Inductor();
-    Inductor(vector<string> element);
+    Inductor(vector<string> element, int num_var);
     
     double get_current_historic();
     double get_current();
-    void set_stamp(double** Yn,vector<double> nodal_solution,int num_vars);
+    //void set_stamp(double** Yn,vector<double> nodal_solution,int num_vars);
+    void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
+    void update_historic(double** Yn_solution, int num_vars);
 private:
-    double resistance;
     double current_historic;
     double current;
-    
-    void update_historic(vector<double> nodal_solution);
-    void update_current(vector<double> nodal_solution);
+    //Methods
+    void update_current(double** Yn_solution, int num_vars);
 };
 
 #endif /* INDUCTOR_H */

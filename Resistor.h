@@ -19,10 +19,10 @@ class Resistor:public Element {
 public:
     Resistor();
     Resistor(vector<string> element);
-    void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
+    //void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
+    void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
 private:
 
 };
 
 #endif /* RESISTOR_H */
-

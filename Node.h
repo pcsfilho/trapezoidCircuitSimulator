@@ -11,6 +11,7 @@ public:
     Node(string v);
     string get_var_node();
     vector<double> get_node_solutions();
+    double get_last_node_solution();
     void add_solution(double s);
     
 private:

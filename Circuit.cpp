@@ -1,4 +1,5 @@
 #include "Circuit.h"
+#include "Switch.h"
 #include <iostream>
 #include <sstream>  // for string streams
 #include <string>  // for string
@@ -22,7 +23,6 @@ Circuit::Circuit(string name, int numElements, int numNodes, vector<Element*> el
 
 void Circuit::add_element(vector<string> tokens, double step_time)
 {
-  //Element *element = new Element(tokens);
   Element *element;
   
   if(tokens[0]=="V"||tokens[0]=="I")
@@ -32,29 +32,25 @@ void Circuit::add_element(vector<string> tokens, double step_time)
   }
   else if(tokens[0]=="C")
   {
-    element = new Capacitor(tokens);
+    element = new Capacitor(tokens,numVars);    
     double temp=2*(element->get_value());
     double rc = step_time/temp;
     element->set_resistance(rc);
-    cout<<"Get resistance: "<< element->get_resistance()<<endl;
-    element->set_num_var(numVars);
   }
   else if(tokens[0]=="L")
   {
-    element = new Inductor(tokens);
+    element = new Inductor(tokens,numVars);
     double temp=2*(element->get_value());
     double rl =  temp/step_time;
     element->set_resistance(rl);
-    element->set_num_var(numVars);
   }
   else if(tokens[0]=="R")
   {
     element = new Resistor(tokens);
-    element->set_resistance(element->get_value());
   }
   else
   {
-    //chave
+    element= new Switch(tokens);
   }
   
   elements.push_back(element);

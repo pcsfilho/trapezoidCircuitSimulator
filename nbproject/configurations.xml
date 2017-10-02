@@ -14,6 +14,7 @@
       <itemPath>Simulation.h</itemPath>
       <itemPath>Simulator.h</itemPath>
       <itemPath>Source.h</itemPath>
+      <itemPath>Switch.h</itemPath>
       <itemPath>matrix.h</itemPath>
       <itemPath>utils.h</itemPath>
     </logicalFolder>
@@ -29,6 +30,7 @@
       <itemPath>Simulation.cpp</itemPath>
       <itemPath>Simulator.cpp</itemPath>
       <itemPath>Source.cpp</itemPath>
+      <itemPath>Switch.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
       <itemPath>matrix.cpp</itemPath>
       <itemPath>simples.net</itemPath>
@@ -48,6 +50,9 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>rc_dc.net</itemPath>
+    <itemPath>rede_switch_dc.net</itemPath>
+    <itemPath>rl_dc.net</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -97,11 +102,21 @@
       </item>
       <item path="Source.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Switch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Switch.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rl_dc.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="simples.net" ex="false" tool="3" flavor2="0">
       </item>
@@ -166,11 +181,21 @@
       </item>
       <item path="Source.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Switch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Switch.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rl_dc.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="simples.net" ex="false" tool="3" flavor2="0">
       </item>

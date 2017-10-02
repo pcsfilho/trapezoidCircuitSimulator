@@ -11,6 +11,7 @@ using namespace std;
 class Element{
     public:
         Element();
+        Element(vector<string> element, int num_var);
         Element(vector<string> element);
         string get_name();
         string get_type();
@@ -20,7 +21,8 @@ class Element{
         int get_node_2();
         int get_var();
         void set_resistance(double r);    
-        virtual void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars)=0;
+        //virtual void set_stamp(double** Yn_original, double** Yn_original,vector<double> nodal_solution,int num_vars)=0;
+        virtual void set_stamp(double** Yn_original, double** Yn_solution,int num_vars)=0;
         void set_num_var(int num_var);
     protected:
         string name;

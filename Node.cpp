@@ -21,3 +21,8 @@ vector<double> Node::get_node_solutions()
 {
     return solutions;
 }
+
+double Node::get_last_node_solution()
+{
+    return solutions.back();
+}

@@ -19,63 +19,73 @@ Inductor::Inductor()
     current_historic=0;
 }
 
-Inductor::Inductor(vector<string> element):Element(element)
+Inductor::Inductor(vector<string> element, int nv):Element(element,nv)
 {
     current=0;
     current_historic=0;
 }
 
+double Inductor::get_current_historic()
+{
+    return current_historic;
+}
 
-void Inductor::update_current(vector<double> nodal_solution)
+double Inductor::get_current()
+{
+    return current;
+}
+
+void Inductor::update_current(double** Yn_solution, int num_vars)
 {
     if(node_2==REFERENCIA)
     {
-        current = ((1/resistance)*(nodal_solution[node_1])) + current_historic;
+        current=((1/get_resistance())*(Yn_solution[node_1-1][num_vars])) + current_historic;
     }
     else
     {
-        current = ((1/resistance)*(nodal_solution[node_1]-nodal_solution[node_2])) + current_historic;
+        current=((1/get_resistance())*(Yn_solution[node_1-1][num_vars]-Yn_solution[node_2-1][num_vars])) + current_historic;
     }
+    
 }
 
-void Inductor::update_historic(vector<double> nodal_solution)
+void Inductor::update_historic(double** Yn_solution, int num_vars)
 {
-    update_current(nodal_solution);
+    update_current(Yn_solution,num_vars);
+    
     if(node_2==REFERENCIA)
     {
-       current_historic = - current-((1/resistance)*nodal_solution[node_1]);
+       current_historic = current + ((1/get_resistance())*Yn_solution[node_1-1][num_vars]);
     }
     else
     {
-        current_historic = - current-((1/resistance)*(nodal_solution[node_1]-nodal_solution[node_2]));
+        current_historic = current+((1/get_resistance())*(Yn_solution[node_1-1][num_vars]-Yn_solution[node_2-1][num_vars]));
     }
 }
 
-void Inductor::set_stamp(double** Yn, vector<double> nodal_solution, int num_vars)
+void Inductor::set_stamp(double** Yn_original, double** Yn_solution, int num_vars)
 {
-    cout<<"ESTAMPA INDUTOR"<<endl;
     if(get_node_1()!=REFERENCIA)
     {
-        Yn[get_node_1()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_1()-1]+(1/get_resistance());
+        Yn_original[get_node_1()-1][get_node_1()-1] = Yn_original[get_node_1()-1][get_node_1()-1]+(1/get_resistance());
     }
     if(get_node_2()!=REFERENCIA)
     {
-        Yn[get_node_2()-1][get_node_2()-1] = Yn[get_node_2()-1][get_node_2()-1]+(1/get_resistance());
+        Yn_original[get_node_2()-1][get_node_2()-1] = Yn_original[get_node_2()-1][get_node_2()-1]+(1/get_resistance());
     }
     if(get_node_1()!= REFERENCIA && get_node_2()!=REFERENCIA)
     {
-        Yn[get_node_1()-1][get_node_2()-1] = Yn[get_node_1()-1][get_node_2()-1]-(1/get_resistance());
-        Yn[get_node_2()-1][get_node_1()-1] = Yn[get_node_1()-1][get_node_2()-1];
+        Yn_original[get_node_1()-1][get_node_2()-1] = Yn_original[get_node_1()-1][get_node_2()-1]-(1/get_resistance());
+        Yn_original[get_node_2()-1][get_node_1()-1] = Yn_original[get_node_1()-1][get_node_2()-1];
     }
-    update_historic(nodal_solution);
+    update_historic(Yn_solution,num_vars);
     
     if(get_node_1()!=REFERENCIA)
     {
-        Yn[get_node_1()-1][num_vars] = Yn[get_var()-1][num_vars] - current_historic;
+        Yn_original[get_node_1()-1][num_vars] = Yn_original[get_node_1()-1][num_vars] - current_historic;
     }
 
     if(get_node_2()!=REFERENCIA)
     {
-        Yn[get_node_2()-1][num_vars] = Yn[get_var()-1][num_vars] + current_historic;
+        Yn_original[get_node_2()-1][num_vars] = Yn_original[get_node_2()-1][num_vars] + current_historic;
     }
 }

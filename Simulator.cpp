@@ -63,7 +63,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                     tokens.push_back(token);
                 }
             }
-            if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" || tokens[0]=="I" || tokens[0]=="V")
+            if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
             {
                 circuit->add_element(tokens, simulation->get_step_time());
                 
