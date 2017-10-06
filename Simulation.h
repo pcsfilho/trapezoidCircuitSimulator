@@ -27,7 +27,8 @@ public:
     double** get_matrix_mna();
     vector<double> get_nodal_solution();
     void create_matrix_mna();
-    void run_analysis();
+    bool run_analysis();
+    void set_output_file_name(string name);
     
 private:
   Circuit circuit;
@@ -35,6 +36,7 @@ private:
   double end_time;
   double step_time;
   string type_simulation;
+  string output_file_name;
   double current_time;
   double** matrix_mna;
   double** matrix_mna_aux;
@@ -43,7 +45,7 @@ private:
   void build_matriz_mna();
   void update_matriz_mna();
   void init_nodal_solution();
-  ;
+  void write_in_file(string file_path, string line);
 };
 
 #endif

@@ -40,7 +40,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
     getline(netlistFile, netlistLine);
     Circuit* circuit = simulation->get_circuit();
     circuit->set_name(netlistLine);
-    string delimiter = " ";
+    //string delimiter = " ";
     vector<string> nodes;
     vector<string> vars;
     while (getline(netlistFile, netlistLine))
@@ -128,7 +128,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
 }
 
 
-void Simulator::run_mna_analysis()
+bool Simulator::run_mna_analysis()
 {
     simulation->run_analysis();
 }

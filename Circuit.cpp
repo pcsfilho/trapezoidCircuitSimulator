@@ -81,6 +81,7 @@ void Circuit::add_node(string var)
     numNodes++;
 }
 
+
 void Circuit::set_name(string n)
 {
   name=n;
@@ -118,4 +119,45 @@ vector<string> Circuit::get_vars()
 Element* Circuit::get_element_by_index(int index)
 {
     return elements[index];
+}
+
+vector<Node*> Circuit::get_nodes()
+{
+    return nodes;
+}
+/**
+ * 
+ * @param matrix_solution
+ */
+string Circuit::set_node_values(double** matrix_solution)
+{
+    Node* node;
+    string temp="";
+    for(int i=0;i<get_nodes().size();i++)
+    {
+        stringstream ss (stringstream::in | stringstream::out);
+        ss << matrix_solution[i][get_num_vars()];
+        temp += ss.str() + " ";
+        
+        node = get_nodes()[i];
+        
+        node->add_solution(matrix_solution[i][get_num_vars()]);
+    }
+    temp = temp.substr(0, temp.size()-1);
+    return temp;
+}
+/**
+ */
+void Circuit::print_nodes_solutions()
+{
+    Node* node;
+    for(int i=0;i<get_nodes().size();i++)
+    {
+        node = get_nodes()[i];
+        cout<<"No: "<<node->get_var_node()<<endl;
+        for(int j=0;j<node->get_node_solutions().size();j++)
+        {
+            cout<<"Valor: "<<node->get_node_solutions()[j] <<endl;
+        }
+    }
 }

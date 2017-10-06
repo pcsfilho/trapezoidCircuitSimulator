@@ -24,9 +24,10 @@ public:
     
     //void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
     void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
+    double get_source_value(double time);
 private:
     string current_type;
+    double frequency;
+    double sin_source(double time);
 };
-
 #endif /* SOURCE_H */
-

@@ -10,8 +10,9 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-#include "Simulator.h"
 #include "utils.h"
+#include "Simulator.h"
+
 
 using namespace std;
 
@@ -19,16 +20,26 @@ using namespace std;
 int main(int argc, char **argv)
 {
   ifstream netlistFile;
-  Simulation simulation;
-  Simulator simulator;
   
   print();
-  readNetlistFile(argc, argv, netlistFile);
-  simulator = Simulator(netlistFile, &simulation);
-
-  simulator.init_matrix_mna();
-  simulator.run_mna_analysis();
-
-
+  int r=readNetlistFile(argc, argv, netlistFile);
+  if(r==0)
+  {
+      Simulation* simulation = new Simulation();
+      Simulator simulator;
+      simulator = Simulator(netlistFile, simulation);
+      simulation->set_output_file_name(create_file(simulation->get_circuit()->get_name()));
+      simulator.init_matrix_mna();
+      if(!simulator.run_mna_analysis())
+      {
+          cout<<"Nao converge"<<endl;
+      }
+  }
+  else
+  {
+      cout<<"Arquivo nao encontrado"<<endl;
+  }
+  
+  
   return 0;
 }

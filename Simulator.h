@@ -19,7 +19,7 @@ public:
     Simulator(ifstream &netlistFile, Simulation *sim);
     void init_matrix_mna();
     void create_matrix_mna();
-    void run_mna_analysis();
+    bool run_mna_analysis();
     void print_matrix_mna();
 
 private:

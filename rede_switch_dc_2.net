@@ -1,6 +1,6 @@
-SWITCH
-. TRAN 1e-3 0 3e-3
-S S1 1 2 1 1 2e-3
+REDE SWITCH 2
+. TRAN 1e-3 0 4e-3
+S S1 1 2 1 2 2e-3 3e-3
 L L1 2 3 1e-6
 C C1 3 0 0.5e-6
 R R1 3 0 4

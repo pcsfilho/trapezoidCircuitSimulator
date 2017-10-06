@@ -2,8 +2,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <string>
+#include <string.h>
 #include <vector>
 using namespace std;
+
 
 int readNetlistFile(int argc, char** argv, ifstream& netlist)
 {
@@ -16,7 +18,8 @@ int readNetlistFile(int argc, char** argv, ifstream& netlist)
             break;
         }
 
-        case 2: {
+        case 2: 
+        {
             file_path = argv[1];
             break;
         }
@@ -27,7 +30,7 @@ int readNetlistFile(int argc, char** argv, ifstream& netlist)
     }
 
     netlist.open(file_path.c_str(), ifstream::in);
-
+    //create_file(file_path.substr(0,file_path.length()-4).c_str());
     if(!netlist.is_open()){
         cerr << "ERRO: Este arquivo não pode ser aberto " << file_path << endl;
     return -1;
@@ -86,3 +89,22 @@ vector<string> split(const string& s, const string& delimiter, const bool& remov
     return tokens;
 }
 
+string create_file(string name)
+{
+    //cout<<name <<endl;
+    string ext=".dat";
+    name = name.substr(0, name.size()-1);
+    name+=ext;
+    //cout<<"Nome: "<<name<<endl;
+    ofstream file;
+    file.open(name.c_str());
+    file.close();
+    return name;
+}
+/*void write_in_file(string file_path, string line)
+{
+    ofstream file;
+    file.open(file_path.c_str(), ios::app);
+    file << line << std::endl;
+    file.close();
+}*/

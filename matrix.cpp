@@ -54,20 +54,21 @@ void delete_matrix(int nv, double** Yn)
 void print_matrix(int nv, double** Yn){
     /* Opcional: Mostra o sistema apos a montagem da estampa*/
     for (int k=0; k<nv; k++) {
-        for (int j=0; j<nv+1; j++)
-            if (Yn[k][j]!=0)
-            {
-                if(Yn[k][j]<1)
-                {
-                    cout << setprecision(3) << fixed << setw(3) << showpos;
-                }
-                else
-                {
-                    cout << setprecision(1) << fixed << setw(3) << showpos;
-                }
+        for (int j=0; j<nv+1; j++){
+            //if (Yn[k][j]!=0)
+            //{
+              //  if(Yn[k][j]<1)
+                //{
+                    cout << scientific << setw(3) << showpos;
+                //}
+                //else
+                //{
+                  //  cout << scientific << setw(3) << showpos;
+               // }
                 cout <<Yn[k][j] << "  ";
-            }
-            else cout << " ..... ";
+           // }
+            //else cout << " ...... ";
+        }
         cout << endl;
     }
     cout << endl;

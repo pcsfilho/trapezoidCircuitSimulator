@@ -2,10 +2,12 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include "Simulation.h"
 #include "CONSTANTES.h"
 #include "matrix.h"
 #include "Switch.h"
+//#include "utils.h"
 
 using namespace std;
 
@@ -49,8 +51,8 @@ void Simulation::build_matriz_mna()
         element = circuit.get_element_by_index(i);        
         element->set_stamp(matrix_mna,matrix_mna_aux,get_circuit()->get_num_vars());      
     }
-    cout<<"BUILD"<<endl;
-    print_matrix(get_circuit()->get_num_vars(), matrix_mna);
+    //cout<<"BUILD"<<endl;
+    //print_matrix(get_circuit()->get_num_vars(), matrix_mna);
 }
 
 void Simulation::update_matriz_mna()
@@ -59,10 +61,11 @@ void Simulation::update_matriz_mna()
     
     for(int i=0; i<circuit.get_num_elements();i++)
     {
-        cout<<"UPDATE"<<endl;
+        //cout<<"UPDATE"<<endl;
         element = circuit.get_element_by_index(i);        
         if(element->get_type()=="C")
         {   
+            //cout<<"CAPACITOR"<<endl;
             Capacitor* c = dynamic_cast<Capacitor*>(element);
             c->update_historic(matrix_mna_aux, get_circuit()->get_num_vars());
             if(c->get_node_1()!=REFERENCIA)
@@ -76,11 +79,9 @@ void Simulation::update_matriz_mna()
         }
         else if(element->get_type()=="L")
         {
-            cout<<"ESTAMPA L"<<endl;
+            //cout<<"INDUTOR"<<endl;
             Inductor* l = dynamic_cast<Inductor*>(element);
             l->update_historic(matrix_mna_aux, get_circuit()->get_num_vars());
-            cout<<"il: "<<l->get_current()<<endl;
-            cout<<"Il: "<<l->get_current_historic()<<endl;
             if(l->get_node_1()!=REFERENCIA)
             {
                 matrix_mna[l->get_node_1()-1][get_circuit()->get_num_vars()]= -l->get_current_historic();
@@ -92,30 +93,35 @@ void Simulation::update_matriz_mna()
         }
         else if(element->get_type()=="S")
         {
-            cout<<"ESTAMPA S"<<endl;
+            //cout<<"CHAVE"<<endl;
             Switch* s = dynamic_cast<Switch*>(element);
             s->set_stamp_switch(matrix_mna,current_time);
-            
         }
         else  if(element->get_type()=="V")
         {
-            cout<<"ESTAMPA V"<<endl;
+            //cout<<"FONTE"<<endl;
+            Source* s = dynamic_cast<Source*>(element);
+            matrix_mna[s->get_var()-1][get_circuit()->get_num_vars()]=s->get_source_value(current_time);            
         }
-        
-        print_matrix(get_circuit()->get_num_vars(), matrix_mna);
+        else
+        {
+            //cout<<"RESISTOR"<<endl;
+        }
+        //print_matrix(get_circuit()->get_num_vars(),matrix_mna);
     }
 }
-
-
-
-void Simulation::run_analysis()
+/**
+ * Funçao que faz iteraçoes a partir do netlist para obter a soluçao do sistema de acordo com as
+ * configuraçoes de simulaçao definidas pelo usuario.
+ */
+bool Simulation::run_analysis()
 {
     int iteration=0;
     init_nodal_solution();
     
     while(current_time<=end_time)
     {
-        cout<<"tempo: "<< current_time<<endl;
+        //cout<<"tempo: "<< current_time<<endl;
         if(current_time==0)
         {
             build_matriz_mna();
@@ -127,59 +133,93 @@ void Simulation::run_analysis()
         copy_matrix(get_circuit()->get_num_vars(),matrix_mna,matrix_mna_aux);
         if(solve(get_circuit()->get_num_vars(),matrix_mna_aux))
         {
-            cout<<"Converge"<<endl;
-            print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+            //cout<<"Converge"<<endl;
+            //print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+            write_in_file(output_file_name, get_circuit()->set_node_values(matrix_mna_aux));
         }
         else
         {
-            cout<<"Nao converge"<<endl;
-            return;
+            return false;
         }
         current_time = current_time + step_time;
         iteration++;
     }
     print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+    return true;
 }
+
+void Simulation::set_output_file_name(string name)
+{
+    output_file_name=name;
+}
+/**
+ * 
+ * @return 
+ */
 double** Simulation::get_matrix_mna()
 {
   return matrix_mna;
 }
-
-
-
+/**
+ * 
+ * @return 
+ */
 double Simulation::get_initial_time()
 {
   return initial_time;
 }
-
+/**
+ * 
+ * @return 
+ */
 vector<double> Simulation::get_nodal_solution()
 {
     return nodal_solution;
 }
-
+/**
+ * 
+ * @return 
+ */
 double Simulation::get_current_time()
 {
   return current_time;
 }
-
-
+/**
+ * 
+ * @return 
+ */
 double Simulation::get_end_time()
 {
   return end_time;
 }
+/**
+ * 
+ * @return 
+ */
 double Simulation::get_step_time()
 {
   return step_time;
 }
+/**
+ * 
+ * @return 
+ */
 Circuit* Simulation::get_circuit()
 {
   return &circuit;
 }
+/**
+ * 
+ * @return 
+ */
 string Simulation::get_type_simulation()
 {
   return type_simulation;
 }
-
+/**
+ * 
+ * @return 
+ */
 double Simulation::get_parsed_value(string s)
 {
     istringstream os(s);
@@ -187,11 +227,21 @@ double Simulation::get_parsed_value(string s)
     os >> d;
     return d;
 }
-
+/**
+ * 
+ */
 void Simulation::init_nodal_solution()
 {
     for(int i=0;i<circuit.get_num_vars();i++)
     {
         nodal_solution.push_back(0);
     }
+}
+
+void Simulation::write_in_file(string file_path, string line)
+{
+    ofstream file;
+    file.open(file_path.c_str(), ios::app);
+    file << line << std::endl;
+    file.close();
 }

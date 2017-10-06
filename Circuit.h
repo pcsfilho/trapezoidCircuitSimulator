@@ -29,7 +29,9 @@ class Circuit{
         vector<Element*> get_elements();
         vector<string> get_vars();
         void set_name(string n);
-        void add_node(string var);        
+        void add_node(string var);
+        string set_node_values(double** matrix_solution);        
+        void print_nodes_solutions();
     private:
         //atributtes
         int numElements;
