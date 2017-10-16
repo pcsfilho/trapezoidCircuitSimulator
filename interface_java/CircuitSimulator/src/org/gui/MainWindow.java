@@ -1,6 +1,6 @@
 package org.gui;
 
-import org.canvas.PanelCircuitArea;
+import org.gui.canvas.PanelCircuitArea;
 import org.gui.dialogs.ComponentDialog;
 import javax.swing.*;
 import javax.swing.border.Border;
