@@ -2,6 +2,7 @@ package org.gui.canvas;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 public abstract class CircuitElement implements Editable {
     static double voltageRange = 5;
@@ -12,7 +13,7 @@ public abstract class CircuitElement implements Editable {
     static PanelCircuitArea sim;
     static Color whiteColor, selectColor, lightGrayColor;
     static Font unitsFont;
-
+    ArrayList<CircuitElement> links;
     public static NumberFormat showFormat, shortFormat, noCommaFormat;
     static final double pi = 3.14159265358979323846;
 
@@ -80,8 +81,8 @@ public abstract class CircuitElement implements Editable {
     }
     
     void allocNodes() {
-	nodes = new int[getPostCount()+getInternalNodeCount()];
-	volts = new double[getPostCount()+getInternalNodeCount()];
+	nodes = new int[getNodesCount()+getInternalNodeCount()];
+	volts = new double[getNodesCount()+getInternalNodeCount()];
     }
     String dump() {
 	int t = getDumpType();
@@ -90,7 +91,7 @@ public abstract class CircuitElement implements Editable {
     }
     void reset() {
 	int i;
-	for (i = 0; i != getPostCount()+getInternalNodeCount(); i++)
+	for (i = 0; i != getNodesCount()+getInternalNodeCount(); i++)
 	    volts[i] = 0;
 	curcount = 0;
     }
@@ -302,7 +303,7 @@ public abstract class CircuitElement implements Editable {
     }
     void drawPosts(Graphics g) {
 	int i;
-	for (i = 0; i != getPostCount(); i++) {
+	for (i = 0; i != getNodesCount(); i++) {
 	    Point p = getPost(i);
 	    drawPost(g, p.x, p.y, nodes[i]);
 	}
@@ -317,7 +318,7 @@ public abstract class CircuitElement implements Editable {
 	return volts[0] - volts[1];
     }
     boolean nonLinear() { return false; }
-    int getPostCount() { return 2; }
+    int getNodesCount() { return 2; }
     int getNode(int n) { return nodes[n]; }
     Point getPost(int n) {
 	return (n == 0) ? point1 : (n == 1) ? point2 : null;
@@ -589,7 +590,7 @@ public abstract class CircuitElement implements Editable {
     boolean getConnection(int n1, int n2) { return true; }
     boolean hasGroundConnection(int n1) { return false; }
     boolean isWire() { return false; }
-    boolean canViewInScope() { return getPostCount() <= 2; }
+    boolean canViewInScope() { return getNodesCount() <= 2; }
     boolean comparePair(int x1, int x2, int y1, int y2) {
 	return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
     }

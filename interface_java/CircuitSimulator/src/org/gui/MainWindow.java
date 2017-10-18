@@ -22,16 +22,16 @@ public class MainWindow extends JFrame implements ActionListener {
     private  JMenu menuFile, menuEdit, menuAbout;
     private  JMenuItem newFile, openFile, saveFile, close, cut, copy, paste, clearFile, aboutMe, aboutSoftware;
     private  JToolBar mainToolbar;
-    JButton newButton, openButton, saveButton, clearButton, aboutMeButton, aboutButton;
+    JButton newButton, openButton, saveButton, clearButton, aboutMeButton, aboutButton,runButton,timeButton;
     private JTabbedPane tabbedPane;
     private JPanel principalPanel;
     private SideBar sideBar;
     private PanelCircuitArea canvas_panel;
 
     // setup icons - File Menu
-    private ImageIcon newIcon,openIcon,saveIcon,closeIcon,clearIcon,cutIcon,copyIcon,pasteIcon,selectAllIcon,searchIcon,aboutMeIcon,aboutIcon,
+    private ImageIcon newIcon,openIcon,saveIcon,closeIcon,clearIcon,cutIcon,copyIcon,pasteIcon,aboutMeIcon,aboutIcon,
             capacitorIcon,inductorIcon,ResistorIcon,sourceVoltageIcon,sourceCurrentIcon, sourceVoltageACIcon, groundIcon, wireIcon, switchIcon,
-            ammeterIcon, voltmeterIcon,transientIcon,dcIcon, nodeNameIcon;
+            ammeterIcon, voltmeterIcon,transientIcon,dcIcon, nodeNameIcon,timeIcon,goIcon;
 
     public MainWindow()
     {
@@ -47,15 +47,14 @@ public class MainWindow extends JFrame implements ActionListener {
         openIcon = new ImageIcon("icons/open.png");
         saveIcon = new ImageIcon("icons/save.png");
         closeIcon = new ImageIcon("icons/close.png");
+        goIcon = new ImageIcon("icons/go.png");
+        timeIcon = new ImageIcon("icons/time.png");
 
         // setup icons - Edit Menu
         clearIcon = new ImageIcon("icons/clear.png");
         cutIcon = new ImageIcon("icons/cut.png");
         copyIcon = new ImageIcon("icons/copy.png");
         pasteIcon = new ImageIcon("icons/paste.png");
-        selectAllIcon = new ImageIcon("icons/selectall.png");
-        // setup icons - Search Menu
-        searchIcon = new ImageIcon("icons/search.png");
         // setup icons - Help Menu
         aboutMeIcon = new ImageIcon("icons/about_me.png");
         aboutIcon = new ImageIcon("icons/about.png");
@@ -179,6 +178,18 @@ public class MainWindow extends JFrame implements ActionListener {
         clearButton.addActionListener(this);
         mainToolbar.add(clearButton);
         mainToolbar.addSeparator();
+        
+        timeButton = new JButton(timeIcon);
+        timeButton.setToolTipText("Tempo de simulação");
+        timeButton.addActionListener(this);
+        mainToolbar.add(timeButton);
+        mainToolbar.addSeparator();
+        
+        runButton = new JButton(goIcon);
+        runButton.setToolTipText("Simular");
+        runButton.addActionListener(this);
+        mainToolbar.add(runButton);
+        mainToolbar.addSeparator();
 
         aboutMeButton = new JButton(aboutMeIcon);
         aboutMeButton.setToolTipText("Sobre mim");
@@ -296,15 +307,20 @@ public class MainWindow extends JFrame implements ActionListener {
      */
     public void actionPerformed (ActionEvent e)
     {
-        // If the source of the event was our "close" option
+        // Se botão de fechar
         if (e.getSource() == close)
         {
             this.dispose(); // dispose all resources and close the application
         }
-        // If the source was the "new" file option
+        // Se botão de novo circuito
         else if (e.getSource() == newFile || e.getSource() == newButton)
         {
         
+        }
+        // Se botão de rodar simulação
+        else if (e.getSource() == runButton)
+        {
+            canvas_panel.analyzeCircuit();
         }
         // If the source was the "open" option
         else if (e.getSource() == openFile || e.getSource() == openButton)

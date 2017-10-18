@@ -28,6 +28,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -67,7 +68,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     MenuItem optionsItem;
     PopupMenu elmMenu;
     Rectangle circuitArea;
-    int gridSize, gridMask, gridRound;
+    int gridSize, gridMask, gridRound, groundCount=0;
     ArrayList<CircuitElement> elmList;
     ArrayList<String> undoStack, redoStack;
     CircuitElement dragElm;
@@ -76,6 +77,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     static String ohmString = "ohm";
     boolean didSwitch = false;
     Switch heldSwitchElm;
+    ArrayList<CircuitNode> nodeList;
     //endregion
     
     public PanelCircuitArea(MainWindow frame)
@@ -304,6 +306,9 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	if (dragElm != null && (dragElm.x != dragElm.x2 || dragElm.y != dragElm.y2))
         {
             dragElm.draw(g);
+            //System.out.println("element: "+dragElm.toString());
+            //System.out.println("x: "+dragElm.x + "y: "+dragElm.y);
+            //System.out.println("x2: "+dragElm.x2 + "y2: "+dragElm.y2);
         }
 	
 	g.setColor(CircuitElement.whiteColor);
@@ -577,7 +582,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	    if (ce.boundingBox.contains(x, y)) {
 		int j;
 		int area = ce.boundingBox.width * ce.boundingBox.height;
-		int jn = ce.getPostCount();
+		int jn = ce.getNodesCount();
 		if (jn > 2)
 		    jn = 2;
 		for (j = 0; j != jn; j++) {
@@ -594,7 +599,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 			mouseElm = ce;
 		    }
 		}
-		if (ce.getPostCount() == 0)
+		if (ce.getNodesCount() == 0)
 		    mouseElm = ce;
 	    }
 	}
@@ -604,7 +609,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	    for (i = 0; i != elmList.size(); i++) {
 		CircuitElement ce = getElm(i);
 		int j;
-		int jn = ce.getPostCount();
+		int jn = ce.getNodesCount();
 		for (j = 0; j != jn; j++) {
 		    Point pt = ce.getPost(j);
 		    int dist = distanceSq(x, y, pt.x, pt.y);
@@ -618,7 +623,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	} else {
 	    mousePost = -1;
 	    // look for post close to the mouse pointer
-	    for (i = 0; i != mouseElm.getPostCount(); i++) {
+	    for (i = 0; i != mouseElm.getNodesCount(); i++) {
 		Point pt = mouseElm.getPost(i);
 		if (distanceSq(pt.x, pt.y, x, y) < 26)
 		    mousePost = i;
@@ -792,7 +797,16 @@ boolean dragging;
 	    if (dragElm.x == dragElm.x2 && dragElm.y == dragElm.y2)
 		dragElm.delete();
 	    else {
-		elmList.add(dragElm);
+		
+                if(dragElm instanceof Ground)
+                {
+                    elmList.add(0,dragElm);
+                    groundCount++;
+                }
+                else
+                {
+                    elmList.add(dragElm);
+                }
 		circuitChanged = true;
 	    }
 	    dragElm = null;
@@ -934,6 +948,10 @@ boolean dragging;
 		ce.delete();
 		elmList.remove(i);
 		hasDeleted = true;
+                if(ce instanceof Ground)
+                {
+                    groundCount--;
+                }
 	    }
 	}
 
@@ -951,8 +969,12 @@ boolean dragging;
 	    }
 	}
         
-        if ( hasDeleted )
-	    cv.repaint();
+        if (hasDeleted)
+        {
+            cv.repaint();
+            
+        }
+	    
     }
     @Override
     public void keyPressed(KeyEvent e) {
@@ -962,4 +984,96 @@ boolean dragging;
     public void keyReleased(KeyEvent e) {
     }
     //endregion
+    
+    public void analyzeCircuit(){
+	if (elmList.isEmpty())
+        {
+            JOptionPane.showMessageDialog(frame_parent, "Não há elementos para análise","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+        } 
+        else
+        {
+            nodeList = new ArrayList<>();
+            boolean gotGround = false;
+            int i, j;
+            // Procura por nó referência (terra)
+            for (i = 0; i < elmList.size(); i++)
+            {
+                CircuitElement ce = getElm(i);
+                if (ce instanceof Ground)
+                {
+                    gotGround = true;
+                    break;
+                }
+            }
+            if(!gotGround)
+            {
+                JOptionPane.showMessageDialog(frame_parent, "Não há um nó de referência","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                // allocate nodes and voltage sources
+                for (i = 0; i < elmList.size(); i++)
+                {
+                    CircuitElement ce = getElm(i);
+                    int posts = ce.getNodesCount();
+                    int node;
+                    // allocate a node for each post and match posts to nodes
+                        for(j = 0; j < posts; j++)
+                        {
+                            Point pt = ce.getPost(j);
+                            int k;
+                            for (k = 0; k < nodeList.size(); k++)
+                            {
+                                CircuitNode cn = getCircuitNode(k);
+                                if (pt.x == cn.x && pt.y == cn.y)
+                                {
+                                   break;
+                                }
+                            }
+                            if (k == nodeList.size()){
+                                CircuitNode cn = new CircuitNode();
+                                cn.x = pt.x;
+                                cn.y = pt.y;
+                                nodeList.add(cn);
+                            }
+                            node=k;
+                            if(k==groundCount)
+                            {
+                                node=1;
+                            }
+                            else if(k<groundCount)
+                            {
+                                node=0;
+                            }
+                            else if(k>groundCount)
+                            {
+                                node=k-(groundCount-1);
+                            }
+                            ce.setNode(j, node);
+                        }
+                }   
+                for(i=0;i<elmList.size();i++)
+                {
+                        System.out.println("Elemento: "+getElm(i));
+                        for(int k=0;k<getElm(i).nodes.length;k++)
+                        {
+                            if(!(getElm(i) instanceof Wire) && !(getElm(i) instanceof Ground))
+                            {
+                                System.out.println("No "+(k+1)+" "+getElm(i).nodes[k]);
+                            }                            
+                        }
+                }
+            }
+        }
+    }
+    
+    private CircuitNode getCircuitNode(int n) {
+	if (n >= nodeList.size())
+	    return null;
+	return nodeList.get(n);
+    }
+    
+    
+    
+    
 }

@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 	    super(xa, ya, xb, yb, f);
 	}
 	int getDumpType() { return 'g'; }
-	int getPostCount() { return 1; }
+	int getNodesCount() { return 1; }
 	void draw(Graphics g) {
 	    setVoltageColor(g, 0);
 	    drawThickLine(g, point1, point2);
