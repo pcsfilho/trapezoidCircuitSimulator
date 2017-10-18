@@ -1,4 +1,17 @@
 package org.gui.canvas;        
+import org.gui.elements.Editable;
+import org.gui.elements.GraphicElement;
+import org.gui.elements.CurrentSource;
+import org.gui.elements.Inductor;
+import org.gui.elements.Resistor;
+import org.gui.elements.ACVoltageSource;
+import org.gui.elements.Ground;
+import org.gui.elements.Wire;
+import org.gui.elements.CircuitElement;
+import org.gui.elements.Capacitor;
+import org.gui.elements.Switch;
+import org.gui.elements.DCVoltageSource;
+import org.gui.elements.Output;
 import org.gui.MainWindow;
 import java.awt.CheckboxMenuItem;
 import java.awt.Color;
@@ -26,11 +39,19 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.gui.elements.Circuit;
 
 
 /**
@@ -43,22 +64,22 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     Dimension winSize;
     Rectangle selectedArea;
     Image dbimage;
-    static final int MODE_ADD_ELM = 0;
-    static final int MODE_DRAG_ALL = 1;
-    static final int MODE_DRAG_ROW = 2;
-    static final int MODE_DRAG_COLUMN = 3;
-    static final int MODE_DRAG_SELECTED = 4;
-    static final int MODE_DRAG_POST = 5;
-    static final int MODE_SELECT = 6;
+    public static final int MODE_ADD_ELM = 0;
+    public static final int MODE_DRAG_ALL = 1;
+    public static final int MODE_DRAG_ROW = 2;
+    public static final int MODE_DRAG_COLUMN = 3;
+    public static final int MODE_DRAG_SELECTED = 4;
+    public static final int MODE_DRAG_POST = 5;
+    public static final int MODE_SELECT = 6;
     int draggingPost;
     int dragX, dragY, initDragX, initDragY;
-    int mouseMode = MODE_SELECT;
+    public int mouseMode = MODE_SELECT;
     int pause = 10;
     int tempMouseMode = MODE_SELECT;
     String mouseModeStr = "Select";
     MainWindow frame_parent;
-    CircuitElement plotXElm;
-    CircuitElement plotYElm;
+    public CircuitElement plotXElm;
+    public CircuitElement plotYElm;
     CircuitCanvas cv;
     CheckboxMenuItem smallGridCheckItem;
     static EditDialog editDialog;
@@ -69,15 +90,17 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     PopupMenu elmMenu;
     Rectangle circuitArea;
     int gridSize, gridMask, gridRound, groundCount=0;
-    ArrayList<CircuitElement> elmList;
+    private ArrayList<CircuitElement> elmList;
     ArrayList<String> undoStack, redoStack;
-    CircuitElement dragElm;
-    CircuitElement menuElm, mouseElm, stopElm;
-    static String muString = "u";
-    static String ohmString = "ohm";
+    public CircuitElement dragElm;
+    public CircuitElement menuElm, mouseElm, stopElm;
+    public static String muString = "u";
+    public static String ohmString = "ohm";
     boolean didSwitch = false;
+    Circuit circuit;
     Switch heldSwitchElm;
     ArrayList<CircuitNode> nodeList;
+    private boolean circuitChanged;
     //endregion
     
     public PanelCircuitArea(MainWindow frame)
@@ -86,9 +109,26 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
         init();
     }
     
+    public boolean getChanged()
+    {
+        return circuitChanged;
+    }
+    public ArrayList<CircuitElement> getElementsList()
+    {
+        return elmList;
+    }
+    
+    
+    
+    public Circuit get_circuit()
+    {
+        return circuit;
+    }
+    
     public void init() {
+        
 	CircuitElement.initClass(this);
-	
+	circuit = new Circuit();
 	setLayout(new CircuitLayout());
 	cv = new CircuitCanvas(this);
 	cv.addComponentListener(this);
@@ -133,6 +173,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	return elmList.get(n);
     }
     
+    
     int min(int a, int b)
     {
         return (a < b) ? a : b;
@@ -156,11 +197,11 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	    // centered text causes problems when trying to center the circuit,
 	    // so we special-case it here
 	    if (!ce.isCenteredText()) {
-		minx = min(ce.x, min(ce.x2, minx));
-		maxx = max(ce.x, max(ce.x2, maxx));
+		minx = min(ce.getX1(), min(ce.getX2(), minx));
+		maxx = max(ce.getX1(), max(ce.getX2(), maxx));
 	    }
-	    miny = min(ce.y, min(ce.y2, miny));
-	    maxy = max(ce.y, max(ce.y2, maxy));
+	    miny = min(ce.getY1(), min(ce.getY2(), miny));
+	    maxy = max(ce.getY1(), max(ce.getY2(), maxy));
 	}
 	// center circuit; we don't use snapGrid() because that rounds
 	int dx = gridMask & ((circuitArea.width -(maxx-minx))/2-minx);
@@ -183,7 +224,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     }
 
     
-    int snapGrid(int x)
+    public int snapGrid(int x)
     {
 	return (x+gridRound) & gridMask;
     }
@@ -303,12 +344,9 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
             getElm(i).draw(g);
 	}
 
-	if (dragElm != null && (dragElm.x != dragElm.x2 || dragElm.y != dragElm.y2))
+	if (dragElm != null && (dragElm.getX1() != dragElm.getX2() || dragElm.getY1() != dragElm.getY2()))
         {
             dragElm.draw(g);
-            //System.out.println("element: "+dragElm.toString());
-            //System.out.println("x: "+dragElm.x + "y: "+dragElm.y);
-            //System.out.println("x2: "+dragElm.x2 + "y2: "+dragElm.y2);
         }
 	
 	g.setColor(CircuitElement.whiteColor);
@@ -333,7 +371,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	
 	for (i = elmList.size()-1; i >= 0; i--) {
 	    CircuitElement ce = getElm(i);
-	    if (ce.x == ce.x2 && ce.y == ce.y2) {
+	    if (ce.getX1() == ce.getX2() && ce.getY1() == ce.getY2()) {
 		elmList.remove(i);
 		ce.delete();
 	    }
@@ -364,9 +402,9 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	int i;
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElement ce = getElm(i);
-	    if (ce.y  == dragY)
+	    if (ce.getY1()  == dragY)
 		ce.movePoint(0, 0, dy);
-	    if (ce.y2 == dragY)
+	    if (ce.getY2() == dragY)
 		ce.movePoint(1, 0, dy);
 	}
 	removeZeroLengthElements();
@@ -379,9 +417,9 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	int i;
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElement ce = getElm(i);
-	    if (ce.x  == dragX)
+	    if (ce.getX1()  == dragX)
 		ce.movePoint(0, dx, 0);
-	    if (ce.x2 == dragX)
+	    if (ce.getX2() == dragX)
 		ce.movePoint(1, dx, 0);
 	}
 	removeZeroLengthElements();
@@ -440,8 +478,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     void dragPost(int x, int y) {
 	if (draggingPost == -1) {
 	    draggingPost =
-		(distanceSq(mouseElm.x , mouseElm.y , x, y) >
-		 distanceSq(mouseElm.x2, mouseElm.y2, x, y)) ? 1 : 0;
+		(distanceSq(mouseElm.getX1() , mouseElm.getY1() , x, y) >
+		 distanceSq(mouseElm.getX2(), mouseElm.getY2(), x, y)) ? 1 : 0;
 	}
 	int dx = x-dragX;
 	int dy = y-dragY;
@@ -579,9 +617,9 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElement ce = getElm(i);
         
-	    if (ce.boundingBox.contains(x, y)) {
+	    if (ce.getBOundingBox().contains(x, y)) {
 		int j;
-		int area = ce.boundingBox.width * ce.boundingBox.height;
+		int area = ce.getBOundingBox().width * ce.getBOundingBox().height;
 		int jn = ce.getNodesCount();
 		if (jn > 2)
 		    jn = 2;
@@ -699,7 +737,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	    return false;
 	Switch se = (Switch) mouseElm;
 	se.toggle();
-	if (se.momentary)
+	if (se.getMomentary())
 	    heldSwitchElm = se;
 	
 	return true;
@@ -778,26 +816,29 @@ boolean dragging;
     public void mouseReleased(MouseEvent e) {
         
         int ex = e.getModifiersEx();
-	if ((ex & (MouseEvent.SHIFT_DOWN_MASK|MouseEvent.CTRL_DOWN_MASK|
-		   MouseEvent.META_DOWN_MASK)) == 0 && e.isPopupTrigger()) {
+	if ((ex & (MouseEvent.SHIFT_DOWN_MASK|MouseEvent.CTRL_DOWN_MASK| MouseEvent.META_DOWN_MASK)) == 0 && e.isPopupTrigger()) 
+        {
 	    doPopupMenu(e);
 	    return;
 	}
 	tempMouseMode = mouseMode;
 	selectedArea = null;
 	dragging = false;
-	boolean circuitChanged = false;
-	if (heldSwitchElm != null) {
+	circuitChanged = false;
+	if (heldSwitchElm != null)
+        {
 	    heldSwitchElm.mouseUp();
 	    heldSwitchElm = null;
 	    circuitChanged = true;
 	}
-	if (dragElm != null) {
+	if (dragElm != null){
 	    // if the element is zero size then don't create it
-	    if (dragElm.x == dragElm.x2 && dragElm.y == dragElm.y2)
+	    if (dragElm.getX1() == dragElm.getX2() && dragElm.getY1() == dragElm.getY2())
+            {
 		dragElm.delete();
-	    else {
-		
+            }
+	    else
+            {
                 if(dragElm instanceof Ground)
                 {
                     elmList.add(0,dragElm);
@@ -806,6 +847,9 @@ boolean dragging;
                 else
                 {
                     elmList.add(dragElm);
+                    Graphics2D g;
+                    g = (Graphics2D)dbimage.getGraphics();
+                    dragElm.set_name();
                 }
 		circuitChanged = true;
 	    }
@@ -818,6 +862,7 @@ boolean dragging;
 	    dragElm.delete();
 	dragElm = null;
 	cv.repaint();
+        System.out.println("Mouse Relead "+circuitChanged);
     }
 
     @Override
@@ -826,14 +871,12 @@ boolean dragging;
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("EXITED");
 	mouseElm = plotXElm = plotYElm = null;
 	cv.repaint();
     }
 
      void setMouseMode(int mode)
     {
-        
 	mouseMode = mode;
 	if ( mode == MODE_ADD_ELM )
 	    cv.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -845,8 +888,7 @@ boolean dragging;
     {
         int prevMouseMode = mouseMode;
         setMouseMode(MODE_ADD_ELM);
-        String s=this.getClass().getPackage().toString();
-        s=s.substring(8,s.length())+"."+element;
+        String s= "org.gui.elements."+element;
         if (s.length() > 0)
 		mouseModeStr = s;
 	    if (s.compareTo("DragAll") == 0)
@@ -861,7 +903,8 @@ boolean dragging;
 		setMouseMode(MODE_DRAG_POST);
 	    else if (s.compareTo("Select") == 0)
 		setMouseMode(MODE_SELECT);
-	    else if (s.length() > 0) {
+	    else if (s.length() > 0)
+            {
 		try {
 		    addingClass = Class.forName(s);
 		} catch (Exception ee) {
@@ -928,6 +971,8 @@ boolean dragging;
         if (e.getKeyChar() == 127)
 	{
 	    doDelete();
+            circuitChanged=true;
+            System.out.println("keyTyped "+circuitChanged);
 	    return;
 	}
 	if (e.getKeyChar() == ' ' || e.getKeyChar() == KeyEvent.VK_ESCAPE) {
@@ -937,14 +982,15 @@ boolean dragging;
 	tempMouseMode = mouseMode;
     }
 
-    void doDelete() {
+    void doDelete(){
 	int i;
 	setMenuSelection();
 	boolean hasDeleted = false;
 
 	for (i = elmList.size()-1; i >= 0; i--) {
 	    CircuitElement ce = getElm(i);
-	    if (ce.isSelected()) {
+	    if (ce.isSelected()) 
+            {
 		ce.delete();
 		elmList.remove(i);
 		hasDeleted = true;
@@ -952,6 +998,7 @@ boolean dragging;
                 {
                     groundCount--;
                 }
+                
 	    }
 	}
 
@@ -981,11 +1028,14 @@ boolean dragging;
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e)
+    {
+        
     }
     //endregion
     
-    public void analyzeCircuit(){
+    public void create_circuit_description()
+    {
 	if (elmList.isEmpty())
         {
             JOptionPane.showMessageDialog(frame_parent, "Não há elementos para análise","Análise do circuito",JOptionPane.ERROR_MESSAGE);
@@ -995,6 +1045,7 @@ boolean dragging;
             nodeList = new ArrayList<>();
             boolean gotGround = false;
             int i, j;
+            circuit.get_elements().clear();
             // Procura por nó referência (terra)
             for (i = 0; i < elmList.size(); i++)
             {
@@ -1011,67 +1062,121 @@ boolean dragging;
             }
             else
             {
-                // allocate nodes and voltage sources
-                for (i = 0; i < elmList.size(); i++)
+                if(circuitChanged)
                 {
-                    CircuitElement ce = getElm(i);
-                    int posts = ce.getNodesCount();
-                    int node;
-                    // allocate a node for each post and match posts to nodes
-                        for(j = 0; j < posts; j++)
-                        {
-                            Point pt = ce.getPost(j);
-                            int k;
-                            for (k = 0; k < nodeList.size(); k++)
+                    // allocate nodes and voltage sources
+                    for (i = 0; i < elmList.size(); i++)
+                    {
+                        CircuitElement ce = getElm(i);
+                        int posts = ce.getNodesCount();
+                        int node;
+                        // allocate a node for each post and match posts to nodes
+                            for(j = 0; j < posts; j++)
                             {
-                                CircuitNode cn = getCircuitNode(k);
-                                if (pt.x == cn.x && pt.y == cn.y)
+                                Point pt = ce.getPost(j);
+                                int k;
+                                for (k = 0; k < nodeList.size(); k++)
                                 {
-                                   break;
+                                    CircuitNode cn = getCircuitNode(k);
+                                    if (pt.x == cn.x && pt.y == cn.y)
+                                    {
+                                       break;
+                                    }
                                 }
+                                if (k == nodeList.size()){
+                                    CircuitNode cn = new CircuitNode();
+                                    cn.x = pt.x;
+                                    cn.y = pt.y;
+                                    nodeList.add(cn);
+                                }
+                                node=k;
+                                if(k==groundCount)
+                                {
+                                    node=1;
+                                }
+                                else if(k<groundCount)
+                                {
+                                    node=0;
+                                }
+                                else if(k>groundCount)
+                                {
+                                    node=k-(groundCount-1);
+                                }
+                                ce.setNode(j, node);
                             }
-                            if (k == nodeList.size()){
-                                CircuitNode cn = new CircuitNode();
-                                cn.x = pt.x;
-                                cn.y = pt.y;
-                                nodeList.add(cn);
-                            }
-                            node=k;
-                            if(k==groundCount)
+                            //add elementos que descrevem o circuito
+                            if(!(ce instanceof Wire) && !(ce instanceof Ground))
                             {
-                                node=1;
+                                circuit.add_element(ce);
                             }
-                            else if(k<groundCount)
-                            {
-                                node=0;
-                            }
-                            else if(k>groundCount)
-                            {
-                                node=k-(groundCount-1);
-                            }
-                            ce.setNode(j, node);
-                        }
-                }   
-                for(i=0;i<elmList.size();i++)
-                {
-                        System.out.println("Elemento: "+getElm(i));
-                        for(int k=0;k<getElm(i).nodes.length;k++)
+                    }   
+                    for(i=0;i<circuit.get_elements().size();i++)
+                    {
+                        CircuitElement ce=circuit.get_elements().get(i);
+                        System.out.println("Elemento: "+ce.dump());
+                        for(int k=0;k<ce.getNodes().length;k++)
                         {
-                            if(!(getElm(i) instanceof Wire) && !(getElm(i) instanceof Ground))
-                            {
-                                System.out.println("No "+(k+1)+" "+getElm(i).nodes[k]);
-                            }                            
+                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
+                    }
+                    try
+                    {   
+                        if(!circuit.get_path_circuit_name().equals(""))
+                        {   
+                            System.out.println("criou");
+                            circuit.create_netlist_circuit();
+                        }
+                        else
+                        {
+                            if(save_circuit())
+                            {
+                                circuit.create_netlist_circuit();
+                            }
+                        }
+                        circuitChanged=false;
+                    }
+                    catch(FileNotFoundException e)
+                    {
+                        JOptionPane.showMessageDialog(frame_parent, "Erro ao criar o arquivo de descrição do circuito","Criação Netlist",JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch(UnsupportedEncodingException e)
+                    {
+                        JOptionPane.showMessageDialog(frame_parent, "Houve algum erro ao criar o arquivo de descrição do circuito","Criação Netlist",JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else
+                {
+                    System.out.println("Não mudou");
                 }
             }
         }
+        System.out.println("create "+circuitChanged);
     }
     
-    private CircuitNode getCircuitNode(int n) {
+    public boolean save_circuit()
+    {
+        // Open a file chooser
+        JFileChooser fileChoose = new JFileChooser();
+        FileNameExtensionFilter netFilter = new FileNameExtensionFilter("arquivo netlist (*.net)", "net");
+        fileChoose.addChoosableFileFilter(netFilter);
+        fileChoose.setFileFilter(netFilter);
+        // Open the file, only this time we call
+        int option = fileChoose.showSaveDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION)
+        {   
+            circuit.set_path_circuit_name(fileChoose.getSelectedFile().getPath()+".net");
+            return true;
+        }
+        return false;
+    }
+    
+    private CircuitNode getCircuitNode(int n)
+    {
 	if (n >= nodeList.size())
 	    return null;
 	return nodeList.get(n);
     }
+    
     
     
     

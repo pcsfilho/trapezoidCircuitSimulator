@@ -1,4 +1,5 @@
 package org.gui.canvas;
+import org.gui.elements.CircuitElement;
 import java.util.ArrayList;
 
 class CircuitNode {

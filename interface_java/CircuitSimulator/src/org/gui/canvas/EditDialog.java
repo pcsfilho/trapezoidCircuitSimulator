@@ -1,5 +1,5 @@
 package org.gui.canvas;
-import org.gui.canvas.Editable;
+import org.gui.elements.Editable;
 import org.gui.canvas.EditInfo;
 import org.gui.canvas.PanelCircuitArea;
 import org.gui.MainWindow;

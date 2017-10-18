@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
 
@@ -27,14 +28,17 @@ public class MainWindow extends JFrame implements ActionListener {
     private JPanel principalPanel;
     private SideBar sideBar;
     private PanelCircuitArea canvas_panel;
+    
+    TrapezoidCircuitSimulator circuit_simulator;
 
     // setup icons - File Menu
     private ImageIcon newIcon,openIcon,saveIcon,closeIcon,clearIcon,cutIcon,copyIcon,pasteIcon,aboutMeIcon,aboutIcon,
             capacitorIcon,inductorIcon,ResistorIcon,sourceVoltageIcon,sourceCurrentIcon, sourceVoltageACIcon, groundIcon, wireIcon, switchIcon,
             ammeterIcon, voltmeterIcon,transientIcon,dcIcon, nodeNameIcon,timeIcon,goIcon;
 
-    public MainWindow()
+    public MainWindow(TrapezoidCircuitSimulator tcs)
     {
+        circuit_simulator=tcs;
         initIcons();
         initComponents();
         initSideBar();
@@ -320,7 +324,7 @@ public class MainWindow extends JFrame implements ActionListener {
         // Se botão de rodar simulação
         else if (e.getSource() == runButton)
         {
-            canvas_panel.analyzeCircuit();
+            canvas_panel.create_circuit_description();
         }
         // If the source was the "open" option
         else if (e.getSource() == openFile || e.getSource() == openButton)
@@ -340,17 +344,18 @@ public class MainWindow extends JFrame implements ActionListener {
         // If the source of the event was the "save" option
         else if (e.getSource() == saveFile || e.getSource() == saveButton)
         {
-            // Open a file chooser
-            JFileChooser fileChoose = new JFileChooser();
-            // Open the file, only this time we call
-            int option = fileChoose.showSaveDialog(this);
-            /*
-             * ShowSaveDialog instead of showOpenDialog if the user clicked OK
-             * (and not cancel)
-             */
-            if (option == JFileChooser.APPROVE_OPTION)
+            if(canvas_panel.getChanged() || !(canvas_panel.get_circuit().get_path_circuit_name().equals("")))
             {
-                
+                System.out.println("IF "+canvas_panel.getChanged());
+                canvas_panel.create_circuit_description();
+            }
+            else
+            {
+                System.out.println("ELSE");
+                if(!canvas_panel.save_circuit())
+                {
+                    JOptionPane.showMessageDialog(this,"Para simulação a rede deve ser salva.");
+                }
             }
         }
         // Limpar canvas
@@ -377,10 +382,6 @@ public class MainWindow extends JFrame implements ActionListener {
             
             String el = ((JButton)e.getSource()).getName();
             canvas_panel.choice_circuit_element(el);
-            /*ComponentDialog d=new ComponentDialog(this, title);
-            d.setSize(200, 80);
-            d.setLocationRelativeTo(null);
-            d.setVisible(true);*/
         }
     }
 }
