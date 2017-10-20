@@ -683,31 +683,26 @@ public abstract class CircuitElement implements Editable {
 	else
 	    g.setColor(new Color(b, rg, b));
     }
-    void setConductanceColor(Graphics g, double w0) {
-	w0 *= powerMult;
-	//System.out.println(w);
-	double w = (w0 < 0) ? -w0 : w0;
-	if (w > 1)
-	    w = 1;
-	int rg = (int) (w*255);
-	g.setColor(new Color(rg, rg, rg));
-    }
+    
     double getPower() { return getVoltageDiff()*current; }
-    double getScopeValue(int x) {
-	return (x == 1) ? getPower() : getVoltageDiff();
-    }
-    String getScopeUnits(int x) {
-	return (x == 1) ? "W" : "V";
-    }
+    
     public EditInfo getEditInfo(int n)
     {
         return null;
     }
-    public void setEditValue(int n, EditInfo ei) {}
-    boolean getConnection(int n1, int n2) { return true; }
-    boolean hasGroundConnection(int n1) { return false; }
+    
+    public void setEditValue(int n, EditInfo ei){}
+    
+    boolean getConnection(int n1, int n2)
+    {
+        return true;
+    }
+    
+    boolean hasGroundConnection(int n1)
+    {
+        return false;
+    }
     boolean isWire() { return false; }
-    boolean canViewInScope() { return getNodesCount() <= 2; }
     boolean comparePair(int x1, int x2, int y1, int y2) {
 	return ((x1 == y1 && x2 == y2) || (x1 == y2 && x2 == y1));
     }
@@ -719,7 +714,10 @@ public abstract class CircuitElement implements Editable {
     {
         return selected;
     }
-    public void setSelected(boolean x) { selected = x; }
+    public void setSelected(boolean x)
+    {
+        selected = x;
+    }
     public void selectRect(Rectangle r)
     {
 	selected = r.intersects(boundingBox);

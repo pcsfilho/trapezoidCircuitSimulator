@@ -1,4 +1,5 @@
 package org.gui.canvas;        
+
 import org.gui.elements.Editable;
 import org.gui.elements.GraphicElement;
 import org.gui.elements.CurrentSource;
@@ -39,14 +40,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -71,60 +68,65 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     public static final int MODE_DRAG_SELECTED = 4;
     public static final int MODE_DRAG_POST = 5;
     public static final int MODE_SELECT = 6;
+    public static String muString = "u";
+    public static String ohmString = "ohm";
     int draggingPost;
     int dragX, dragY, initDragX, initDragY;
     public int mouseMode = MODE_SELECT;
-    int pause = 10;
     int tempMouseMode = MODE_SELECT;
     String mouseModeStr = "Select";
     MainWindow frame_parent;
-    public CircuitElement plotXElm;
-    public CircuitElement plotYElm;
+    public CircuitElement plotXElm,plotYElm;
     CircuitCanvas cv;
-    CheckboxMenuItem smallGridCheckItem;
     static EditDialog editDialog;
-    MenuItem elmEditMenuItem;
     int mousePost = -1;
-    int menuScope = -1;
-    MenuItem optionsItem;
-    PopupMenu elmMenu;
     Rectangle circuitArea;
-    int gridSize, gridMask, gridRound, groundCount=0;
+    private int gridSize, gridMask, gridRound, groundCount=0;
     private ArrayList<CircuitElement> elmList;
-    ArrayList<String> undoStack, redoStack;
     public CircuitElement dragElm;
     public CircuitElement menuElm, mouseElm, stopElm;
-    public static String muString = "u";
-    public static String ohmString = "ohm";
-    boolean didSwitch = false;
     Circuit circuit;
     Switch heldSwitchElm;
     ArrayList<CircuitNode> nodeList;
     private boolean circuitChanged;
     //endregion
     
+    /**
+     * Contrutor que recebe o Frame principal
+     * @param frame 
+     */
     public PanelCircuitArea(MainWindow frame)
     {
         this.frame_parent=frame;
         init();
     }
-    
+    /**
+     * Retorna se houve alguma mudança no circuito
+     * @return 
+     */
     public boolean getChanged()
     {
         return circuitChanged;
     }
+    /**
+     * Retorna uma lista com os elementos adicionados no canvas
+     * @return 
+     */
     public ArrayList<CircuitElement> getElementsList()
     {
         return elmList;
     }
-    
-    
-    
+    /**
+    * Retorna o objeto de circuito criado para descrever um determinado circuito
+    * @return 
+    */
     public Circuit get_circuit()
     {
         return circuit;
     }
-    
+    /**
+    *Inicializa os componentes para desenho de um circuito. 
+    */
     public void init() {
         
 	CircuitElement.initClass(this);
@@ -137,12 +139,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	cv.addKeyListener(this);
 	this.add(cv);
 
-        smallGridCheckItem = getCheckItem("Small Grid");
-
         setClassElement(Wire.class.getCanonicalName());
 	setClassElement(Resistor.class.getCanonicalName());
-
-	
 	setClassElement(Capacitor.class.getCanonicalName());
 	setClassElement(Inductor.class.getCanonicalName());
 	setClassElement(Switch.class.getCanonicalName());
@@ -157,42 +155,58 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 
 	//cv.setBackground(Color.black);
 	cv.setForeground(Color.BLACK);
-	
-        elmMenu = new PopupMenu();
-	elmMenu.add(elmEditMenuItem = getMenuItem("Editar"));
-        add(elmMenu);
 
         handleResize();
 	requestFocus();
     }
-    
+    /**
+    * Retorna um elemento de circuito adicionado a lista de elementos de circuito pelo indice
+    * @param n
+    * @return 
+    */
     public CircuitElement getElm(int n) {
-        
-	if (n >= elmList.size())
-	    return null;
-	return elmList.get(n);
+	if (n < elmList.size())
+        {
+            return elmList.get(n);
+        }
+        return null;
     }
-    
-    
+    /**
+     * Retorna o menor valor
+     * @param a
+     * @param b
+     * @return 
+     */
     int min(int a, int b)
     {
         return (a < b) ? a : b;
     }
+    /**
+     * Retorna o maior valor
+     * @param a
+     * @param b
+     * @return 
+     */
     int max(int a, int b)
     {
         return (a > b) ? a : b;
     }
-    
+    /**
+     * 
+     */
     void handleResize() {
-        winSize = cv.getSize();
+        winSize = this.getSize();//Pega tamanho do canvas
 	if (winSize.width == 0)
+        {
 	    return;
-	dbimage = createImage(winSize.width, winSize.height);
-	circuitArea = new Rectangle(0, 0, winSize.width, winSize.height);
+        }
+	dbimage = createImage(this.getSize().width, this.getSize().height);
+	circuitArea = new Rectangle(0, 0, this.getSize().width,this.getSize().height);
         
 	int i;
 	int minx = 1000, maxx = 0, miny = 1000, maxy = 0;
-	for (i = 0; i != elmList.size(); i++) {
+	for (i = 0; i != elmList.size(); i++)
+        {
 	    CircuitElement ce = getElm(i);
 	    // centered text causes problems when trying to center the circuit,
 	    // so we special-case it here
@@ -210,20 +224,17 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	    dx = gridMask & (-minx);
 	if (dy+miny < 0)
 	    dy = gridMask & (-miny);
-	for (i = 0; i != elmList.size(); i++) {
+	for (i = 0; i != elmList.size(); i++)
+        {
 	    CircuitElement ce = getElm(i);
 	    ce.move(dx, dy);
 	}
     }
-    
-    
-    MenuItem getMenuItem(String s) {
-	MenuItem mi = new MenuItem(s);
-	mi.addActionListener(this);
-	return mi;
-    }
-
-    
+    /**
+     * 
+     * @param x
+     * @return 
+     */
     public int snapGrid(int x)
     {
 	return (x+gridRound) & gridMask;
@@ -300,7 +311,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     
     void setGrid()
     {
-	gridSize = (smallGridCheckItem.getState()) ? 8 : 16;
+	gridSize = 16;
 	gridMask = ~(gridSize-1);
 	gridRound = gridSize/2-1;
     }
@@ -363,7 +374,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     @Override
     public void componentResized(ComponentEvent e) {
         handleResize();
-	cv.repaint(pause);
+	cv.repaint();
     }
     
     void removeZeroLengthElements() {
@@ -583,7 +594,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		dragX = snapGrid(e.getX()); dragY = snapGrid(e.getY());
 	    }
 	}
-	cv.repaint(pause);
+	cv.repaint();
     }
 
     int distanceSq(int x1, int y1, int x2, int y2)
@@ -610,7 +621,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
         if(origMouse!=null)
         
 	mouseElm = null;
-	mousePost = -1;
 	plotXElm = plotYElm = null;
 	int bestDist = 100000;
 	int bestArea = 100000;
@@ -641,7 +651,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		    mouseElm = ce;
 	    }
 	}
-	if (mouseElm == null) {
+	if (mouseElm == null){
 	    // the mouse pointer was not in any of the bounding boxes, but we
 	    // might still be close to a post
 	    for (i = 0; i != elmList.size(); i++) {
@@ -650,23 +660,13 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		int jn = ce.getNodesCount();
 		for (j = 0; j != jn; j++) {
 		    Point pt = ce.getPost(j);
-		    int dist = distanceSq(x, y, pt.x, pt.y);
 		    if (distanceSq(pt.x, pt.y, x, y) < 26) {
 			mouseElm = ce;
-			mousePost = j;
 			break;
 		    }
 		}
 	    }
-	} else {
-	    mousePost = -1;
-	    // look for post close to the mouse pointer
-	    for (i = 0; i != mouseElm.getNodesCount(); i++) {
-		Point pt = mouseElm.getPost(i);
-		if (distanceSq(pt.x, pt.y, x, y) < 26)
-		    mousePost = i;
-	    }
-	}
+	} 
 	if (mouseElm != origMouse)
 	    cv.repaint();
         
@@ -674,7 +674,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2 && !didSwitch )
+        if (e.getClickCount() == 2)
 	    doEditMenu(e);
         if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 	    if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
@@ -691,12 +691,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	}
     }
    
-    void doPopupMenu(MouseEvent e) {
-	menuElm = mouseElm;
-	if (mouseElm != null) {
-	    elmMenu.show(e.getComponent(), e.getX(), e.getY());
-	}
-    }
     
     void doEditMenu(MouseEvent e) {
 	if( mouseElm != null )
@@ -704,7 +698,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     }
     //Criação de dialogo para edição do componente
     void doEdit(Editable eable) {
-        System.out.println("DOEDIT");
 	clearSelection();
 	if (editDialog != null) {
 	    requestFocus();
@@ -730,15 +723,14 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	}
     }
     
-    
     boolean doSwitch(int x, int y) {
         
 	if (mouseElm == null || !(mouseElm instanceof Switch))
 	    return false;
+        
 	Switch se = (Switch) mouseElm;
-	se.toggle();
-	if (se.getMomentary())
-	    heldSwitchElm = se;
+        se.changeState();
+        heldSwitchElm = se;
 	
 	return true;
     }
@@ -756,14 +748,7 @@ boolean dragging;
     @Override
     public void mousePressed(MouseEvent e) {
         
-        didSwitch = false;
-        
 	int ex = e.getModifiersEx();
-	if ((ex & (MouseEvent.META_DOWN_MASK|
-		   MouseEvent.SHIFT_DOWN_MASK)) == 0 && e.isPopupTrigger()) {
-	    doPopupMenu(e);
-	    return;
-	}
 	if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 	    // left mouse
 	    tempMouseMode = mouseMode;
@@ -795,7 +780,6 @@ boolean dragging;
 	    clearSelection();
 	if (mouseMode == MODE_SELECT && doSwitch(e.getX(), e.getY()))
 	{
-            didSwitch = true;
 	    return;
 	}
 	initDragX = e.getX();
@@ -816,20 +800,14 @@ boolean dragging;
     public void mouseReleased(MouseEvent e) {
         
         int ex = e.getModifiersEx();
-	if ((ex & (MouseEvent.SHIFT_DOWN_MASK|MouseEvent.CTRL_DOWN_MASK| MouseEvent.META_DOWN_MASK)) == 0 && e.isPopupTrigger()) 
-        {
-	    doPopupMenu(e);
-	    return;
-	}
 	tempMouseMode = mouseMode;
 	selectedArea = null;
 	dragging = false;
 	circuitChanged = false;
 	if (heldSwitchElm != null)
         {
-	    heldSwitchElm.mouseUp();
-	    heldSwitchElm = null;
 	    circuitChanged = true;
+            heldSwitchElm = null;
 	}
 	if (dragElm != null){
 	    // if the element is zero size then don't create it
@@ -917,43 +895,7 @@ boolean dragging;
     }
     
     @Override
-    public void itemStateChanged(ItemEvent e){
-        
-        Object mi = e.getItemSelectable();
-	
-	if (mi instanceof CheckboxMenuItem){
-	    MenuItem mmi = (MenuItem) mi;
-	    int prevMouseMode = mouseMode;
-	    setMouseMode(MODE_ADD_ELM);
-	    String s = mmi.getActionCommand();
-            System.out.println("MMI: "+s);
-	    if (s.length() > 0)
-		mouseModeStr = s;
-	    if (s.compareTo("DragAll") == 0)
-		setMouseMode(MODE_DRAG_ALL);
-	    else if (s.compareTo("DragRow") == 0)
-		setMouseMode(MODE_DRAG_ROW);
-	    else if (s.compareTo("DragColumn") == 0)
-		setMouseMode(MODE_DRAG_COLUMN);
-	    else if (s.compareTo("DragSelected") == 0)
-		setMouseMode(MODE_DRAG_SELECTED);
-	    else if (s.compareTo("DragPost") == 0)
-		setMouseMode(MODE_DRAG_POST);
-	    else if (s.compareTo("Select") == 0)
-		setMouseMode(MODE_SELECT);
-	    else if (s.length() > 0) {
-		try {
-		    addingClass = Class.forName(s);
-                    System.out.println("AQUI: "+addingClass.getName());
-		} catch (Exception ee) {
-		    ee.printStackTrace();
-		}
-	    }
-	    else
-	    	setMouseMode(prevMouseMode);
-	    tempMouseMode = mouseMode;
-	}
-    }
+    public void itemStateChanged(ItemEvent e){}
 
     void setMenuSelection(){
         
@@ -972,10 +914,10 @@ boolean dragging;
 	{
 	    doDelete();
             circuitChanged=true;
-            System.out.println("keyTyped "+circuitChanged);
 	    return;
 	}
-	if (e.getKeyChar() == ' ' || e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+	if (e.getKeyChar() == ' ' || e.getKeyChar() == KeyEvent.VK_ESCAPE)
+        {
 	    setMouseMode(MODE_SELECT);
 	    mouseModeStr = "Select";
 	}
@@ -1078,15 +1020,15 @@ boolean dragging;
                                 for (k = 0; k < nodeList.size(); k++)
                                 {
                                     CircuitNode cn = getCircuitNode(k);
-                                    if (pt.x == cn.x && pt.y == cn.y)
+                                    if (pt.x == cn.getX() && pt.y == cn.getY())
                                     {
                                        break;
                                     }
                                 }
                                 if (k == nodeList.size()){
                                     CircuitNode cn = new CircuitNode();
-                                    cn.x = pt.x;
-                                    cn.y = pt.y;
+                                    cn.setX(pt.x);
+                                    cn.setY(pt.y);
                                     nodeList.add(cn);
                                 }
                                 node=k;

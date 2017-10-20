@@ -346,12 +346,10 @@ public class MainWindow extends JFrame implements ActionListener {
         {
             if(canvas_panel.getChanged() || !(canvas_panel.get_circuit().get_path_circuit_name().equals("")))
             {
-                System.out.println("IF "+canvas_panel.getChanged());
                 canvas_panel.create_circuit_description();
             }
             else
             {
-                System.out.println("ELSE");
                 if(!canvas_panel.save_circuit())
                 {
                     JOptionPane.showMessageDialog(this,"Para simulação a rede deve ser salva.");

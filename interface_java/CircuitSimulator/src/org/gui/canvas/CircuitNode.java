@@ -2,14 +2,38 @@ package org.gui.canvas;
 import org.gui.elements.CircuitElement;
 import java.util.ArrayList;
 
-class CircuitNode {
-    int x, y;
-    ArrayList<CircuitNodeLink> links;
-    boolean internal;
-    ArrayList<CircuitElement> elements;
-    CircuitNode()
+public class CircuitNode {
+    private int x, y;
+    private ArrayList<CircuitElement> elements;
+    
+    public CircuitNode()
     {
-        links = new ArrayList<>();
+        elements= new ArrayList<>();
+    }
+    
+    public int getX()
+    {
+        return x;
+    }
+    
+    public void setX(int x)
+    {
+        this.x=x;
+    }
+    
+    public void setY(int y)
+    {
+        this.y=y;
+    }
+    
+    public int getY()
+    {
+        return y;
+    }
+    
+    public ArrayList<CircuitElement> getElements()
+    {
+        return elements;
     }
     
     @Override

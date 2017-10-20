@@ -4,33 +4,29 @@ import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
 public class Switch extends CircuitElement {
-    protected boolean momentary;
-    // position 0 == closed, position 1 == open
-    int position, posCount;
+    protected boolean state;
+    
     public Switch(int xx, int yy) {
 	super(xx, yy);
-	momentary = false;
-	position = 0;
-	posCount = 2;
+	state = false;
     }
     Switch(int xx, int yy, boolean mm) {
 	super(xx, yy);
-	position = (mm) ? 1 : 0;
-	momentary = mm;
-	posCount = 2;
+	state = mm;
     }
     public Switch(int xa, int ya, int xb, int yb, int f,
 		     StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
 	String str = st.nextToken();
-	if (str.compareTo("true") == 0)
-	    position = (this instanceof LogicInput) ? 0 : 1;
-	else if (str.compareTo("false") == 0)
-	    position = (this instanceof LogicInput) ? 1 : 0;
-	else
-	    position = new Integer(str).intValue();
-	momentary = new Boolean(st.nextToken()).booleanValue();
-	posCount = 2;
+    }
+    
+    public void changeState()
+    {
+        state =!state;
+    }
+    public boolean getState()
+    {
+        return state;
     }
     
     public void set_name()
@@ -39,17 +35,14 @@ public class Switch extends CircuitElement {
         name = "CH"+countSwitches;
     }
     
-    public boolean getMomentary()
-    {
-        return momentary;
-    }
     public int getDumpType()
     {
         return 's';
     }
+    
     public String dump()
     {
-	return super.dump() + " " + position + " " + momentary;
+	return super.dump() + " " + state;
     }
 
     Point ps, ps2;
@@ -62,13 +55,13 @@ public class Switch extends CircuitElement {
 	
     public void draw(Graphics g) {
 	int openhs = 16;
-	int hs1 = (position == 1) ? 0 : 2;
-	int hs2 = (position == 1) ? openhs : 2;
+	int hs1 = (state) ? 0 : 2;
+	int hs2 = (state) ? openhs : 2;
 	setBbox(point1, point2, openhs);
 
 	draw2Leads(g);
 	    
-	if (position == 0)
+	if (!state)
 	    doDots(g);
 	    
 	if (!needsHighlight())
@@ -80,27 +73,11 @@ public class Switch extends CircuitElement {
 	drawPosts(g);
         drawValues(g, name, 10);
     }
-    public void calculateCurrent() {
-	if (position == 1)
-	    current = 0;
-    }
-    void stamp() {
-    }
-    public int getVoltageSourceCount() {
-	return (position == 1) ? 0 : 1;
-    }
-    public void mouseUp() {
-	if (momentary)
-	    toggle();
-    }
-    public void toggle() {
-	position++;
-	if (position >= posCount)
-	    position = 0;
-    }
+    
+    
     void getInfo(String arr[]) {
-	arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
-	if (position == 1) {
+	arr[0] = (state) ? "push switch (SPST)" : "switch (SPST)";
+	if (state) {
 	    arr[1] = "open";
 	    arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 	} else {
@@ -109,14 +86,14 @@ public class Switch extends CircuitElement {
 	    arr[3] = "I = " + getCurrentDText(getCurrent());
 	}
     }
-    boolean getConnection(int n1, int n2) { return position == 0; }
+    
     boolean isWire() { return true; }
     public EditInfo getEditInfo(int n)
     {
 	if (n == 0)
         {
 	    EditInfo ei = new EditInfo("", 0, -1, -1);
-	    ei.checkbox = new Checkbox("Momentary Switch", momentary);
+	    ei.checkbox = new Checkbox("Chave", state);
 	    return ei;
 	}
 	return null;
@@ -125,7 +102,7 @@ public class Switch extends CircuitElement {
     public void setEditValue(int n, EditInfo ei)
     {
 	if (n == 0)
-	    momentary = ei.checkbox.getState();
+	    state = ei.checkbox.getState();
     }
     public int getShortcut()
     {

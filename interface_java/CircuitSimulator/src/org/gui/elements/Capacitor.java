@@ -5,26 +5,28 @@ import org.gui.canvas.EditInfo;
 
     public class Capacitor extends CircuitElement {
 	double capacitance;
-	double compResistance, voltdiff;
 	Point plate1[], plate2[];
-	public static final int FLAG_BACK_EULER = 2;
 	public Capacitor(int xx, int yy) {
 	    super(xx, yy);
 	    capacitance = 1e-5;
 	}
 	public Capacitor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
         {
-            
 	    super(xa, ya, xb, yb, f);
 	    capacitance = new Double(st.nextToken()).doubleValue();
-	    voltdiff = new Double(st.nextToken()).doubleValue();
 	}
-	public int getDumpType() { return 'c'; }
-	public String dump()
+	
+        public int getDumpType()
         {
-	    return super.dump() + " " + capacitance + " " + voltdiff;
+            return 'c';
+        }
+
+        public String dump()
+        {
+	    return super.dump() + " " + capacitance;
 	}
-	public void setPoints() {
+	
+        public void setPoints() {
 	    super.setPoints();
 	    double f = (dn/2-4)/dn;
 	    // calc leads
@@ -64,14 +66,15 @@ import org.gui.canvas.EditInfo;
             drawValues(g, name, hs);
 	}
 
-    public void set_name()
-    {
-        countCapacitors++;
-        name = "C"+countCapacitors;
-        System.out.println(name);
-    }
+        public void set_name()
+        {
+            countCapacitors++;
+            name = "C"+countCapacitors;
+            System.out.println(name);
+        }
         
-        void getInfo(String arr[]) {
+        void getInfo(String arr[])
+        {
 	    arr[0] = "capacitor";
 	    getBasicInfo(arr);
 	    arr[3] = "C = " + getUnitText(capacitance, "F");
@@ -91,9 +94,4 @@ import org.gui.canvas.EditInfo;
         {
             capacitance = ei.value;
 	}
-        
-	public int getShortcut() 
-        {
-            return 'c';
-        }
     }
