@@ -35,16 +35,11 @@ public class Switch extends CircuitElement {
         name = "CH"+countSwitches;
     }
     
-    public int getDumpType()
+    public int getType()
     {
         return 's';
     }
     
-    public String dump()
-    {
-	return super.dump() + " " + state;
-    }
-
     Point ps, ps2;
     public void setPoints() {
 	super.setPoints();

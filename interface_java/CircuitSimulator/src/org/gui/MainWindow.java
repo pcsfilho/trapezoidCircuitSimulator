@@ -1,19 +1,9 @@
 package org.gui;
 
 import org.gui.canvas.PanelCircuitArea;
-import org.gui.dialogs.ComponentDialog;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
 
 public class MainWindow extends JFrame implements ActionListener {
@@ -23,7 +13,8 @@ public class MainWindow extends JFrame implements ActionListener {
     private  JMenu menuFile, menuEdit, menuAbout;
     private  JMenuItem newFile, openFile, saveFile, close, cut, copy, paste, clearFile, aboutMe, aboutSoftware;
     private  JToolBar mainToolbar;
-    JButton newButton, openButton, saveButton, clearButton, aboutMeButton, aboutButton,runButton,timeButton;
+    private JTextField timeSimulationtxt;
+    JButton newButton, openButton, saveButton, clearButton, aboutMeButton, aboutButton,runButton,timeButton, pointerButton;
     private JTabbedPane tabbedPane;
     private JPanel principalPanel;
     private SideBar sideBar;
@@ -34,7 +25,7 @@ public class MainWindow extends JFrame implements ActionListener {
     // setup icons - File Menu
     private ImageIcon newIcon,openIcon,saveIcon,closeIcon,clearIcon,cutIcon,copyIcon,pasteIcon,aboutMeIcon,aboutIcon,
             capacitorIcon,inductorIcon,ResistorIcon,sourceVoltageIcon,sourceCurrentIcon, sourceVoltageACIcon, groundIcon, wireIcon, switchIcon,
-            ammeterIcon, voltmeterIcon,transientIcon,dcIcon, nodeNameIcon,timeIcon,goIcon;
+            ammeterIcon, voltmeterIcon,transientIcon,dcIcon, nodeNameIcon,timeIcon,goIcon,pointerIcon;
 
     public MainWindow(TrapezoidCircuitSimulator tcs)
     {
@@ -52,7 +43,8 @@ public class MainWindow extends JFrame implements ActionListener {
         saveIcon = new ImageIcon("icons/save.png");
         closeIcon = new ImageIcon("icons/close.png");
         goIcon = new ImageIcon("icons/go.png");
-        timeIcon = new ImageIcon("icons/time.png");
+        timeIcon = new ImageIcon("icons/time_icon.png");
+        pointerIcon = new ImageIcon("icons/pointer.png");
 
         // setup icons - Edit Menu
         clearIcon = new ImageIcon("icons/clear.png");
@@ -156,8 +148,6 @@ public class MainWindow extends JFrame implements ActionListener {
 
         mainToolbar = new JToolBar();
         this.add(mainToolbar, BorderLayout.NORTH);
-        // used to create space between button groups
-        Border emptyBorder = BorderFactory.createEmptyBorder(0, 0, 0, 50);
 
         newButton = new JButton(newIcon);
         newButton.setToolTipText("Novo");
@@ -183,10 +173,18 @@ public class MainWindow extends JFrame implements ActionListener {
         mainToolbar.add(clearButton);
         mainToolbar.addSeparator();
         
-        timeButton = new JButton(timeIcon);
-        timeButton.setToolTipText("Tempo de simulação");
-        timeButton.addActionListener(this);
-        mainToolbar.add(timeButton);
+        
+        JLabel timeLabel = new JLabel(timeIcon);
+        timeLabel.setToolTipText("Tempo de simulação");
+        mainToolbar.add(timeLabel);
+        mainToolbar.addSeparator();
+        
+        timeSimulationtxt = new JTextField(8);
+        timeSimulationtxt.setText("0.0");
+        timeSimulationtxt.setMaximumSize(timeSimulationtxt.getPreferredSize());
+        timeSimulationtxt.setToolTipText("Tempo de simulação");
+        
+        mainToolbar.add(timeSimulationtxt);
         mainToolbar.addSeparator();
         
         runButton = new JButton(goIcon);
@@ -194,6 +192,13 @@ public class MainWindow extends JFrame implements ActionListener {
         runButton.addActionListener(this);
         mainToolbar.add(runButton);
         mainToolbar.addSeparator();
+        
+        pointerButton = new JButton(pointerIcon);
+        pointerButton.setToolTipText("Ponteiro");
+        pointerButton.addActionListener(this);
+        mainToolbar.add(pointerButton);
+        mainToolbar.addSeparator();
+        
 
         aboutMeButton = new JButton(aboutMeIcon);
         aboutMeButton.setToolTipText("Sobre mim");
@@ -232,6 +237,11 @@ public class MainWindow extends JFrame implements ActionListener {
         
     }
 
+    public String get_time_simulation()
+    {
+        return timeSimulationtxt.getText();
+    }
+    
     private void addComponentsEletrics(JPanel panel, int i)
     {
         if(i==1)
@@ -319,12 +329,18 @@ public class MainWindow extends JFrame implements ActionListener {
         // Se botão de novo circuito
         else if (e.getSource() == newFile || e.getSource() == newButton)
         {
-        
+            
+        }
+         // Se botão de ponteiro
+        else if (e.getSource() == pointerButton)
+        {
+            canvas_panel.setMousePointer();
         }
         // Se botão de rodar simulação
         else if (e.getSource() == runButton)
         {
-            canvas_panel.create_circuit_description();
+            System.out.println(get_time_simulation());
+            canvas_panel.analysis_circuit(get_time_simulation());
         }
         // If the source was the "open" option
         else if (e.getSource() == openFile || e.getSource() == openButton)

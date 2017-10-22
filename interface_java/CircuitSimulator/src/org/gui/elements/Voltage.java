@@ -6,35 +6,41 @@ import org.gui.canvas.EditInfo;
 public class Voltage extends CircuitElement {
     static final int FLAG_COS = 2;
     int waveform;
-    static final int WF_DC = 0;
-    static final int WF_AC = 1;
-    static final int WF_SQUARE = 2;
-    static final int WF_TRIANGLE = 3;
-    static final int WF_SAWTOOTH = 4;
-    static final int WF_PULSE = 5;
+    static final int DC = 0;
+    static final int AC = 1;
     static final int WF_VAR = 6;
-    protected double frequency, maxVoltage, freqTimeZero, bias,
-	phaseShift, dutyCycle;
+    protected double frequency, freqTimeZero, bias,phaseShift, dutyCycle;
     
-    Voltage(int xx, int yy, int wf) {
+    Voltage(int xx, int yy, int wf)
+    {
 	super(xx, yy);
 	waveform = wf;
-	maxVoltage = 5;
+	value = 5;
 	frequency = 40;
 	dutyCycle = .5;
-	reset();
     }
+    
+    public double get_frequency()
+    {
+        return frequency;
+    }
+    
+    public void set_frequency(double f)
+    {
+        this.frequency=f;
+    }
+    
     public Voltage(int xa, int ya, int xb, int yb, int f,
 		      StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
-	maxVoltage = 5;
+	value = 5;
 	frequency = 40;
-	waveform = WF_DC;
+	waveform = DC;
 	dutyCycle = .5;
 	try {
 	    waveform = new Integer(st.nextToken()).intValue();
 	    frequency = new Double(st.nextToken()).doubleValue();
-	    maxVoltage = new Double(st.nextToken()).doubleValue();
+	    value = new Double(st.nextToken()).doubleValue();
 	    bias = new Double(st.nextToken()).doubleValue();
 	    phaseShift = new Double(st.nextToken()).doubleValue();
 	    dutyCycle = new Double(st.nextToken()).doubleValue();
@@ -44,59 +50,38 @@ public class Voltage extends CircuitElement {
 	    flags &= ~FLAG_COS;
 	    phaseShift = pi/2;
 	}
-	reset();
     }
-    public int getDumpType() { return 'v'; }
-    public String dump() {
-	return super.dump() + " " + waveform + " " + frequency + " " +
-	    maxVoltage + " " + bias + " " + phaseShift + " " +
-	    dutyCycle;
+    
+    public int getType() 
+    {
+        return 'v';
     }
-    /*void setCurrent(double c) {
-      current = c;
-      System.out.print("v current set to " + c + "\n");
-      }*/
+    
+    public String get_type_current()
+    {
+        return null;
+    }
 
-    void reset() {
-	freqTimeZero = 0;
-	curcount = 0;
-    }
-    double triangleFunc(double x) {
-	if (x < pi)
-	    return x*(2/pi)-1;
-	return 1-(x-pi)*(2/pi);
-    }
-    void stamp() {
-    }
-    public void doStep() {
-    }
     double getVoltage() {
 	//double w = 2*pi*(sim.t-freqTimeZero)*frequency + phaseShift;
         double w=0;
 	switch (waveform) {
-	case WF_DC: return maxVoltage+bias;
-	case WF_AC: return Math.sin(w)*maxVoltage+bias;
-	case WF_SQUARE:
-	    return bias+((w % (2*pi) > (2*pi*dutyCycle)) ?
-			 -maxVoltage : maxVoltage);
-	case WF_TRIANGLE:
-	    return bias+triangleFunc(w % (2*pi))*maxVoltage;
-	case WF_SAWTOOTH:
-	    return bias+(w % (2*pi))*(maxVoltage/pi)-maxVoltage;
-	case WF_PULSE:
-	    return ((w % (2*pi)) < 1) ? maxVoltage+bias : bias;
+	case DC: return value+bias;
+	case AC: return Math.sin(w)*value+bias;
 	default: return 0;
 	}
     }
     final int circleSize = 17;
-    public void setPoints() {
+    
+    public void setPoints()
+    {
 	super.setPoints();
-	calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize*2);
+	calcLeads((waveform == DC || waveform == WF_VAR) ? 8 : circleSize*2);
     }
     public void draw(Graphics g) {
 	setBbox(x_1, y_1, x_2, y_2);
 	draw2Leads(g);
-	if (waveform == WF_DC) {
+	if (waveform == DC) {
 	    setPowerColor(g, false);
 	    setVoltageColor(g, volts[0]);
 	    interpPoint2(lead1, lead2, ps1, ps2, 0, 10);
@@ -114,7 +99,7 @@ public class Voltage extends CircuitElement {
 	}
 	updateDotCount();
 	if (sim.dragElm != this) {
-	    if (waveform == WF_DC)
+	    if (waveform == DC)
 		drawDots(g, point1, point2, curcount);
 	    else {
 		drawDots(g, point1, lead1, curcount);
@@ -133,25 +118,26 @@ public class Voltage extends CircuitElement {
 	adjustBbox(xc-circleSize, yc-circleSize,
 		   xc+circleSize, yc+circleSize);
 	int xc2;
-	switch (waveform) {
-	case WF_DC:
-	{
-	    break;
-	}
-	case WF_AC:
-	{
-	    int i;
-	    int xl = 10;
-	    int ox = -1, oy = -1;
-	    for (i = -xl; i <= xl; i++) {
-		int yy = yc+(int) (.95*Math.sin(i*pi/xl)*wl);
-		if (ox != -1)
-		    drawThickLine(g, ox, oy, xc+i, yy);
-		ox = xc+i; oy = yy;
-	    }
-            drawValues(g, name, circleSize);
-	    break;
-	}
+	switch (waveform)
+        {
+            case DC:
+            {
+                break;
+            }
+            case AC:
+            {
+                int i;
+                int xl = 10;
+                int ox = -1, oy = -1;
+                for (i = -xl; i <= xl; i++) {
+                    int yy = yc+(int) (.95*Math.sin(i*pi/xl)*wl);
+                    if (ox != -1)
+                        drawThickLine(g, ox, oy, xc+i, yy);
+                    ox = xc+i; oy = yy;
+                }
+                drawValues(g, name, circleSize);
+                break;
+            }
 	}
         
     }
@@ -162,28 +148,31 @@ public class Voltage extends CircuitElement {
     double getPower() { return -getVoltageDiff()*current; }
     public double getVoltageDiff() { return volts[1] - volts[0]; }
     void getInfo(String arr[]) {
-	switch (waveform) {
-	case WF_DC: case WF_VAR:
-	    arr[0] = "voltage source"; break;
-	case WF_AC:       arr[0] = "A/C source"; break;
+	switch (waveform)
+        {
+            case DC: case WF_VAR:
+                arr[0] = "fonte de tensão";
+                break;
+            case AC:       
+                arr[0] = "fonte A/C"; 
+                break;
 	}
 	arr[1] = "I = " + getCurrentText(getCurrent());
-	if (waveform != WF_DC && waveform != WF_VAR) {
+	if (waveform != DC && waveform != WF_VAR) {
 	    arr[3] = "f = " + getUnitText(frequency, "Hz");
-	    arr[4] = "Vmax = " + getVoltageText(maxVoltage);
+	    arr[4] = "Vmax = " + getVoltageText(value);
 	    int i = 5;
 	    if (bias != 0)
 		arr[i++] = "Voff = " + getVoltageText(bias);
 	    else if (frequency > 500)
-		arr[i++] = "wavelength = " +
-		    getUnitText(2.9979e8/frequency, "m");
+		arr[i++] = "wavelength = " + getUnitText(2.9979e8/frequency, "m");
 	    arr[i++] = "P = " + getUnitText(getPower(), "W");
 	}
     }
     public EditInfo getEditInfo(int n) {
 	if (n == 0)
-	    return new EditInfo(waveform == WF_DC ? "Voltage" :
-				"Max Voltage", maxVoltage, -20, 20);
+	    return new EditInfo(waveform == DC ? "Tensão" :
+				"Amplitude", value, -20, 20);
 	if (n == 1) {
 	    EditInfo ei =  new EditInfo("Waveform", waveform, -1, -1);
 	    ei.choice = new Choice();
@@ -191,23 +180,21 @@ public class Voltage extends CircuitElement {
 	    ei.choice.add("A/C");
 	    return ei;
 	}
-	if (waveform == WF_DC)
+	if (waveform == DC)
 	    return null;
 	if (n == 2)
-	    return new EditInfo("Frequency (Hz)", frequency, 4, 500);
+	    return new EditInfo("Frequência (Hz)", frequency, 4, 500);
 	if (n == 3)
-	    return new EditInfo("DC Offset (V)", bias, -20, 20);
+	    return new EditInfo("Deslocamento DC (V)", bias, -20, 20);
 	if (n == 4)
-	    return new EditInfo("Phase Offset (degrees)", phaseShift*180/pi,
+	    return new EditInfo("Deslocamento de fase (graus)", phaseShift*180/pi,
 				-180, 180).setDimensionless();
-	if (n == 5 && waveform == WF_SQUARE)
-	    return new EditInfo("Duty Cycle", dutyCycle*100, 0, 100).
-		setDimensionless();
+	
 	return null;
     }
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
-	    maxVoltage = ei.value;
+	    value = ei.value;
 	if (n == 3)
 	    bias = ei.value;
 	if (n == 2) {
@@ -226,15 +213,14 @@ public class Voltage extends CircuitElement {
 	if (n == 1) {
 	    int ow = waveform;
 	    waveform = ei.choice.getSelectedIndex();
-	    if (waveform == WF_DC && ow != WF_DC) {
+	    if (waveform == DC && ow != DC)
+            {
 		ei.newDialog = true;
 		bias = 0;
-	    } else if (waveform != WF_DC && ow == WF_DC) {
+	    } else if (waveform != DC && ow == DC) 
+            {
 		ei.newDialog = true;
 	    }
-	    if ((waveform == WF_SQUARE || ow == WF_SQUARE) &&
-		waveform != ow)
-		ei.newDialog = true;
 	    setPoints();
 	}
 	if (n == 4)

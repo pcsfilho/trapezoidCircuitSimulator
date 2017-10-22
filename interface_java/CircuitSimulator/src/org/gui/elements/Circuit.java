@@ -13,8 +13,7 @@ import java.util.ArrayList;
 /**
  *
  * @author paulo
- */
-
+*/
 public class Circuit
 {
     private ArrayList<CircuitElement> elements;    
@@ -67,19 +66,33 @@ public class Circuit
     public void create_netlist_circuit() throws FileNotFoundException, UnsupportedEncodingException
     {
         PrintWriter writer = new PrintWriter(path_circuit_name,"UTF-8");
-        writer.println("circuito");
-        
+        writer.println("circuito");        
         for(int i=0;i<elements.size();i++)
         {
             CircuitElement ce=elements.get(i);
             int node_1=ce.nodes[0];
             int node_2=ce.nodes[1];
             String name = ce.get_name();
-            writer.print(name+" "+node_1+" "+node_2);
+            String type = ""+(char)ce.getType();
+            double value=ce.get_value();
+            String line;
+            if(type.equals("v"))
+            {   line = type+" "+name+" "+((Voltage)ce).get_type_current()+" "+node_1+" "+node_2+" "+value;
+                if(((Voltage)ce).get_type_current().equals("AC"))
+                {
+                    line+=" "+((Voltage)ce).get_frequency();
+                }
+            }
+            else
+            {
+                line = type+" "+name+" "+node_1+" "+node_2+" "+value;
+            }
+            writer.print(line);
             if(i!=(elements.size()-1))
             {
                 writer.println();
             }
+            System.out.println(line);
         }
         writer.close();
     }

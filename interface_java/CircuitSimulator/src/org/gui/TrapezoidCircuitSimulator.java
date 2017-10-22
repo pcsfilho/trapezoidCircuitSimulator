@@ -9,7 +9,6 @@ public class TrapezoidCircuitSimulator{
     public final static String NAME = "SimAC";
     public final static double VERSION = 3.0;
     public static TrapezoidCircuitSimulator trapezoid_circuit_simulator;
-
     /**
      * @param args
      */

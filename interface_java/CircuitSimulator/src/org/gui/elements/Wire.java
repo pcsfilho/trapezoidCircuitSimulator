@@ -6,11 +6,11 @@ import org.gui.canvas.EditInfo;
     public class Wire extends Resistor {
 	public static boolean ideal = false;
 	private static final double defaultResistance = 1E-06;
-	public Wire(int xx, int yy) { super(xx, yy); resistance = defaultResistance; }
+	public Wire(int xx, int yy) { super(xx, yy); value = defaultResistance; }
 	public Wire(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) {
 	    super(xa, ya, xb, yb, f, new StringTokenizer("0.0"));
-	    resistance = defaultResistance;
+	    value = defaultResistance;
 	}
 	static final int FLAG_SHOWCURRENT = 1;
 	static final int FLAG_SHOWVOLTAGE = 2;

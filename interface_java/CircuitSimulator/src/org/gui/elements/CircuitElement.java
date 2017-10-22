@@ -33,7 +33,23 @@ public abstract class CircuitElement implements Editable {
     double current, curcount;
     private Rectangle boundingBox;
     boolean noDiagonal;
-    public boolean selected;
+    private boolean selected;
+    protected double value;
+    
+    public boolean isSelected()
+    {
+       return selected; 
+    }
+    
+    public void set_value(double v)
+    {
+        this.value=v;
+    }
+    
+    public double get_value()
+    {
+        return this.value;
+    }
     
     public void set_name(String name)
     {
@@ -45,10 +61,11 @@ public abstract class CircuitElement implements Editable {
         return boundingBox;
     }
     
-    public int getDumpType()
+    public int getType()
     {
         return 0;
     }
+    
     public int[] getNodes()
     {
         return nodes;
@@ -164,17 +181,8 @@ public abstract class CircuitElement implements Editable {
 	nodes = new int[getNodesCount()+getInternalNodeCount()];
 	volts = new double[getNodesCount()+getInternalNodeCount()];
     }
-    public String dump() {
-	int t = getDumpType();
-	return (t < 127 ? ((char)t)+" " : t+" ") + x_1 + " " + y_1 + " " +
-	    x_2 + " " + y_2 + " " + flags;
-    }
-    void reset() {
-	int i;
-	for (i = 0; i != getNodesCount()+getInternalNodeCount(); i++)
-	    volts[i] = 0;
-	curcount = 0;
-    }
+    
+    
     public void draw(Graphics g) {}
     public void setCurrent(int x, double c) { current = c; }
     public double getCurrent() { return current; }
@@ -710,30 +718,54 @@ public abstract class CircuitElement implements Editable {
     {
         return sim.mouseElm == this || selected;
     }
-    public boolean isSelected()
+    
+    
+    
+    public void setSelected(boolean s)
     {
-        return selected;
-    }
-    public void setSelected(boolean x)
-    {
-        selected = x;
+        selected = s;
     }
     public void selectRect(Rectangle r)
     {
 	selected = r.intersects(boundingBox);
     }
-    public static int abs(int x) { return x < 0 ? -x : x; }
-    public static int sign(int x) { return (x < 0) ? -1 : (x == 0) ? 0 : 1; }
-    public static int min(int a, int b) { return (a < b) ? a : b; }
-    public static int max(int a, int b) { return (a > b) ? a : b; }
-    public static double distance(Point p1, Point p2) {
+    public static int abs(int x)
+    {
+        return x < 0 ? -x : x;
+    }
+    public static int sign(int x) 
+    {
+        return (x < 0) ? -1 : (x == 0) ? 0 : 1; 
+    }
+    public static int min(int a, int b)
+    {
+        return (a < b) ? a : b; 
+    }
+    public static int max(int a, int b)
+    {
+        return (a > b) ? a : b; 
+    }
+    public static double distance(Point p1, Point p2)
+    {
 	double x = p1.x-p2.x;
 	double y = p1.y-p2.y;
 	return Math.sqrt(x*x+y*y);
     }
-    public Rectangle getBoundingBox() { return boundingBox; }
-    public boolean needsShortcut() { return getShortcut() > 0; }
-    public int getShortcut() { return 0; }
+    public Rectangle getBoundingBox() 
+    {
+        return boundingBox;
+    }
+    public boolean needsShortcut()
+    {
+        return getShortcut() > 0; 
+    }
+    public int getShortcut()
+    {
+        return 0;
+    }
 
-    boolean isGraphicElmt() { return false; }
+    boolean isGraphicElmt()
+    {
+        return false;
+    }
 }

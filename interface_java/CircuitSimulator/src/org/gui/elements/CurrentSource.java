@@ -4,24 +4,25 @@ import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
     public class CurrentSource extends CircuitElement {
-	double currentValue;
+	
 	public CurrentSource(int xx, int yy) {
 	    super(xx, yy);
-	    currentValue = .01;
+	    value = .01;
 	}
 	public CurrentSource(int xa, int ya, int xb, int yb, int f,
 		   StringTokenizer st) {
 	    super(xa, ya, xb, yb, f);
 	    try {
-		currentValue = new Double(st.nextToken()).doubleValue();
+		value = new Double(st.nextToken()).doubleValue();
 	    } catch (Exception e) {
-		currentValue = .01;
+		value = .01;
 	    }
 	}
-	public String dump() {
-	    return super.dump() + " " + currentValue;
-	}
-	public int getDumpType() { return 'i'; }
+	
+	public int getType()
+        {
+            return 'i'; 
+        }
 	
 	Polygon arrow;
 	Point ashaft1, ashaft2, center;
@@ -53,21 +54,21 @@ import org.gui.canvas.EditInfo;
 	    g.fillPolygon(arrow);
 	    setBbox(point1, point2, cr);
 	    doDots(g);
-		String s = getShortUnitText(currentValue, "A");
+		String s = getShortUnitText(value, "A");
 		if (dx == 0 || dy == 0)
 		    drawValues(g, s, cr);
 	    drawPosts(g);
 	}
 	void stamp() {
-	    current = currentValue;
+	    current = value;
 	}
 	public EditInfo getEditInfo(int n) {
 	    if (n == 0)
-		return new EditInfo("Current (A)", currentValue, 0, .1);
+		return new EditInfo("Current (A)", value, 0, .1);
 	    return null;
 	}
 	public void setEditValue(int n, EditInfo ei) {
-	    currentValue = ei.value;
+	    value = ei.value;
 	}
 	void getInfo(String arr[]) {
 	    arr[0] = "current source";

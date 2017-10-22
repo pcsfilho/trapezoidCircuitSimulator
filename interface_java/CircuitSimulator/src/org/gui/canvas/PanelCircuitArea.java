@@ -41,14 +41,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.gui.elements.Circuit;
+import org.gui.elements.Simulation;
 
 
 /**
@@ -267,7 +271,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     }
     
     void register(Class c, CircuitElement elm) {
-	int t = elm.getDumpType();
+	int t = elm.getType();
 	if (t == 0) {
 	    System.out.println("no dump type: " + c);
 	    return;
@@ -682,8 +686,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	}
     }
     
-    void clearSelection() {
-        
+    private void clearSelection()
+    {
 	int i;
 	for (i = 0; i != elmList.size(); i++) {
 	    CircuitElement ce = getElm(i);
@@ -798,7 +802,6 @@ boolean dragging;
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        
         int ex = e.getModifiersEx();
 	tempMouseMode = mouseMode;
 	selectedArea = null;
@@ -838,6 +841,7 @@ boolean dragging;
 	    
 	if (dragElm != null)
 	    dragElm.delete();
+        
 	dragElm = null;
 	cv.repaint();
         System.out.println("Mouse Relead "+circuitChanged);
@@ -852,8 +856,16 @@ boolean dragging;
 	mouseElm = plotXElm = plotYElm = null;
 	cv.repaint();
     }
-
-     void setMouseMode(int mode)
+    /**
+    * Seta o ponteiro de mouse no modo de seleção 
+    */
+    public void setMousePointer()
+    {
+        setMouseMode(MODE_SELECT);
+	mouseModeStr = "Select";
+    }
+    
+    private void setMouseMode(int mode)
     {
 	mouseMode = mode;
 	if ( mode == MODE_ADD_ELM )
@@ -861,7 +873,10 @@ boolean dragging;
 	else
 	    cv.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
-    
+    /**
+    *Seleciona elemento para desenho no canvas 
+    * @param element 
+    */
     public void choice_circuit_element(String element)
     {
         int prevMouseMode = mouseMode;
@@ -896,12 +911,16 @@ boolean dragging;
     
     @Override
     public void itemStateChanged(ItemEvent e){}
-
-    void setMenuSelection(){
-        
-	if (menuElm != null) {
-	    if (menuElm.selected)
-		return;
+    /**
+     * 
+    */
+    private void setMenuSelection(){
+	if (menuElm != null)//Se há algum elemento selecionado
+        {
+	    if(menuElm.isSelected())
+            {
+                return;
+            }
 	    clearSelection();
 	    menuElm.setSelected(true);
 	}
@@ -918,12 +937,13 @@ boolean dragging;
 	}
 	if (e.getKeyChar() == ' ' || e.getKeyChar() == KeyEvent.VK_ESCAPE)
         {
-	    setMouseMode(MODE_SELECT);
-	    mouseModeStr = "Select";
+	    setMousePointer();
 	}
 	tempMouseMode = mouseMode;
     }
-
+    /**
+     * 
+    */
     void doDelete(){
 	int i;
 	setMenuSelection();
@@ -961,21 +981,25 @@ boolean dragging;
         if (hasDeleted)
         {
             cv.repaint();
-            
         }
 	    
     }
+    /**
+     * 
+     * @param e 
+    */
     @Override
-    public void keyPressed(KeyEvent e) {
-    }
-
+    public void keyPressed(KeyEvent e){}
+    /**
+     * 
+     * @param e 
+    */
     @Override
-    public void keyReleased(KeyEvent e)
-    {
-        
-    }
+    public void keyReleased(KeyEvent e){}
     //endregion
-    
+    /**
+     * Faz análise do circuito desenhado no canvas e mapeia os elementos para análise.
+    */
     public void create_circuit_description()
     {
 	if (elmList.isEmpty())
@@ -1055,7 +1079,7 @@ boolean dragging;
                     for(i=0;i<circuit.get_elements().size();i++)
                     {
                         CircuitElement ce=circuit.get_elements().get(i);
-                        System.out.println("Elemento: "+ce.dump());
+                        System.out.println("Elemento: "+ce.get_name());
                         for(int k=0;k<ce.getNodes().length;k++)
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
@@ -1095,6 +1119,33 @@ boolean dragging;
         System.out.println("create "+circuitChanged);
     }
     
+    /**
+     * 
+     * @param time 
+     */
+    public void analysis_circuit(String time)
+    {
+        if(getChanged())
+        {
+            create_circuit_description();
+            
+        }
+        else
+        {
+            System.out.println(time);
+            Simulation sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
+            try {
+                sim.create_simulation_file();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+    }
+    /**
+     * Requisita um caminho ao usuário para salvar o circuito presente no canvas
+     * @return se o circuito foi salvo com sucesso
+    */
     public boolean save_circuit()
     {
         // Open a file chooser
@@ -1111,16 +1162,15 @@ boolean dragging;
         }
         return false;
     }
-    
+    /**
+     *Retorna elemento de circuito na lista de elementos de circuito pelo indice
+     * @param n
+     * @return 
+    */
     private CircuitNode getCircuitNode(int n)
     {
-	if (n >= nodeList.size())
-	    return null;
-	return nodeList.get(n);
+	if (n < nodeList.size())
+            return nodeList.get(n);
+	return null;
     }
-    
-    
-    
-    
-    
 }

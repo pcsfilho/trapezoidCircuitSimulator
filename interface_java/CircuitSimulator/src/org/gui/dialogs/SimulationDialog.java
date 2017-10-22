@@ -10,13 +10,12 @@ import java.awt.GridLayout;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 /**
  *
  * @author paulo
- */
+*/
 public class SimulationDialog extends JDialog{
-    JLabel lValue = new JLabel("Valor");
+    JLabel lValue = new JLabel("Tempo ");
     JLabel lName = new JLabel("Nome");
     JTextField valueField = new JTextField();
     JTextField nameField = new JTextField();
