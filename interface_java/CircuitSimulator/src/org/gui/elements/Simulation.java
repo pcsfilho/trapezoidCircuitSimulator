@@ -6,9 +6,11 @@
 package org.gui.elements;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 
 /**
  *
@@ -31,14 +33,16 @@ public class Simulation
     }
     /**
     * 
+     * @throws java.io.IOException
     */
     public void create_simulation_file() throws IOException
     {
+        circuit.create_netlist_circuit();
         FileWriter fw = new FileWriter(circuit.get_path_circuit_name(), true);
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter out = new PrintWriter(bw);        
         out.println();
-        out.println("."+type+" "+step+" "+start_time+" "+end_time);
+        out.print("."+type+" "+step+" "+start_time+" "+end_time);
         out.close();
     }
 }

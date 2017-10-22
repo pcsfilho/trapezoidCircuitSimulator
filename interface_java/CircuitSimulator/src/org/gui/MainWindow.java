@@ -4,6 +4,8 @@ import org.gui.canvas.PanelCircuitArea;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 
 public class MainWindow extends JFrame implements ActionListener {
@@ -184,6 +186,31 @@ public class MainWindow extends JFrame implements ActionListener {
         timeSimulationtxt.setMaximumSize(timeSimulationtxt.getPreferredSize());
         timeSimulationtxt.setToolTipText("Tempo de simulação");
         
+        timeSimulationtxt.getDocument().addDocumentListener(new DocumentListener()
+        {
+            private void updateTime()
+            {
+                canvas_panel.setTimeChanged(true);
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e)
+            {
+                updateTime();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e)
+            {
+                updateTime();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e)
+            {
+                updateTime();
+            }
+        });
+        
         mainToolbar.add(timeSimulationtxt);
         mainToolbar.addSeparator();
         
@@ -319,7 +346,7 @@ public class MainWindow extends JFrame implements ActionListener {
      * 
      * @param e 
      */
-    public void actionPerformed (ActionEvent e)
+    public void actionPerformed(ActionEvent e)
     {
         // Se botão de fechar
         if (e.getSource() == close)
@@ -339,8 +366,24 @@ public class MainWindow extends JFrame implements ActionListener {
         // Se botão de rodar simulação
         else if (e.getSource() == runButton)
         {
-            System.out.println(get_time_simulation());
-            canvas_panel.analysis_circuit(get_time_simulation());
+         try
+            {
+                if (Double.parseDouble(timeSimulationtxt.getText())>0)
+                {
+                    canvas_panel.analysis_circuit(get_time_simulation());
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,
+                        "Pro favor digite um tempo válido", "Erro de tempo de simulação",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            catch (NumberFormatException ex)
+            {
+                
+                JOptionPane.showMessageDialog(this, "Verifique se o valor no tempo de simulação é válido","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            }
         }
         // If the source was the "open" option
         else if (e.getSource() == openFile || e.getSource() == openButton)

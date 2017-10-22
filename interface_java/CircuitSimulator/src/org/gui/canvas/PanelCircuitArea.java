@@ -94,6 +94,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     ArrayList<CircuitNode> nodeList;
     private boolean circuitChanged;
     //endregion
+    private Simulation sim;
+    private boolean timeChanged;
     
     /**
      * Contrutor que recebe o Frame principal
@@ -112,6 +114,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     {
         return circuitChanged;
     }
+    
     /**
      * Retorna uma lista com os elementos adicionados no canvas
      * @return 
@@ -273,7 +276,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     void register(Class c, CircuitElement elm) {
 	int t = elm.getType();
 	if (t == 0) {
-	    System.out.println("no dump type: " + c);
 	    return;
 	}
 
@@ -282,12 +284,10 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	{
 	    if ( s == 0 )
 	    {
-		System.err.println("no shortcut " + c + " for " + c);
 		return;
 	    }
 	    else if ( s <= ' ' || s >= 127 )
 	    {
-		System.err.println("invalid shortcut " + c + " for " + c);
 		return;
 	    }
 	}
@@ -358,7 +358,17 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
         {
             getElm(i).draw(g);
 	}
-
+        
+        if (tempMouseMode == MODE_DRAG_ROW || tempMouseMode == MODE_DRAG_COLUMN ||
+	    tempMouseMode == MODE_DRAG_POST || tempMouseMode == MODE_DRAG_SELECTED)
+        {
+	    for (i = 0; i != elmList.size(); i++)
+            {
+		CircuitElement ce = getElm(i);
+		ce.drawPost(g, ce.getX1() , ce.getY1());
+		ce.drawPost(g, ce.getX2(), ce.getY2());
+	    }
+        }
 	if (dragElm != null && (dragElm.getX1() != dragElm.getX2() || dragElm.getY1() != dragElm.getY2()))
         {
             dragElm.draw(g);
@@ -490,7 +500,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	return allowed;
     }
 
-    void dragPost(int x, int y) {
+    void dragPost(int x, int y)
+    {
 	if (draggingPost == -1) {
 	    draggingPost =
 		(distanceSq(mouseElm.getX1() , mouseElm.getY1() , x, y) >
@@ -844,7 +855,6 @@ boolean dragging;
         
 	dragElm = null;
 	cv.repaint();
-        System.out.println("Mouse Relead "+circuitChanged);
     }
 
     @Override
@@ -1128,19 +1138,24 @@ boolean dragging;
         if(getChanged())
         {
             create_circuit_description();
-            
         }
-        else
+            
+        try
         {
-            System.out.println(time);
-            Simulation sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
-            try {
-                sim.create_simulation_file();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
-            }
-            
+            sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
+            sim.create_simulation_file();
+            timeChanged=false;
         }
+        catch (IOException ex)
+        {
+            JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+        }
+            
+    }
+    
+    public void setTimeChanged(boolean s)
+    {
+        this.timeChanged=s;
     }
     /**
      * Requisita um caminho ao usuário para salvar o circuito presente no canvas
@@ -1167,7 +1182,7 @@ boolean dragging;
      * @param n
      * @return 
     */
-    private CircuitNode getCircuitNode(int n)
+    public CircuitNode getCircuitNode(int n)
     {
 	if (n < nodeList.size())
             return nodeList.get(n);

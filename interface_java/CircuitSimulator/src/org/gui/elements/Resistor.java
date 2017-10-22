@@ -53,9 +53,10 @@ import org.gui.canvas.EditInfo;
 		}
 		interpPoint2(lead1, lead2, ps1, ps2, 1, hs);
 		drawThickLine(g, ps1, ps2);
+                drawValues(g, name, 12);
                 doDots(g);
                 drawPosts(g);
-                drawValues(g, name, 12);
+                
 	}
     
 	public void calculateCurrent() {

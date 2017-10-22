@@ -23,7 +23,7 @@ import java.util.StringTokenizer;
 	    doDots(g);
 	    interpPoint(point1, point2, ps2, 1+11./dn);
 	    setBbox(point1, ps2, 11);
-	    drawPost(g, x_1, y_1, nodes[0]);
+	    drawPost(g, x_1, y_1);
 	}
 	public void setCurrent(int x, double c) { current = -c; }
 	void stamp() {

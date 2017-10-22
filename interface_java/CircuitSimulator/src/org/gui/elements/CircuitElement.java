@@ -399,10 +399,10 @@ public abstract class CircuitElement implements Editable {
     public void drawPosts(Graphics g)
     {
 	int i;
-	for (i = 0; i != getNodesCount(); i++)
+	for (i = 0; i != 2; i++)
         {
 	    Point p = getPost(i);
-	    drawPost(g, p.x, p.y, nodes[i]);
+            drawPost(g, p.x, p.y);
 	}
     }
     
@@ -430,19 +430,15 @@ public abstract class CircuitElement implements Editable {
     {
 	return (n == 0) ? point1 : (n == 1) ? point2 : null;
     }
-    public void drawPost(Graphics g, int x0, int y0, int n)
-    {
-	if (sim.dragElm == null && !needsHighlight())
-	    return;
-	if (sim.mouseMode == PanelCircuitArea.MODE_DRAG_ROW ||
-	    sim.mouseMode == PanelCircuitArea.MODE_DRAG_COLUMN)
-	    return;
-	drawPost(g, x0, y0);
-    }
-    void drawPost(Graphics g, int x0, int y0)
+    
+    
+    
+    
+    public void drawPost(Graphics g, int x0, int y0)
     {
 	g.setColor(whiteColor);
 	g.fillOval(x0-3, y0-3, 7, 7);
+        
     }
     void setBbox(int x1, int y1, int x2, int y2)
     {
@@ -641,6 +637,7 @@ public abstract class CircuitElement implements Editable {
 	  cadd = -8;*/
 	return cc + cadd;
     }
+    
     void doDots(Graphics g) {
 	updateDotCount();
 	if (sim.dragElm != this)
