@@ -50,11 +50,6 @@ void Element::set_name(string n)
   name=n;
 }
 
-void Element::set_resistance(double r)
-{
-  resistance=r;
-}
-
 double Element::get_resistance()
 {
   return resistance;   

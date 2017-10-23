@@ -24,9 +24,19 @@ Source::Source(vector<string> element)
     node_1=atoi(element[3].c_str());
     node_2=atoi(element[4].c_str());
     value=atof(element[5].c_str());
-    frequency=atof(element[6].c_str());
+    
+    if(current_type=="AC")
+    {
+        frequency=atof(element[6].c_str());
+    }
     var=0;
 }
+
+void Source::set_resistance(double r)
+{
+  resistance=r;
+}
+
 
 void Source::set_stamp(double** Yn_original, double** Yn_solution, int num_vars)
 {

@@ -25,7 +25,7 @@ int readNetlistFile(int argc, char** argv, ifstream& netlist)
         }
 
         default:
-            cerr << "ERRO: Too much information!" << endl;
+            cerr << "ERRO!" << endl;
             return -1;
     }
 

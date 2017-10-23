@@ -20,6 +20,7 @@ public:
     Switch(vector<string> element);
     void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
     void commutate_switch(double current_time);
+    void set_resistance(double r);
     bool get_status();
     int get_count_changes();
     void set_stamp_switch(double** Yn_original, double time);

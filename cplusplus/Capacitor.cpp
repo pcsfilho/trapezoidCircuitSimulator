@@ -22,6 +22,12 @@ Capacitor::Capacitor(vector<string> element, int nv):Element(element,nv)
     current_historic=0;
 }
 
+void Capacitor::set_resistance(double step)
+{
+    double temp=2*(value);
+    resistance = step/temp;
+}
+
 
 void Capacitor::update_current(double** Yn_solution, int num_vars)
 {

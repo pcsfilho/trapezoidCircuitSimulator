@@ -49,6 +49,10 @@ void Simulation::build_matriz_mna()
     for(int i=0; i<circuit.get_num_elements();i++)
     {
         element = circuit.get_element_by_index(i);        
+        if(element->get_type()=="C" || element->get_type()=="L")
+        {
+            element->set_resistance(step_time);
+        }
         element->set_stamp(matrix_mna,matrix_mna_aux,get_circuit()->get_num_vars());      
     }
     //cout<<"BUILD"<<endl;

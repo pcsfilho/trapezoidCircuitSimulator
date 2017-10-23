@@ -23,6 +23,7 @@ int main(int argc, char **argv)
   
   print();
   int r=readNetlistFile(argc, argv, netlistFile);
+  
   if(r==0)
   {
       Simulation* simulation = new Simulation();

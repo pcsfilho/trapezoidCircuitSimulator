@@ -36,10 +36,12 @@ void Simulator::print_matrix_mna()
 
 void Simulator::parser_simulator(ifstream &netlistFile)
 {
+    
     string netlistLine;
     getline(netlistFile, netlistLine);
     Circuit* circuit = simulation->get_circuit();
     circuit->set_name(netlistLine);
+    
     //string delimiter = " ";
     vector<string> nodes;
     vector<string> vars;
@@ -65,7 +67,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
             }
             if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
             {
-                circuit->add_element(tokens, simulation->get_step_time());
+                circuit->add_element(tokens);
                 
                 string node_1;
                 string node_2;
@@ -97,6 +99,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                 simulation->set_config_simulation(tokens);
             }
         }
+        
     }
     netlistFile.close();
 

@@ -20,6 +20,12 @@ Resistor::Resistor()
 Resistor::Resistor(vector<string> element):Element(element)
 {}
 
+void Resistor::set_resistance(double r)
+{
+  resistance=r;
+}
+
+
 void Resistor::set_stamp(double** Yn_original, double** Yn_solution, int num_vars)
 {
     if(get_node_1()!=REFERENCIA)

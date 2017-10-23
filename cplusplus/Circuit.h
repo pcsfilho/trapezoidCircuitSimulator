@@ -19,7 +19,7 @@ class Circuit{
     public:
         Circuit();
         Circuit(string name, int numElements, int numNodes, vector<Element*> elements);
-        void add_element(vector<string> tokens, double step_t);
+        void add_element(vector<string> tokens);
         string get_name();
         int get_num_vars();
         int get_num_nodes();

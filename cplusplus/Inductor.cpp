@@ -25,6 +25,12 @@ Inductor::Inductor(vector<string> element, int nv):Element(element,nv)
     current_historic=0;
 }
 
+void Inductor::set_resistance(double step)
+{
+    double temp=2*(value);
+    resistance = temp/step;
+}
+
 double Inductor::get_current_historic()
 {
     return current_historic;

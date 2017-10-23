@@ -42,6 +42,12 @@ Switch::Switch(vector<string> element)
     count_changes = 0;
 }
 
+void Switch::set_resistance(double r)
+{
+  resistance=r;
+}
+
+
 void Switch::set_stamp(double** Yn_original, double** Yn_solution, int num_vars)
 {
     set_stamp_switch(Yn_original,0);

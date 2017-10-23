@@ -21,7 +21,7 @@ class Source:public Element{
 public:
     Source();
     Source(vector<string> element);
-    
+    void set_resistance(double r);
     //void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
     void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
     double get_source_value(double time);

@@ -21,28 +21,29 @@ Circuit::Circuit(string name, int numElements, int numNodes, vector<Element*> el
 
 //methods
 
-void Circuit::add_element(vector<string> tokens, double step_time)
+void Circuit::add_element(vector<string> tokens)
 {
   Element *element;
   
   if(tokens[0]=="V"||tokens[0]=="I")
   {
-     element= new Source(tokens);
-     element->set_resistance(0);
+    element= new Source(tokens);
+    element->set_resistance(0);
+    
   }
   else if(tokens[0]=="C")
   {
     element = new Capacitor(tokens,numVars);    
-    double temp=2*(element->get_value());
-    double rc = step_time/temp;
-    element->set_resistance(rc);
+    //double temp=2*(element->get_value());
+    //double rc = step_time/temp;
+    //element->set_resistance(rc);
   }
   else if(tokens[0]=="L")
   {
     element = new Inductor(tokens,numVars);
-    double temp=2*(element->get_value());
-    double rl =  temp/step_time;
-    element->set_resistance(rl);
+    //double temp=2*(element->get_value());
+    //double rl =  temp/step_time;
+    //element->set_resistance(rl);
   }
   else if(tokens[0]=="R")
   {
@@ -52,7 +53,6 @@ void Circuit::add_element(vector<string> tokens, double step_time)
   {
     element= new Switch(tokens);
   }
-  
   elements.push_back(element);
   numElements++;
   

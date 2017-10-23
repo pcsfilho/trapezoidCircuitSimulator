@@ -20,7 +20,7 @@ class Inductor: public Element{
 public:
     Inductor();
     Inductor(vector<string> element, int num_var);
-    
+    void set_resistance(double step);
     double get_current_historic();
     double get_current();
     //void set_stamp(double** Yn,vector<double> nodal_solution,int num_vars);
