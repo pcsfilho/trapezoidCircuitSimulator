@@ -1,11 +1,11 @@
-Rede switch ac
-. TRAN 1e-4 0 0.15
-S S1 1 2 1 2 0.041 0.085  
+SWITCH_AC
+. TRAN 1e-6 0 15e-2
+S S1 1 2 1 2 41e-3 85e-3
 L L1 2 3 1e-6
 C C1 3 0 0.5e-6
 R R1 3 0 4
 R R2 2 4 4
-S S2 3 4 0 2 0.045 0.080
+S S2 3 4 0 2 45e-3 80e-3
 R R3 4 0 200
 L L2 4 0 1e-5
 V VCC1 AC 1 0 2 60

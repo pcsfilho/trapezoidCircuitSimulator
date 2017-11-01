@@ -22,10 +22,10 @@ public:
     Inductor(vector<string> element, int num_var);
     void set_resistance(double step);
     double get_current_historic();
-    double get_current();
     //void set_stamp(double** Yn,vector<double> nodal_solution,int num_vars);
     void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
     void update_historic(double** Yn_solution, int num_vars);
+    double get_current();
 private:
     double current_historic;
     double current;

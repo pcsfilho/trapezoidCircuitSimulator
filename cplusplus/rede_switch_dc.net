@@ -1,5 +1,5 @@
-SWITCH
-. TRAN 1e-3 0 3e-3
+SWITCH_DC
+. TRAN 1e-3 0 15e-5
 S S1 1 2 1 1 2e-3
 L L1 2 3 1e-6
 C C1 3 0 0.5e-6

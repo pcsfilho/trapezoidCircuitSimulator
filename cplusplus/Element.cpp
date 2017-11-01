@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "CONSTANTES.h"
+#include "matrix.h"
 #include <iostream>
 #include <string.h>     /* atoi */
 #include <sstream>
@@ -38,6 +39,21 @@ Element::Element(vector<string> element)
   set_value(element[4]);
   var=0;
   resistance=get_value();
+}
+double Element:: get_voltage(double** Yn_original, int num_vars)
+{
+    double voltage_node_starting=0;
+    double voltage_node_ending=0;
+    if(node_1 != 0)
+    {
+        voltage_node_starting= Yn_original[node_1-1][num_vars];
+    }
+    if(node_2 != 0)
+    {
+        voltage_node_ending= Yn_original[node_2-1][num_vars];
+    }
+    //cout<<get_name()<<": "<<voltage_node_starting<<"-"<<voltage_node_ending<<"="<<(voltage_node_starting-voltage_node_ending)<<endl;
+    return (voltage_node_starting-voltage_node_ending);
 }
 
 void Element::set_type(string t)

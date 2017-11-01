@@ -12,6 +12,7 @@ Circuit::Circuit()
     numNodes=0;
     numVars=0;
     name="circuit";
+    //event=false;
 }
 
 Circuit::Circuit(string name, int numElements, int numNodes, vector<Element*> elements)
@@ -51,7 +52,9 @@ void Circuit::add_element(vector<string> tokens)
   }
   else
   {
-    element= new Switch(tokens);
+    Switch* s=new Switch(tokens);
+    element = s;
+    switches.push_back(s);
   }
   elements.push_back(element);
   numElements++;
@@ -60,6 +63,22 @@ void Circuit::add_element(vector<string> tokens)
   {
       add_var("I_"+element->get_name());
   }
+}
+
+bool Circuit::hasEvent(double time)
+{
+    //cout<<"HasEvent: "<<switches.size()<<endl;
+    for(int i=0;i<switches.size();i++)
+    {
+        Switch* s = switches[i];
+      //  cout<<"Teste Chave: "<<s->get_name()<<endl;
+        if(s->has_event(time))
+        {
+      //      cout<<"Verdade"<<endl;
+            return true;
+        }
+    }
+    return false;
 }
 
 void Circuit::add_var(string var)
@@ -129,15 +148,18 @@ vector<Node*> Circuit::get_nodes()
  * 
  * @param matrix_solution
  */
-string Circuit::set_node_values(double** matrix_solution)
+string Circuit::set_node_values(double** matrix_solution, double time)
 {
     Node* node;
+    stringstream ss (stringstream::in | stringstream::out);
+    ss << time;
     string temp="";
+    temp=ss.str();
     for(int i=0;i<get_nodes().size();i++)
     {
         stringstream ss (stringstream::in | stringstream::out);
         ss << matrix_solution[i][get_num_vars()];
-        temp += ss.str() + " ";
+        temp +=" "+ss.str();
         
         node = get_nodes()[i];
         
@@ -146,6 +168,41 @@ string Circuit::set_node_values(double** matrix_solution)
     temp = temp.substr(0, temp.size()-1);
     return temp;
 }
+
+string Circuit::calculate_voltages_elements(double** matrix_solution, double time)
+{
+    Element* e;
+    stringstream ss (stringstream::in | stringstream::out);
+    ss << time;
+    string temp="";
+    temp=ss.str();
+    for(int i=0;i<get_num_elements();i++)
+    {
+        e=get_element_by_index(i);
+        if(e->get_type().compare("V") !=0 && e->get_type().compare("I")!=0)
+        {
+            stringstream ss (stringstream::in | stringstream::out);
+            if(e->get_type().compare("L")==0 || e->get_type().compare("C")==0)
+            {
+                double value;
+                if(e->get_type().compare("L")==0)
+                {
+                    Inductor* l = dynamic_cast<Inductor*>(e);
+                    value=l->get_current();
+                }
+                else
+                {
+                    value=e->get_voltage(matrix_solution, get_num_vars());
+                }
+                ss << value;
+                temp +=" "+ss.str();
+            }
+        }
+    }
+    //temp = temp.substr(0, temp.size()-1);
+    return temp;
+}
+
 /**
  */
 void Circuit::print_nodes_solutions()

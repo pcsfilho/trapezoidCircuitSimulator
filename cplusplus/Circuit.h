@@ -11,6 +11,7 @@
 #include "Inductor.h"
 #include "Source.h"
 #include "Resistor.h"
+#include "Switch.h"
 #include "Node.h"
 
 using namespace std;
@@ -30,8 +31,14 @@ class Circuit{
         vector<string> get_vars();
         void set_name(string n);
         void add_node(string var);
-        string set_node_values(double** matrix_solution);        
+        string set_node_values(double** matrix_solution, double time);        
         void print_nodes_solutions();
+        string calculate_voltages_elements(double** matrix_solution, double time);
+        //bool get_event();
+        //void set_event();
+        //void add_time_event(double time);
+        
+        bool hasEvent(double time);
     private:
         //atributtes
         int numElements;
@@ -39,8 +46,10 @@ class Circuit{
         int numNodes;
         string name;
         vector<Element*> elements;
+        vector<Switch*> switches;
         vector<string> vars;
         vector<Node*> nodes;
+        //bool event;
         //methods
         void add_var(string var);
 };

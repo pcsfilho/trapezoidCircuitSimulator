@@ -9,5 +9,5 @@ void print_matrix(int nv, double** Yn);
 bool solve(int nv, double** Y_mna);
 void delete_matrix(int nv, double** Yn);
 void copy_matrix(int nv, double** Yn_source, double** Yn_destiny);
-
+void clear_matrix(int nv, double** Yn);
 #endif

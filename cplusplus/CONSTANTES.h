@@ -2,7 +2,8 @@
 #define CONSTANTES_H
 
 #define DEBUG
-#define PI 3.14159265
+#define PI 3.14159265358979
+
 
 static const int MAX_NAME = 11;
 static const int MAX_NODES = 50;

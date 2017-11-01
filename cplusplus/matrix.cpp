@@ -74,6 +74,17 @@ void print_matrix(int nv, double** Yn){
     cout << endl;
 }
 
+void clear_matrix(int nv, double** Yn){
+    /* Opcional: Mostra o sistema apos a montagem da estampa*/
+    for (int k=0; k<nv; k++)
+    {
+        for (int j=0; j<nv+1; j++)
+        {
+            Yn[k][j]=0;
+        }
+    }
+}
+
 void copy_matrix(int nv, double** Yn_source, double** Yn_destiny)
 {
     for(int i=0;i<nv;i++)

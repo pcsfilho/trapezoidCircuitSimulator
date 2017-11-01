@@ -52,6 +52,7 @@
     </logicalFolder>
     <itemPath>rc_ac.net</itemPath>
     <itemPath>rc_dc.net</itemPath>
+    <itemPath>rede_switch_ac.net</itemPath>
     <itemPath>rede_switch_dc.net</itemPath>
     <itemPath>rede_switch_dc_2.net</itemPath>
     <itemPath>rl_dc.net</itemPath>
@@ -117,6 +118,8 @@
       <item path="rc_ac.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rede_switch_ac.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
       </item>
@@ -200,6 +203,8 @@
       <item path="rc_ac.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rede_switch_ac.net" ex="false" tool="3" flavor2="0">
       </item>
       <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
       </item>

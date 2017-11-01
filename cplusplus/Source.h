@@ -24,6 +24,7 @@ public:
     void set_resistance(double r);
     //void set_stamp(double** Yn, vector<double> nodal_solution,int num_vars);
     void set_stamp(double** Yn_original, double** Yn_solution, int num_vars);
+    void set_stamp_source(double** Yn_original,int num_vars, double time);
     double get_source_value(double time);
 private:
     string current_type;
