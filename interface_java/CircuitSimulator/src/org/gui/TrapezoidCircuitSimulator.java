@@ -27,9 +27,4 @@ public class TrapezoidCircuitSimulator{
         }
         return trapezoid_circuit_simulator;
     }
-    
-    public static void create_netlist_file()
-    {
-        
-    }
 }

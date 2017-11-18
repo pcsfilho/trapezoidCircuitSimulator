@@ -1,3 +1,6 @@
 /build/
 /dist/
 /interface_java/CircuitSimulator/dist/
+/nbproject/private/
+/interface_java/CircuitSimulator/nbproject/private/
+/interface_java/CircuitSimulator/build/

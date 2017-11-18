@@ -1,0 +1,5 @@
+RC AC
+. TRAN 1e-3 0 3e-3
+R R1 1 2 500
+C C1 2 0 1.e-6
+V VCC AC 1 0 100 60

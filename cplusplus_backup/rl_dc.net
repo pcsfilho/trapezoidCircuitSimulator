@@ -1,0 +1,5 @@
+RL DC
+. TRAN 1e-3 0 3e-3
+R R1 1 2 1 
+L L1 2 0 0.5e-3
+V VCC DC 1 0 10

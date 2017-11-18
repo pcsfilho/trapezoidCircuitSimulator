@@ -27,7 +27,7 @@ public class Inductor extends CircuitElement{
             name = "L"+countInductors;
         }
         
-	public int getType() { return 'l'; }
+	public int getType() { return 'L'; }
 
 	public void setPoints() {
 	    super.setPoints();

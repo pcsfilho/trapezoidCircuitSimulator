@@ -15,7 +15,7 @@ public class Voltage extends CircuitElement {
     {
 	super(xx, yy);
 	waveform = wf;
-	value = 5;
+	value = 100;
 	frequency = 40;
 	dutyCycle = .5;
     }
@@ -54,7 +54,7 @@ public class Voltage extends CircuitElement {
     
     public int getType() 
     {
-        return 'v';
+        return 'V';
     }
     
     public String get_type_current()

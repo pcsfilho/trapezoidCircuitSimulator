@@ -5,19 +5,21 @@ import org.gui.canvas.EditInfo;
 
     public class Capacitor extends CircuitElement {
 	Point plate1[], plate2[];
-	public Capacitor(int xx, int yy) {
+	public Capacitor(int xx, int yy) 
+        {
 	    super(xx, yy);
-	    value = 1e-5;
+	    value = 1e-6;
 	}
 	public Capacitor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
         {
 	    super(xa, ya, xb, yb, f);
-	    value = new Double(st.nextToken()).doubleValue();
+	    //value = new Double(st.nextToken()).doubleValue();
+            value=1e-6;
 	}
 	
         public int getType()
         {
-            return 'c';
+            return 'C';
         }
 	
         public void setPoints() {

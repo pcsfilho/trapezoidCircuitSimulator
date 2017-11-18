@@ -18,7 +18,7 @@ int readNetlistFile(int argc, char** argv, ifstream& netlist)
             break;
         }
 
-        case 2: 
+        case 2:
         {
             file_path = argv[1];
             break;
@@ -38,6 +38,17 @@ int readNetlistFile(int argc, char** argv, ifstream& netlist)
 
     return 0;
 }
+
+int readNetlistFile(const char* file_path, ifstream& netlist)
+{
+    netlist.open(file_path, ifstream::in);
+    if(!netlist.is_open())
+    {
+        return -1;
+    }
+    return 0;
+}
+
 
 void print(){
     cout << endl << "Análise de Circuitos"

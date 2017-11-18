@@ -4,14 +4,15 @@ import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
     public class Resistor extends CircuitElement {
-	public Resistor(int xx, int yy) { super(xx, yy); value = 100; }
+	public Resistor(int xx, int yy) { super(xx, yy); value = 500; }
 	public Resistor(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) 
         {
 	    super(xa, ya, xb, yb, f);
-	    value = new Double(st.nextToken()).doubleValue();
+	    //value = new Double(st.nextToken()).doubleValue();
+            value=500;
 	}
-	public int getType() { return 'r'; }
+	public int getType() { return 'R'; }
 	
         
         public void set_name()

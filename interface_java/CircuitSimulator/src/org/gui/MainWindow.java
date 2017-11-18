@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
+import org.jni.InterfaceJNI;
 
 public class MainWindow extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -370,7 +371,10 @@ public class MainWindow extends JFrame implements ActionListener {
             {
                 if (Double.parseDouble(timeSimulationtxt.getText())>0)
                 {
-                    canvas_panel.analysis_circuit(get_time_simulation());
+                    String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
+                    InterfaceJNI jni=new InterfaceJNI();
+                    String path_out = jni.run_analysis(path_circuit);
+                    JOptionPane.showMessageDialog(this,path_out);
                 }
                 else
                 {
@@ -381,7 +385,6 @@ public class MainWindow extends JFrame implements ActionListener {
             }
             catch (NumberFormatException ex)
             {
-                
                 JOptionPane.showMessageDialog(this, "Verifique se o valor no tempo de simulação é válido","Análise do circuito",JOptionPane.ERROR_MESSAGE);
             }
         }

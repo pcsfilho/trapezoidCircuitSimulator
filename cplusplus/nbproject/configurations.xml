@@ -1,220 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="100">
+<configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="HeaderFiles"
-                   displayName="Arquivos de Cabeçalho"
-                   projectFiles="true">
-      <itemPath>CONSTANTES.h</itemPath>
-      <itemPath>Capacitor.h</itemPath>
-      <itemPath>Circuit.h</itemPath>
-      <itemPath>Element.h</itemPath>
-      <itemPath>Inductor.h</itemPath>
-      <itemPath>Node.h</itemPath>
-      <itemPath>Resistor.h</itemPath>
-      <itemPath>Simulation.h</itemPath>
-      <itemPath>Simulator.h</itemPath>
-      <itemPath>Source.h</itemPath>
-      <itemPath>Switch.h</itemPath>
-      <itemPath>matrix.h</itemPath>
-      <itemPath>utils.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="SourceFiles"
-                   displayName="Arquivos de Código-Fonte"
-                   projectFiles="true">
-      <itemPath>Capacitor.cpp</itemPath>
-      <itemPath>Circuit.cpp</itemPath>
-      <itemPath>Element.cpp</itemPath>
-      <itemPath>Inductor.cpp</itemPath>
-      <itemPath>Node.cpp</itemPath>
-      <itemPath>Resistor.cpp</itemPath>
-      <itemPath>Simulation.cpp</itemPath>
-      <itemPath>Simulator.cpp</itemPath>
-      <itemPath>Source.cpp</itemPath>
-      <itemPath>Switch.cpp</itemPath>
-      <itemPath>main.cpp</itemPath>
-      <itemPath>matrix.cpp</itemPath>
-      <itemPath>simples.net</itemPath>
-    </logicalFolder>
-    <logicalFolder name="ResourceFiles"
-                   displayName="Arquivos de Recurso"
-                   projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="TestFiles"
-                   displayName="Arquivos de Teste"
-                   projectFiles="false"
-                   kind="TEST_LOGICAL_FOLDER">
-    </logicalFolder>
+    <df root="." name="0">
+      <in>Capacitor.cpp</in>
+      <in>Circuit.cpp</in>
+      <in>Element.cpp</in>
+      <in>Inductor.cpp</in>
+      <in>InterfaceJNI.cpp</in>
+      <in>Node.cpp</in>
+      <in>Resistor.cpp</in>
+      <in>Simulation.cpp</in>
+      <in>Simulator.cpp</in>
+      <in>Source.cpp</in>
+      <in>Switch.cpp</in>
+      <in>main.cpp</in>
+      <in>matrix.cpp</in>
+      <in>modified_nodal_analysis.m</in>
+    </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Arquivos Importantes"
                    projectFiles="false"
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
     </logicalFolder>
-    <itemPath>rc_ac.net</itemPath>
-    <itemPath>rc_dc.net</itemPath>
-    <itemPath>rede_switch_ac.net</itemPath>
-    <itemPath>rede_switch_dc.net</itemPath>
-    <itemPath>rede_switch_dc_2.net</itemPath>
-    <itemPath>rl_dc.net</itemPath>
   </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="1">
+    <conf name="Default" type="0">
       <toolsSet>
         <compilerSet>default</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
+        <dependencyChecking>false</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
-      <compileType>
-      </compileType>
-      <item path="CONSTANTES.h" ex="false" tool="3" flavor2="0">
-      </item>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
       <item path="Capacitor.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Capacitor.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Circuit.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Circuit.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Element.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Element.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Inductor.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Inductor.h" ex="false" tool="3" flavor2="0">
+      <item path="InterfaceJNI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Node.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Node.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Resistor.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Resistor.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Simulation.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Simulation.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Simulator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Simulator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Source.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="Source.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="Switch.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Switch.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="matrix.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rc_ac.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_ac.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_dc_2.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rl_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="simples.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="utils.h" ex="false" tool="3" flavor2="0">
-      </item>
-    </conf>
-    <conf name="Release" type="1">
-      <toolsSet>
-        <compilerSet>default</compilerSet>
-        <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
-      </toolsSet>
-      <compileType>
-        <cTool>
-          <developmentMode>5</developmentMode>
-        </cTool>
-        <ccTool>
-          <developmentMode>5</developmentMode>
-        </ccTool>
-        <fortranCompilerTool>
-          <developmentMode>5</developmentMode>
-        </fortranCompilerTool>
-        <asmTool>
-          <developmentMode>5</developmentMode>
-        </asmTool>
-      </compileType>
-      <item path="CONSTANTES.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Capacitor.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Capacitor.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Circuit.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Circuit.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Element.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Element.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Inductor.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Inductor.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Node.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Node.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Resistor.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Resistor.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Simulation.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Simulation.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Simulator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Simulator.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Source.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Source.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Switch.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="Switch.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="matrix.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rc_ac.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rc_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_ac.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rede_switch_dc_2.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="rl_dc.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="simples.net" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="utils.h" ex="false" tool="3" flavor2="0">
+      <item path="modified_nodal_analysis.m" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

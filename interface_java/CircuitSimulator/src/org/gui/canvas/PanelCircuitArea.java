@@ -1132,8 +1132,9 @@ boolean dragging;
     /**
      * 
      * @param time 
+     * @return  
      */
-    public void analysis_circuit(String time)
+    public String analysis_circuit(String time)
     {
         if(getChanged())
         {
@@ -1143,14 +1144,14 @@ boolean dragging;
         try
         {
             sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
-            sim.create_simulation_file();
             timeChanged=false;
+            return sim.create_simulation_file();
         }
         catch (IOException ex)
         {
             JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
         }
-            
+        return null;
     }
     
     public void setTimeChanged(boolean s)

@@ -1,0 +1,3 @@
+Makefile:125: nbproject/Makefile-impl.mk: Arquivo ou diretório não encontrado
+Makefile:128: nbproject/Makefile-variables.mk: Arquivo ou diretório não encontrado
+make: *** No rule to make target 'nbproject/Makefile-variables.mk'.  Pare.

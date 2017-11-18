@@ -76,7 +76,7 @@ public class Circuit
             String type = ""+(char)ce.getType();
             double value=ce.get_value();
             String line;
-            if(type.equals("v"))
+            if(type.equals("V"))
             {   line = type+" "+name+" "+((Voltage)ce).get_type_current()+" "+node_1+" "+node_2+" "+value;
                 if(((Voltage)ce).get_type_current().equals("AC"))
                 {
