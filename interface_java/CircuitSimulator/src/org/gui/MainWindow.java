@@ -374,7 +374,7 @@ public class MainWindow extends JFrame implements ActionListener {
                     String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
                     InterfaceJNI jni=new InterfaceJNI();
                     String path_out = jni.run_analysis(path_circuit);
-                    JOptionPane.showMessageDialog(this,path_out);
+                    System.out.println(path_out);
                 }
                 else
                 {

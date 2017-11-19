@@ -27,7 +27,7 @@ Simulation::Simulation(Circuit circuit, double init_time, double end_time,double
 void Simulation::set_config_simulation(vector<string> data)
 {
     type_simulation=data[1];
-    
+
     if(type_simulation=="TRAN")
     {
         step_time = get_parsed_value(data[2]);
@@ -47,21 +47,21 @@ void Simulation::build_matriz_mna()
 {
     Element* element;
     //cout<<"BUILD"<<endl;
-    
+
     for(int i=0; i<circuit.get_num_elements();i++)
     {
-        element = circuit.get_element_by_index(i);        
-        
+        element = circuit.get_element_by_index(i);
+
         if((element->get_type().compare("C") ==0 || element->get_type().compare("L")==0) && current_time==0 )
         {
             element->set_resistance(step_time);
         }
-        
+
         if(element->get_type().compare("S")==0 && current_time!=0)
         {
             Switch* s = dynamic_cast<Switch*>(element);
             s->set_change(true);
-            s->set_stamp_switch(matrix_mna,current_time); 
+            s->set_stamp_switch(matrix_mna,current_time);
         }
         else if(element->get_type().compare("V")==0 && current_time!=0)
         {
@@ -70,20 +70,20 @@ void Simulation::build_matriz_mna()
         }
         else
         {
-            element->set_stamp(matrix_mna,matrix_mna_aux,get_circuit()->get_num_vars());  
+            element->set_stamp(matrix_mna,matrix_mna_aux,get_circuit()->get_num_vars());
         }
-        
+
         //cout<<"Elemento: "<<element->get_name()<<endl;
         //print_matrix(get_circuit()->get_num_vars(), matrix_mna);
     }
-//    print_matrix(get_circuit()->get_num_vars(), matrix_mna);
+   print_matrix(get_circuit()->get_num_vars(), matrix_mna);
 }
 
 void Simulation::update_matriz_mna()
 {
     Element* element;
     //cout<<"UPDATE"<<endl;
-    
+
     for (int k=0; k<circuit.get_num_vars(); k++)
     {
         //for (int j=0; j<circuit.get_num_vars()+1; j++)
@@ -91,13 +91,13 @@ void Simulation::update_matriz_mna()
             matrix_mna[k][circuit.get_num_vars()]=0;
         //}
     }
-       
+
     for(int i=0; i<circuit.get_num_elements();i++)
     {
         //cout<<"UPDATE"<<endl;
-        element = circuit.get_element_by_index(i);        
+        element = circuit.get_element_by_index(i);
         if(element->get_type()=="C")
-        {   
+        {
     //        cout<<"CAPACITOR"<<endl;
             Capacitor* c = dynamic_cast<Capacitor*>(element);
             c->update_historic(matrix_mna_aux, get_circuit()->get_num_vars());
@@ -134,7 +134,7 @@ void Simulation::update_matriz_mna()
         {
     //        cout<<"FONTE"<<endl;
             Source* s = dynamic_cast<Source*>(element);
-            matrix_mna[s->get_var()-1][get_circuit()->get_num_vars()]=s->get_source_value(current_time);            
+            matrix_mna[s->get_var()-1][get_circuit()->get_num_vars()]=s->get_source_value(current_time);
         }
         else
         {
@@ -151,11 +151,11 @@ bool Simulation::run_analysis()
 {
     int iteration=0;
     init_nodal_solution();
-    
+
     while(current_time<=end_time)
     {
     //    cout<<"tempo: "<< current_time<<endl;
-        
+
         if(current_time==0)
         {
             build_matriz_mna();
@@ -172,7 +172,7 @@ bool Simulation::run_analysis()
             {
                 update_matriz_mna();
             }
-            
+
         }
         copy_matrix(get_circuit()->get_num_vars(),matrix_mna,matrix_mna_aux);
         if(solve(get_circuit()->get_num_vars(),matrix_mna_aux))
@@ -184,7 +184,7 @@ bool Simulation::run_analysis()
             //plot 'SWITCH_AC.dat' using 1:2 with lines, 'SWITCH_AC.dat' using 1:3 with lines, 'SWITCH_AC.dat' using 1:4 with lines
                 //plot 'SWITCH_AC.dat' using 1:2 title "Corrente em L1" with lines
             //set xrange [0:0.15]
-                    
+
             /*
              * set terminal png ;
              * set output 'SWITCH_AC.png';
@@ -222,72 +222,72 @@ void Simulation::set_output_file_name(string name)
     output_file_name=name;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double** Simulation::get_matrix_mna()
 {
   return matrix_mna;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double Simulation::get_initial_time()
 {
   return initial_time;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 vector<double> Simulation::get_nodal_solution()
 {
     return nodal_solution;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double Simulation::get_current_time()
 {
   return current_time;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double Simulation::get_end_time()
 {
   return end_time;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double Simulation::get_step_time()
 {
   return step_time;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 Circuit* Simulation::get_circuit()
 {
   return &circuit;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 string Simulation::get_type_simulation()
 {
   return type_simulation;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 double Simulation::get_parsed_value(string s)
 {
@@ -297,7 +297,7 @@ double Simulation::get_parsed_value(string s)
     return d;
 }
 /**
- * 
+ *
  */
 void Simulation::init_nodal_solution()
 {

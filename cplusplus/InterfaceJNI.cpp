@@ -1,3 +1,6 @@
+//g++ -o libsimulation_jni.so  -shared -fPIC -I/usr/lib/jvm/java-8-oracle/include -I/usr/lib/jvm/java-8-oracle/include/linux  *.cpp -lc
+//sudo cp libsimulation_jni.so /usr/lib
+
 #include <iostream>
 #include <string>
 #include "org_jni_InterfaceJNI.h"

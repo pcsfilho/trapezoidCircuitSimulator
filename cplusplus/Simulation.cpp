@@ -140,7 +140,7 @@ void Simulation::update_matriz_mna()
         {
     //        cout<<"RESISTOR"<<endl;
         }
-        print_matrix(get_circuit()->get_num_vars(),matrix_mna);
+        //print_matrix(get_circuit()->get_num_vars(),matrix_mna);
     }
 }
 /**
@@ -213,8 +213,8 @@ plot [0:0.15] [-1:1] 'SWITCH_AC.dat' using 1:4  with lines
         current_time = current_time + step_time;
         iteration++;
     }
-    cout<<"Resultado Final"<<endl;
-    print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+    //cout<<"Resultado Final"<<endl;
+    //print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
     return true;
 }
 
