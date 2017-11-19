@@ -25,7 +25,7 @@ Simulator::Simulator(ifstream &netlistFile, Simulation* sim)
 
 void Simulator::init_matrix_mna()
 {
-    simulation->create_matrix_mna();   
+    simulation->create_matrix_mna();
 }
 
 void Simulator::print_matrix_mna()
@@ -36,12 +36,12 @@ void Simulator::print_matrix_mna()
 
 void Simulator::parser_simulator(ifstream &netlistFile)
 {
-    
+
     string netlistLine;
     getline(netlistFile, netlistLine);
     Circuit* circuit = simulation->get_circuit();
     circuit->set_name(netlistLine);
-    
+
     //string delimiter = " ";
     vector<string> nodes;
     vector<string> vars;
@@ -68,7 +68,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
             if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
             {
                 circuit->add_element(tokens);
-                
+
                 string node_1;
                 string node_2;
                 if(tokens[0]=="V" || tokens[0]=="I")
@@ -81,7 +81,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                     node_1 = tokens[2];
                     node_2 = tokens[3];
                 }
-                
+
                 if(!(std::find(nodes.begin(), nodes.end(), node_1) !=nodes.end()) && node_1!="0")
                 {
                     circuit->add_node(node_1);
@@ -99,7 +99,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                 simulation->set_config_simulation(tokens);
             }
         }
-        
+
     }
     netlistFile.close();
 
@@ -112,13 +112,13 @@ void Simulator::parser_simulator(ifstream &netlistFile)
     cout<<"Passo: "<<simulation->get_step_time()<<endl;
     cout<<"Tempo inicial: "<<simulation->get_initial_time() <<endl;
     cout<<"Tempo final: "<<simulation->get_end_time() <<endl;
-    
+
     cout<<"Variaveis: "<<endl;
     for (int i = 0; i < circuit->get_num_vars(); ++i)
     {
         cout<<circuit->get_vars()[i]<<endl;
     }
-    
+
     cout<<"Elementos: "<<endl;
     for (int i = 0; i < circuit->get_elements().size(); ++i)
     {
@@ -127,12 +127,12 @@ void Simulator::parser_simulator(ifstream &netlistFile)
         cout<<"No 1: "<<circuit->get_elements()[i]->get_node_1()<<"No 2: "<<circuit->get_elements()[i]->get_node_2()<<endl;
         cout<<"Valor: "<<circuit->get_elements()[i]->get_value()<<endl;
         cout<<"Var: "<<circuit->get_elements()[i]->get_var()<<endl;
-        
+
     }
 }
 
 
 bool Simulator::run_mna_analysis()
 {
-    simulation->run_analysis();
+    return simulation->run_analysis();
 }

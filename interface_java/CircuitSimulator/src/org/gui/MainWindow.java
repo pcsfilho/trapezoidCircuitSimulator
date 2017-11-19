@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
+import org.gui.plot.PlotFile;
 import org.jni.InterfaceJNI;
 
 public class MainWindow extends JFrame implements ActionListener {
@@ -374,6 +375,8 @@ public class MainWindow extends JFrame implements ActionListener {
                     String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
                     InterfaceJNI jni=new InterfaceJNI();
                     String path_out = jni.run_analysis(path_circuit);
+                    PlotFile pf = new PlotFile("Circuito", this);
+                    pf.open_chart(path_out);
                     System.out.println(path_out);
                 }
                 else

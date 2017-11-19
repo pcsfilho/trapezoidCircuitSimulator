@@ -32,9 +32,14 @@ JNIEXPORT jstring JNICALL Java_org_jni_InterfaceJNI_run_1analysis
       string path=create_file(simulation->get_circuit()->get_name());
       simulation->set_output_file_name(path);
       simulator.init_matrix_mna();
-      if(!simulator.run_mna_analysis())
+      if(simulator.run_mna_analysis())
       {
+          printf("Retornou");
           return env->NewStringUTF(path.c_str());
+      }
+      else
+      {
+        printf("N Retornou");
       }
   }
   else

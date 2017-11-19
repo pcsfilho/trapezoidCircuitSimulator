@@ -46,7 +46,7 @@ void Simulation::create_matrix_mna()
 void Simulation::build_matriz_mna()
 {
     Element* element;
-    //cout<<"BUILD"<<endl;
+    cout<<"BUILD"<<endl;
 
     for(int i=0; i<circuit.get_num_elements();i++)
     {
@@ -152,6 +152,8 @@ bool Simulation::run_analysis()
     int iteration=0;
     init_nodal_solution();
 
+
+
     while(current_time<=end_time)
     {
     //    cout<<"tempo: "<< current_time<<endl;
@@ -180,7 +182,7 @@ bool Simulation::run_analysis()
     //        cout<<"Converge"<<endl;
            // print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
             write_in_file(output_file_name,get_circuit()->calculate_voltages_elements(matrix_mna_aux, current_time));
-            printf("escreveu");
+            //printf("escreveu");
             //cout<<get_circuit()->calculate_voltages_elements(matrix_mna_aux, current_time)<<endl;
             //plot 'SWITCH_AC.dat' using 1:2 with lines, 'SWITCH_AC.dat' using 1:3 with lines, 'SWITCH_AC.dat' using 1:4 with lines
                 //plot 'SWITCH_AC.dat' using 1:2 title "Corrente em L1" with lines
@@ -213,8 +215,8 @@ plot [0:0.15] [-1:1] 'SWITCH_AC.dat' using 1:4  with lines
         current_time = current_time + step_time;
         iteration++;
     }
-    //cout<<"Resultado Final"<<endl;
-    //print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+    cout<<"Resultado Final"<<endl;
+    print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
     return true;
 }
 
