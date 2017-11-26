@@ -1,0 +1,6 @@
+Title: Effect of Age on Ability
+Xlabel: Age
+Ylabel: Ability
+start: 0
+interval: 15
+0, 3, 4.2, 7, 5.1, 10, 3.2

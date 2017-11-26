@@ -20,6 +20,7 @@ public class Circuit
     private ArrayList<CircuitElement> sources;    
     private String circuit_name;
     private String path_circuit_name;
+    private int elmCount;
     
     public Circuit()
     {
@@ -27,6 +28,7 @@ public class Circuit
         sources=new  ArrayList<>();
         circuit_name="";
         path_circuit_name="";
+        elmCount=0;
     }
     
     public void add_element(CircuitElement elm)
@@ -34,13 +36,15 @@ public class Circuit
         String type = ""+(char)elm.getType();
         if(type.equals("V"))
         {
-            System.out.println("Fonte");
             sources.add(elm);
+            elements.add(elm);
         }
         else
         {
-            elements.add(elm);
+            elements.add(elmCount,elm);
+            elmCount++;
         }
+        
         
     }
     
@@ -53,9 +57,15 @@ public class Circuit
     {
         this.path_circuit_name=n;
     }
+    
     public ArrayList<CircuitElement> get_elements()
     {
         return elements;
+    }
+    
+    public ArrayList<CircuitElement> get_sources()
+    {
+        return sources;
     }
     /**
     * Criar netlist a partir da lista de elementos
@@ -77,9 +87,10 @@ public class Circuit
     
     public void create_netlist_circuit() throws FileNotFoundException, UnsupportedEncodingException
     {
+        //System.out.println("Nome Circuito: "+path_circuit_name);
         PrintWriter writer = new PrintWriter(path_circuit_name,"UTF-8");
         writer.println("circuito");        
-        for(int i=0;i<elements.size();i++)
+        for(int i=0;i<elmCount;i++)
         {
             CircuitElement ce=elements.get(i);
             String type = ""+(char)ce.getType();
@@ -93,10 +104,11 @@ public class Circuit
             line = type+" "+name+" "+node_1+" "+node_2+" "+value;
             
             writer.print(line);
-            if(i!=(elements.size()-1))
+            if(i!=(elmCount-1))
             {
                 writer.println();
             }
+            //System.out.println("Linha: "+line);
         }
         writer.println();
         for(int i=0;i<sources.size();i++)
@@ -120,6 +132,7 @@ public class Circuit
             {
                 writer.println();
             }
+            //System.out.println("Linha: "+line);
         }
         writer.close();
     }

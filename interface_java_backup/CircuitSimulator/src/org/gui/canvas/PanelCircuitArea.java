@@ -45,14 +45,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.gui.elements.Ammeter;
 import org.gui.elements.Circuit;
 import org.gui.elements.Simulation;
+import org.gui.elements.Voltmeter;
 
 
 /**
@@ -156,6 +156,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	setClassElement(ACVoltageSource.class.getCanonicalName());
         setClassElement(CurrentSource.class.getCanonicalName());
 	setClassElement(Output.class.getCanonicalName());
+        setClassElement(Ammeter.class.getCanonicalName());
+        setClassElement(Voltmeter.class.getCanonicalName());
 	
 	setGrid();
 	elmList = new ArrayList<>();
@@ -721,6 +723,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	}
 	editDialog = new EditDialog(eable, this, frame_parent);
 	editDialog.setVisible(true);
+        circuitChanged=true;
     }
     
     void doMainMenuChecks(Menu m) {
@@ -839,6 +842,7 @@ boolean dragging;
                 else
                 {
                     elmList.add(dragElm);
+                    System.out.println("Tipo: "+(char)dragElm.getType());
                     Graphics2D g;
                     g = (Graphics2D)dbimage.getGraphics();
                     dragElm.set_name();
@@ -1099,7 +1103,6 @@ boolean dragging;
                     {   
                         if(!circuit.get_path_circuit_name().equals(""))
                         {   
-                            System.out.println("criou");
                             circuit.create_netlist_circuit();
                         }
                         else
@@ -1107,6 +1110,10 @@ boolean dragging;
                             if(save_circuit())
                             {
                                 circuit.create_netlist_circuit();
+                            }
+                            else
+                            {
+                                return;
                             }
                         }
                         circuitChanged=false;
@@ -1132,25 +1139,29 @@ boolean dragging;
     /**
      * 
      * @param time 
+     * @return  
      */
-    public void analysis_circuit(String time)
+    public String analysis_circuit(String time)
     {
         if(getChanged())
         {
             create_circuit_description();
         }
-            
-        try
+        
+        if(circuit.get_path_circuit_name()!=null && !circuit.get_path_circuit_name().equals(""))
         {
-            sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
-            sim.create_simulation_file();
-            timeChanged=false;
+            try
+            {
+                sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
+                timeChanged=false;
+                return sim.create_simulation_file();
+            }
+            catch (IOException ex)
+            {
+                JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            }
         }
-        catch (IOException ex)
-        {
-            JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
-        }
-            
+        return null;
     }
     
     public void setTimeChanged(boolean s)

@@ -284,8 +284,8 @@ public class MainWindow extends JFrame implements ActionListener {
             addComponentsOnSideBar(panel, new JButton(sourceVoltageIcon) ,"DCVoltageSource","Fonte de Tensão");
             addComponentsOnSideBar(panel, new JButton(switchIcon) ,"Switch","Chave");
             addComponentsOnSideBar(panel, new JButton(wireIcon) ,"Wire","Conexão");
-            addComponentsOnSideBar(panel, new JButton(voltmeterIcon) ,"Volt","Voltimetro");
-            addComponentsOnSideBar(panel, new JButton(ammeterIcon) ,"Amp","Amperimentro");
+            addComponentsOnSideBar(panel, new JButton(voltmeterIcon) ,"Voltmeter","Voltimetro");
+            addComponentsOnSideBar(panel, new JButton(ammeterIcon) ,"Ammeter","Amperimentro");
             addComponentsOnSideBar(panel, new JButton(groundIcon) ,"Ground","Terra");
         }
         else
@@ -373,11 +373,14 @@ public class MainWindow extends JFrame implements ActionListener {
                 if (Double.parseDouble(timeSimulationtxt.getText())>0)
                 {
                     String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
-                    InterfaceJNI jni=new InterfaceJNI();
-                    String path_out = jni.run_analysis(path_circuit);
-                    PlotFile pf = new PlotFile("Circuito", this);
-                    pf.open_chart(path_out);
-                    System.out.println(path_out);
+                    if(path_circuit!=null)
+                    {
+                        InterfaceJNI jni=new InterfaceJNI();
+                        String path_out = jni.run_analysis(path_circuit);
+                        PlotFile pf = new PlotFile("Circuito", this);
+                        pf.open_chart(path_out);
+                        System.out.println(path_out);
+                    }
                 }
                 else
                 {
@@ -440,7 +443,8 @@ public class MainWindow extends JFrame implements ActionListener {
                 ((JButton)e.getSource()).getName().equals("Capacitor")|| ((JButton)e.getSource()).getName().equals("Inductor") ||
                 ((JButton)e.getSource()).getName().equals("Resistor") || ((JButton)e.getSource()).getName().equals("Ground") ||
                 ((JButton)e.getSource()).getName().equals("CurrentSource") || ((JButton)e.getSource()).getName().equals("DCVoltageSource") ||
-                ((JButton)e.getSource()).getName().equals("ACVoltageSource")||((JButton)e.getSource()).getName().equals("Switch"))
+                ((JButton)e.getSource()).getName().equals("ACVoltageSource")||((JButton)e.getSource()).getName().equals("Switch") ||
+                ((JButton)e.getSource()).getName().equals("Ammeter")||((JButton)e.getSource()).getName().equals("Voltmeter"))
         {
             
             String el = ((JButton)e.getSource()).getName();

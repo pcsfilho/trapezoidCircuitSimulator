@@ -21,10 +21,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.List;
 import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
@@ -45,14 +45,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.gui.elements.Ammeter;
 import org.gui.elements.Circuit;
 import org.gui.elements.Simulation;
+import org.gui.elements.Voltmeter;
 
 
 /**
@@ -85,7 +87,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     static EditDialog editDialog;
     int mousePost = -1;
     Rectangle circuitArea;
-    private int gridSize, gridMask, gridRound, groundCount=0;
+    private int gridSize, gridMask, gridRound, groundCount=0, wirePos=0,wireCount=0, elmCount=0;
     private ArrayList<CircuitElement> elmList;
     public CircuitElement dragElm;
     public CircuitElement menuElm, mouseElm, stopElm;
@@ -156,6 +158,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	setClassElement(ACVoltageSource.class.getCanonicalName());
         setClassElement(CurrentSource.class.getCanonicalName());
 	setClassElement(Output.class.getCanonicalName());
+        setClassElement(Ammeter.class.getCanonicalName());
+        setClassElement(Voltmeter.class.getCanonicalName());
 	
 	setGrid();
 	elmList = new ArrayList<>();
@@ -721,6 +725,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	}
 	editDialog = new EditDialog(eable, this, frame_parent);
 	editDialog.setVisible(true);
+        circuitChanged=true;
     }
     
     void doMainMenuChecks(Menu m) {
@@ -831,20 +836,69 @@ boolean dragging;
             }
 	    else
             {
+                /*if(dragElm instanceof Ground)
+                {
+                    if(groundCount==0)
+                    {
+                        groundPos=elmList.size();
+                    }
+                    elmList.add(dragElm);
+                    groundCount++;
+                }
+                else if(dragElm instanceof Wire)
+                {
+                    if(groundCount>0)
+                    {
+                        elmList.add(groundPos, dragElm);
+                    }
+                    else
+                    {
+                        elmList.add(dragElm);
+                    }
+                    wireCount++;
+                    groundPos++;
+                }
+                else
+                {
+                    System.out.println("Tamanho: "+elmCount);
+                    elmList.add(elmCount,dragElm);
+                    elmCount++;
+                    groundPos++;
+                    dragElm.set_name();
+                }*/
+                
                 if(dragElm instanceof Ground)
                 {
                     elmList.add(0,dragElm);
                     groundCount++;
                 }
+                else if(dragElm instanceof Wire)
+                {
+                    if(wireCount==0)
+                    {
+                        wirePos=elmList.size();
+                    }
+                    elmList.add(dragElm);
+                    wireCount++;
+                }
                 else
                 {
-                    elmList.add(dragElm);
-                    Graphics2D g;
-                    g = (Graphics2D)dbimage.getGraphics();
+                    if(wireCount>0)
+                    {
+                        elmList.add(wirePos, dragElm);
+                    }
+                    else
+                    {
+                        elmList.add(dragElm);
+                    }
+                    elmCount++;
+                    wirePos++;
                     dragElm.set_name();
                 }
+                
 		circuitChanged = true;
 	    }
+            
 	    dragElm = null;
 	}
 	if (circuitChanged)
@@ -969,6 +1023,16 @@ boolean dragging;
                 if(ce instanceof Ground)
                 {
                     groundCount--;
+                    wirePos--;
+                }
+                else if(ce instanceof Wire)
+                {
+                    wireCount--;
+                }
+                else
+                {
+                    elmCount--;
+                    wirePos--;
                 }
                 
 	    }
@@ -982,6 +1046,20 @@ boolean dragging;
 		    ce.delete();
 		    elmList.remove(i);
 		    hasDeleted = true;
+                if(ce instanceof Ground)
+                {
+                    groundCount--;
+                    wirePos--;
+                }
+                else if(ce instanceof Wire)
+                {
+                    wireCount--;
+                }
+                else
+                {
+                    elmCount--;
+                    wirePos--;
+                }
 		    mouseElm = null;
 		    break;
 		}
@@ -1007,6 +1085,171 @@ boolean dragging;
     @Override
     public void keyReleased(KeyEvent e){}
     //endregion
+    
+    
+    private void define_nodes(int start, int limit,Map<String, CircuitNode> nodes, ArrayList<Integer> groundList)
+    {
+        for (int i = start; i < limit; i++)
+                    {
+                        CircuitElement ce = getElm(i);
+                        int posts = ce.getNodesCount();
+                        // 
+                        for(int j = 0; j < posts; j++)
+                        {
+                            Point pt = ce.getPost(j);
+                            int k;
+                            for (k = 0; k < nodeList.size(); k++)
+                            {
+                                CircuitNode cn = getCircuitNode(k);
+                                if (pt.x == cn.getX() && pt.y == cn.getY())
+                                {
+                                    break;
+                                }
+                            }
+                            CircuitNode cn;
+                            if (k == nodeList.size())
+                            {
+                                cn = new CircuitNode();
+                                cn.setX(pt.x);
+                                cn.setY(pt.y);
+                		CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
+                                cn.getElements().add(ce);
+                                cn.getLinks().add(cnl);
+                                cn.setNum(k);
+                                nodeList.add(cn);
+                                nodes.put(Integer.toString(k),cn);
+                                
+                                if(ce instanceof Ground)
+                                {
+                                    groundList.add(k);
+                                }
+                            }
+                            else
+                            {
+                                cn=getCircuitNode(k);
+                                cn.getElements().add(ce);
+                                CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
+                                cn.getLinks().add(cnl);
+                            }
+                            ce.setNode(j, k);
+                            if(!(ce instanceof Ground))
+                                {
+                                    if(groundList.contains(k))
+                                    {
+                                        ce.setNode(j, 0);
+                                    }
+                                    else
+                                    {
+                                        ce.setNode(j, k);
+                                    }
+                                }
+                        }
+                        if(ce instanceof Wire)
+                        {
+                                int min_node_local;
+                                int max_node_local;
+                                if(ce.getNode(0)>ce.getNode(1))
+                                {
+                                    min_node_local=ce.getNode(1);
+                                    max_node_local=ce.getNode(0);
+                                }
+                                else
+                                {
+                                    max_node_local=ce.getNode(1);
+                                    min_node_local=ce.getNode(0);
+                                }
+                                                                
+                                //System.out.println("No minimo: "+min_node_local);
+                                //System.out.println("No maximo: "+max_node_local);
+                                
+                                CircuitNode c_n =nodes.get(Integer.toString(max_node_local));
+                                //System.out.println("No recuperado: "+c_n.getNum());
+                                
+                                for(int g=0;g<c_n.getElements().size();g++)
+                                {
+                                    CircuitElement c_e = c_n.getElements().get(g);
+                                    
+                                    if(!(c_e instanceof Wire))
+                                    {
+                                  //      System.out.println("Elemento: "+ (char)c_e.getType());
+                                        for(int p=0;p < c_e.getNodes().length;p++)
+                                        {
+                                    //        System.out.println("No "+ (p+1)+" "+c_e.getNodes()[p]);
+                                            if(c_e.getNodes()[p]==max_node_local)
+                                            {
+                                      //          System.out.println("Troca no"+(c_e.getNodes()[p])+" por: "+ min_node_local);
+                                                c_e.setNode(p,min_node_local);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            //add elementos que descrevem o circuito
+                            if(!(ce instanceof Wire) && !(ce instanceof Ground))
+                            {
+                                circuit.add_element(ce);
+                            }
+                    }
+    }
+    
+    private void adjustment_nodes()
+    {
+        int n_maior=0;
+        int pos=0;
+        while(pos<circuit.get_elements().size())
+        {
+            System.out.println("POS: "+pos);
+            int temp_node_value=0;
+            int temp_node_num=1;
+            n_maior++;
+            for(int i=pos;i<circuit.get_elements().size();i++)
+            {
+                CircuitElement ce = circuit.get_elements().get(i);
+                System.out.println("Elemento: "+ce.get_name());
+                for(int j=0;j<ce.getNodesCount();j++)
+                {
+                    System.out.println("No: "+(j+1));
+                    boolean compare=false;
+                    /*if(wireCount>0)
+                    {
+                        compare = (ce.getNodes()[j]>=wireCount) && (ce.getNodes()[j]>0);
+                    }
+                    else
+                    {
+                        compare = (ce.getNodes()[j]>groundCount) && (ce.getNodes()[j]>0);
+                    }*/
+                                    
+                                    if(ce.getNodes()[j]>n_maior)
+                                    {
+                                        System.out.println("Valor: "+ce.getNodes()[j]);
+                                        temp_node_num=j;
+                                        if(temp_node_value==0)
+                                        {
+                                            System.out.println("TEMP ZERO");
+                                            temp_node_value = ce.getNodes()[j];
+                                            ce.setNode(j,n_maior);
+                                            pos=i;
+                                            System.out.println("Substituiu por: "+ce.getNodes()[j]);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            System.out.println("TEMP N ZERO");
+                                            if(ce.getNodes()[j]==temp_node_value)
+                                            {
+                                                ce.setNode(j,n_maior);
+                                                System.out.println("Substituiu por: "+ce.getNodes()[j]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if(temp_node_num==1)
+                            {
+                                pos++;
+                            }
+                        }
+    }
     /**
      * Faz análise do circuito desenhado no canvas e mapeia os elementos para análise.
     */
@@ -1018,21 +1261,7 @@ boolean dragging;
         } 
         else
         {
-            nodeList = new ArrayList<>();
-            boolean gotGround = false;
-            int i, j;
-            circuit.get_elements().clear();
-            // Procura por nó referência (terra)
-            for (i = 0; i < elmList.size(); i++)
-            {
-                CircuitElement ce = getElm(i);
-                if (ce instanceof Ground)
-                {
-                    gotGround = true;
-                    break;
-                }
-            }
-            if(!gotGround)
+            if(groundCount==0)
             {
                 JOptionPane.showMessageDialog(frame_parent, "Não há um nó de referência","Análise do circuito",JOptionPane.ERROR_MESSAGE);
             }
@@ -1040,66 +1269,71 @@ boolean dragging;
             {
                 if(circuitChanged)
                 {
-                    // allocate nodes and voltage sources
-                    for (i = 0; i < elmList.size(); i++)
+                    nodeList = new ArrayList<>();
+                    ArrayList<Integer> groundList = new ArrayList<>();
+                    Map<String, CircuitNode> nodes = new HashMap<>();
+                    int i, j;
+                    circuit = new Circuit();
+                    //circuit.get_elements().clear();
+                    //
+                    define_nodes(0,groundCount,nodes, groundList);
+                    System.out.println("ANALIZE TERRA");
+                    for(i=0;i<groundCount;i++)
                     {
-                        CircuitElement ce = getElm(i);
-                        int posts = ce.getNodesCount();
-                        int node;
-                        // allocate a node for each post and match posts to nodes
-                            for(j = 0; j < posts; j++)
-                            {
-                                Point pt = ce.getPost(j);
-                                int k;
-                                for (k = 0; k < nodeList.size(); k++)
-                                {
-                                    CircuitNode cn = getCircuitNode(k);
-                                    if (pt.x == cn.getX() && pt.y == cn.getY())
-                                    {
-                                       break;
-                                    }
-                                }
-                                if (k == nodeList.size()){
-                                    CircuitNode cn = new CircuitNode();
-                                    cn.setX(pt.x);
-                                    cn.setY(pt.y);
-                                    nodeList.add(cn);
-                                }
-                                node=k;
-                                if(k==groundCount)
-                                {
-                                    node=1;
-                                }
-                                else if(k<groundCount)
-                                {
-                                    node=0;
-                                }
-                                else if(k>groundCount)
-                                {
-                                    node=k-(groundCount-1);
-                                }
-                                ce.setNode(j, node);
-                            }
-                            //add elementos que descrevem o circuito
-                            if(!(ce instanceof Wire) && !(ce instanceof Ground))
-                            {
-                                circuit.add_element(ce);
-                            }
-                    }   
-                    for(i=0;i<circuit.get_elements().size();i++)
-                    {
-                        CircuitElement ce=circuit.get_elements().get(i);
-                        System.out.println("Elemento: "+ce.get_name());
+                        CircuitElement ce=elmList.get(i);
+                        System.out.println("Elemento: "+ (char)ce.getType());
                         for(int k=0;k<ce.getNodes().length;k++)
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
                     }
+                    
+                    
+                    define_nodes(groundCount,groundCount+elmCount,nodes, groundList);
+                    System.out.println("ANALIZE ELEMENTOS");
+                    for(i=0;i<groundCount+elmCount;i++)
+                    {
+                        CircuitElement ce=elmList.get(i);
+                        System.out.println("Elemento: "+ (char)ce.getType());
+                        for(int k=0;k<ce.getNodes().length;k++)
+                        {
+                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
+                        }
+                    }
+                    
+                    if(wireCount>0)
+                    {
+                        define_nodes(groundCount+elmCount,groundCount+elmCount+wireCount,nodes, groundList);
+                                            System.out.println("ANALIZE ELEMENTOS E FIOS");
+                        for(i=0;i<elmList.size();i++)
+                        {
+                            CircuitElement ce=elmList.get(i);
+                            System.out.println("Elemento: "+ (char)ce.getType());
+                            for(int k=0;k<ce.getNodes().length;k++)
+                            {
+                                System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
+                            }
+                        }
+                    }                  
+                  
+                    adjustment_nodes();  
+                    System.out.println("ANALIZE ELEMENTOS E FIOS CORRETOS");
+                    for(i=0;i<circuit.get_elements().size();i++)
+                    {
+                        CircuitElement ce=circuit.get_elements().get(i);
+                        System.out.println("Elemento: "+ (char)ce.getType());
+                        for(int k=0;k<ce.getNodes().length;k++)
+                        {
+                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
+                        }
+                    }
+                    
+                    
+
                     try
                     {   
                         if(!circuit.get_path_circuit_name().equals(""))
                         {   
-                            System.out.println("criou");
                             circuit.create_netlist_circuit();
                         }
                         else
@@ -1107,6 +1341,10 @@ boolean dragging;
                             if(save_circuit())
                             {
                                 circuit.create_netlist_circuit();
+                            }
+                            else
+                            {
+                                return;
                             }
                         }
                         circuitChanged=false;
@@ -1140,16 +1378,19 @@ boolean dragging;
         {
             create_circuit_description();
         }
-            
-        try
+        
+        if(circuit.get_path_circuit_name()!=null && !circuit.get_path_circuit_name().equals(""))
         {
-            sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
-            timeChanged=false;
-            return sim.create_simulation_file();
-        }
-        catch (IOException ex)
-        {
-            JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            try
+            {
+                sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
+                timeChanged=false;
+                return sim.create_simulation_file();
+            }
+            catch (IOException ex)
+            {
+                JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+            }
         }
         return null;
     }

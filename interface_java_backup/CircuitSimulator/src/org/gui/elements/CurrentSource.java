@@ -21,7 +21,7 @@ import org.gui.canvas.EditInfo;
 	
 	public int getType()
         {
-            return 'i'; 
+            return 'I'; 
         }
 	
 	Polygon arrow;

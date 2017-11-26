@@ -15,6 +15,6 @@ public class InterfaceJNI
     //Bloco estático para carregar a biblioteca "simulation"
     static
     {
-        System.loadLibrary("simulation");
+        System.loadLibrary("simulation_jni");
     }
 }

@@ -1,20 +1,54 @@
 package org.gui.canvas;
-import org.gui.elements.CircuitElement;
 import java.util.ArrayList;
+import org.gui.elements.CircuitElement;
 
 public class CircuitNode {
-    private int x, y;
+    private int x, y,num,ground;
+    private boolean reference;
+    private ArrayList<CircuitNodeLink> links;
     private ArrayList<CircuitElement> elements;
     
     public CircuitNode()
     {
+        links= new ArrayList<>();
         elements= new ArrayList<>();
+    }
+    
+    public boolean IsReferenceNode()
+    {
+        return reference;
+    }
+    
+    public void setLikeReferenceNode()
+    {
+        reference=true;
+    }
+    
+    public int getGroundNode()
+    {
+        return ground;
+    }
+    
+    public void setGroundNode(int g)
+    {
+        this.ground=g;
     }
     
     public int getX()
     {
         return x;
     }
+    
+    public int getNum()
+    {
+        return num;
+    }
+    
+    public void setNum(int num)
+    {
+        this.num=num;
+    }
+    
     
     public void setX(int x)
     {
@@ -31,10 +65,17 @@ public class CircuitNode {
         return y;
     }
     
+    public ArrayList<CircuitNodeLink> getLinks()
+    {
+        return links;
+    }
+    
     public ArrayList<CircuitElement> getElements()
     {
         return elements;
     }
+    
+    
     
     @Override
     public boolean equals(Object object)

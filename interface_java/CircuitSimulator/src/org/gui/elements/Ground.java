@@ -8,7 +8,8 @@ import java.util.StringTokenizer;
 			 StringTokenizer st) {
 	    super(xa, ya, xb, yb, f);
 	}
-	public int getDumpType() { return 'g'; }
+	public int getType() { return 'G' ;}
+        
 	public int getNodesCount() { return 1; }
 	public void draw(Graphics g) {
 	    setVoltageColor(g, 0);

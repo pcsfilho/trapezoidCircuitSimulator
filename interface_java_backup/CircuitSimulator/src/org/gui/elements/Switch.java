@@ -37,7 +37,7 @@ public class Switch extends CircuitElement {
     
     public int getType()
     {
-        return 's';
+        return 'S';
     }
     
     Point ps, ps2;

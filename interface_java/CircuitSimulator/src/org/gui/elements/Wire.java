@@ -101,12 +101,12 @@ import org.gui.canvas.EditInfo;
 		    flags &= ~FLAG_SHOWVOLTAGE;
 	    }
 	}
-        public int getShortcut() { return 'f'; }
-	public int getDumpType() { return 'f'; }
+	public int getType() { return 'W'; }
 	public String dump()
         {
-	    int t = getDumpType();
+	    int t = getType();
 	    return (t < 127 ? ((char)t)+" " : t+" ") + x_1 + " " + y_1 + " " +
 		x_2 + " " + y_2 + " " + getFlags();
 	}
+        
     }

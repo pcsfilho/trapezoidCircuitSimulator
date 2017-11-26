@@ -15,6 +15,7 @@ public abstract class CircuitElement implements Editable {
     public static int countDCVoltageSources = 0;
     public static int countACSources = 0;
     public static int countCurrentSources = 0;
+    public static int countammeters = 0;
     public static Color colorScale[];
     public static double currentMult, powerMult;
     public static Point ps1, ps2;
@@ -403,6 +404,21 @@ public abstract class CircuitElement implements Editable {
         {
 	    Point p = getPost(i);
             drawPost(g, p.x, p.y);
+	}
+    }
+    
+    public void drawVerticalLine(Graphics g)
+    {
+	int i;
+	for (i = 0; i != 2; i++)
+        {
+            Point p = getPost(i);
+            Point px = new Point(p.x,p.y+25);
+            Point py = new Point(p.x,p.y+25);
+            setVoltageColor(g, volts[0]);
+            drawThickLine(g, px, py);
+	    
+            drawPost(g, p.x, p.y+25);
 	}
     }
     
