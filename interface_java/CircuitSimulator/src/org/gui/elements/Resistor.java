@@ -3,24 +3,34 @@ import java.awt.*;
 import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
-    public class Resistor extends CircuitElement {
+    public class Resistor extends CircuitElement
+    {
+       
+        Point ps3, ps4;
+        
 	public Resistor(int xx, int yy) { super(xx, yy); value = 500; }
 	public Resistor(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) 
         {
 	    super(xa, ya, xb, yb, f);
-	    //value = new Double(st.nextToken()).doubleValue();
             value=500;
 	}
-	public int getType() { return 'R'; }
+        @Override
+	public int getType() 
+        {
+            return 'R'; 
+        }
 	
         
+        @Override
         public void set_name()
         {
             countResistors++;
             name = "R"+countResistors;
         }
-	Point ps3, ps4;
+	
+        
+        @Override
 	public void setPoints() {
 	    super.setPoints();
 	    calcLeads(32);
@@ -31,7 +41,6 @@ import org.gui.canvas.EditInfo;
 	public void draw(Graphics g) {
 	    int segments = 16;
 	    int i;
-	    int ox = 0;
 	    int hs = 8;
 	    double v1 = volts[0];
 	    double v2 = volts[1];
@@ -59,28 +68,50 @@ import org.gui.canvas.EditInfo;
                 drawPosts(g);
                 
 	}
-    
-	public void calculateCurrent() {
-	    current = (volts[0]-volts[1])/value;
-	    //System.out.print(this + " res current set to " + current + "\n");
+	
+	public EditInfo getEditInfo(int n)
+        {
+            if(n==0)
+            {
+                return new EditInfo("Resistencia (OHMS)", value, 0, 0);
+            }
+            else if (n == 1)
+            {
+		EditInfo ei = new EditInfo("", 0, -1, -1);
+		ei.checkbox = new Checkbox("PLOTAR TENSAO", false);
+		return ei;
+	    }
+            else if (n == 2)
+            {
+		EditInfo ei = new EditInfo("", 0, -1, -1);
+		ei.checkbox = new Checkbox("PLOTAR CORRENTE", false);
+		return ei;
+	    }
+            return null;
 	}
-	void stamp() {
+        
+	public void setEditValue(int n, EditInfo ei)
+        {
+            if (n == 0 && ei.value > 0)
+            {
+		value = ei.value;
+            }
+            else if (n == 1) 
+            {
+                plot_voltage=false;
+		if (ei.checkbox.getState())
+                {
+                    plot_voltage=true;
+                }
+	    }
+            else if (n == 2) 
+            {
+                plot_current=false;
+		if (ei.checkbox.getState())
+                {
+                    plot_current=true;
+                }
+	    }
 	}
-	void getInfo(String arr[]) {
-	    arr[0] = "resistor";
-	    getBasicInfo(arr);
-	    arr[3] = "R = " + getUnitText(value, sim.ohmString);
-	    arr[4] = "P = " + getUnitText(getPower(), "W");
-	}
-	public EditInfo getEditInfo(int n) {
-	    // ohmString doesn't work here on linux
-	    if (n == 0)
-		return new EditInfo("Resistência (ohms)", value, 0, 0);
-	    return null;
-	}
-	public void setEditValue(int n, EditInfo ei) {
-	    if (ei.value > 0)
-	        value = ei.value;
-	}
-	public int getShortcut() { return 'r'; }
+	
     }

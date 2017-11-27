@@ -6,33 +6,44 @@ import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
 public class Inductor extends CircuitElement{
-    public static final int FLAG_BACK_EULER = 2;
+    
     int nodes[];
-    int flags;
+    
       
-    public Inductor(int xx, int yy) {
+    public Inductor(int xx, int yy) 
+    {
 	    super(xx, yy);
 	    value = 1;
-	}
-	public Inductor(int xa, int ya, int xb, int yb, int f,
-		    StringTokenizer st) {
-	    super(xa, ya, xb, yb, f);
-	    value = new Double(st.nextToken()).doubleValue();
-	    current = new Double(st.nextToken()).doubleValue();
-	}
+    }
+    public Inductor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
+    {
+        super(xa, ya, xb, yb, f);
+        value = 1;
+    }
         
+    /**
+     *
+     */
+    @Override
         public void set_name()
         {
             countInductors++;
             name = "L"+countInductors;
         }
         
-	public int getType() { return 'L'; }
+    @Override
+	public int getType() 
+        {
+            return 'L';
+        }
 
-	public void setPoints() {
+    @Override
+	public void setPoints() 
+        {
 	    super.setPoints();
 	    calcLeads(32);
 	}
+    @Override
 	public void draw(Graphics g) {
 	    double v1 = volts[0];
 	    double v2 = volts[1];
@@ -48,21 +59,51 @@ public class Inductor extends CircuitElement{
 	    drawPosts(g);
 	}
 
-        void getInfo(String arr[]) {
-	    arr[0] = "inductor";
-	    getBasicInfo(arr);
-	    arr[3] = "L = " + getUnitText(value, "H");
-	    arr[4] = "P = " + getUnitText(getPower(), "W");
-	}
-	public EditInfo getEditInfo(int n) {
-            if (n == 0)
-            return new EditInfo("Indutância (H)", value, 0, 0);
-            
+        
+    @Override
+	public EditInfo getEditInfo(int n)
+        {
+            if(n==0)
+            {
+                return new EditInfo("Indutância (H)", value, 0, 0);
+            }
+            else if (n == 1)
+            {
+		EditInfo ei = new EditInfo("", 0, -1, -1);
+		ei.checkbox = new Checkbox("PLOTAR TENSAO", false);
+		return ei;
+	    }
+            else if (n == 2)
+            {
+		EditInfo ei = new EditInfo("", 0, -1, -1);
+		ei.checkbox = new Checkbox("PLOTAR CORRENTE", false);
+		return ei;
+	    }
             return null;
 	}
         
-	public void setEditValue(int n, EditInfo ei) {
-            value = ei.value;
+	public void setEditValue(int n, EditInfo ei)
+        {
+            if (n == 0 && ei.value > 0)
+            {
+		value = ei.value;
+            }
+            else if (n == 1) 
+            {
+                plot_voltage=false;
+		if (ei.checkbox.getState())
+                {
+                    plot_voltage=true;
+                }
+	    }
+            else if (n == 2) 
+            {
+                plot_current=false;
+		if (ei.checkbox.getState())
+                {
+                    plot_current=true;
+                }
+	    }
 	}
     
 }

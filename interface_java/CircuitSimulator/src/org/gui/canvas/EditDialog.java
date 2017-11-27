@@ -1,12 +1,13 @@
 package org.gui.canvas;
 import org.gui.elements.Editable;
-import org.gui.canvas.EditInfo;
-import org.gui.canvas.PanelCircuitArea;
 import org.gui.MainWindow;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import org.gui.elements.Switch;
 
 public class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
     Editable elm;
@@ -19,10 +20,13 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
     NumberFormat noCommaFormat;
 
     EditDialog(Editable ce, PanelCircuitArea p,MainWindow f) {
+        
 	super(f, "Editar Componente", false);
+        setLocationRelativeTo(null);
 	cframe = f;
         this.panel_circuit = p;
 	elm = ce;
+        
 	setLayout(new EditDialogLayout());
 	einfos = new EditInfo[10];
 	noCommaFormat = DecimalFormat.getInstance();
@@ -36,10 +40,7 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
             {
 		break;
             }
-            else
-            {
-                System.out.println("Edit: "+elm.getEditInfo(i).name);
-            }
+            
 	    EditInfo ei = einfos[i];
 	    add(new Label(ei.name));
 	    if (ei.choice != null) {
@@ -55,6 +56,36 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
 		ei.textf.addActionListener(this);
 	    }
 	}
+        
+        if(elm instanceof Switch)
+        {
+            System.out.println("Chave");
+            JTextField numCom = new JTextField();
+            Object[] message = {"Numero de Comutaçoes", numCom.getText()};
+            String option = JOptionPane.showInputDialog(null, message, "Numero de Comutaçoes da Chave", JOptionPane.OK_CANCEL_OPTION);
+            System.out.println("OPTION: "+option);
+            if (option == null)
+            {
+                this.closeDialog();
+            }
+            else
+            {
+                int rowCnt=Integer.parseInt(option);
+                JTextField g = new JTextField("Tempos de Comutaçao");
+                g.setEditable(false);
+                JTextField sp=new JTextField();
+                add(g);
+                
+                for(int j=0;j<rowCnt;j++)
+                {
+                        g =new JTextField(5);
+                        add(new Label("Tempo "+(j+1)+": "));
+                        add(g);
+                }
+            }
+        }
+        
+        
 	einfocount = i;
 	add(applyButton = new Button("Aplicar"));
 	applyButton.addActionListener(this);
@@ -158,27 +189,8 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
 	    apply();
     }
 	
-    public void adjustmentValueChanged(AdjustmentEvent e) {
-	Object src = e.getSource();
-	int i;
-	for (i = 0; i != einfocount; i++) {
-	    EditInfo ei = einfos[i];
-	    if (ei.bar == src) {
-		double v = ei.bar.getValue() / 1000.;
-		if (v < 0)
-		    v = 0;
-		if (v > 1)
-		    v = 1;
-		ei.value = (ei.maxval-ei.minval)*v + ei.minval;
-		/*if (ei.maxval-ei.minval > 100)
-		    ei.value = Math.round(ei.value);
-		else
-		ei.value = Math.round(ei.value*100)/100.;*/
-		ei.value = Math.round(ei.value/ei.minval)*ei.minval;
-		elm.setEditValue(i, ei);
-		ei.textf.setText(unitString(ei));
-	    }
-	}
+    public void adjustmentValueChanged(AdjustmentEvent e) 
+    {
     }
 
     public void itemStateChanged(ItemEvent e) {

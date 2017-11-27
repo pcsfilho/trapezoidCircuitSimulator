@@ -28,7 +28,7 @@ public class EditInfo
     
     String name, text;
     public double value, minval, maxval;
-    TextField textf;
+    public TextField textf;
     Scrollbar bar;
     public Choice choice;
     public Checkbox checkbox;

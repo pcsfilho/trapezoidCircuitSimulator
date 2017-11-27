@@ -1,19 +1,28 @@
 package org.gui.elements;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
 
 public class Switch extends CircuitElement {
     protected boolean state;
+    private ArrayList<Double> time_commutations;
+    Point ps, ps2;
     
-    public Switch(int xx, int yy) {
+    public Switch(int xx, int yy)
+    {
 	super(xx, yy);
 	state = false;
+        time_commutations= new ArrayList<>();
     }
-    Switch(int xx, int yy, boolean mm) {
+    
+    Switch(int xx, int yy, boolean mm) 
+    {
 	super(xx, yy);
 	state = mm;
+        time_commutations= new ArrayList<>();
     }
+    
     public Switch(int xa, int ya, int xb, int yb, int f,
 		     StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
@@ -23,6 +32,11 @@ public class Switch extends CircuitElement {
     public void changeState()
     {
         state =!state;
+    }
+    
+    public void addTimeCommutations(double time)
+    {
+        time_commutations.add(time);
     }
     public boolean getState()
     {
@@ -40,7 +54,7 @@ public class Switch extends CircuitElement {
         return 'S';
     }
     
-    Point ps, ps2;
+    
     public void setPoints() {
 	super.setPoints();
 	calcLeads(32);
@@ -69,38 +83,23 @@ public class Switch extends CircuitElement {
         drawValues(g, name, 10);
     }
     
-    
-    void getInfo(String arr[]) {
-	arr[0] = (state) ? "push switch (SPST)" : "switch (SPST)";
-	if (state) {
-	    arr[1] = "open";
-	    arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
-	} else {
-	    arr[1] = "closed";
-	    arr[2] = "V = " + getVoltageText(volts[0]);
-	    arr[3] = "I = " + getCurrentDText(getCurrent());
-	}
-    }
-    
-    boolean isWire() { return true; }
+    @Override
     public EditInfo getEditInfo(int n)
     {
 	if (n == 0)
         {
-	    EditInfo ei = new EditInfo("", 0, -1, -1);
-	    ei.checkbox = new Checkbox("Chave", state);
+	    EditInfo ei = new EditInfo("Estado Inicial: ", 0, -1, -1);
+	    ei.checkbox = new Checkbox("Fechado", state);
 	    return ei;
 	}
+        
 	return null;
     }
     
+    @Override
     public void setEditValue(int n, EditInfo ei)
     {
 	if (n == 0)
 	    state = ei.checkbox.getState();
-    }
-    public int getShortcut()
-    {
-        return 's';
     }
 }

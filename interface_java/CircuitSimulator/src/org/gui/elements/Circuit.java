@@ -139,8 +139,36 @@ public class Circuit
             System.out.println("Linha: "+line);
         }
         
+        for(int i=0;i<elmCount;i++)
+        {
+            CircuitElement ce=elements.get(i);
+            String name = ce.get_name();
+            
+            String line;
+            if(ce.getPlotCurrent())
+            {
+                line = ". PLOT A "+name;
+                writer.print(line);
+            }
+            
+            if(ce.getPlotCurrent())
+            {
+                if(ce.getPlotCurrent())
+                {
+                    writer.println();
+                }
+                line = ". PLOT V "+name;
+                writer.print(line);
+            }
+                        
+            
+            if(i!=(elmCount-1))
+            {
+                writer.println();
+            }
+        }
         
-        for(int i=0;i<measuring_elements.size();i++)
+        /*for(int i=0;i<measuring_elements.size();i++)
         {
             //writer.println();
             CircuitElement ce=measuring_elements.get(i);
@@ -151,13 +179,10 @@ public class Circuit
             String line;
             if(type.equals("M"))
             {
-                line = ". PLOT V "+name+" "+node_1+" "+node_2;
+                type="V";
             }
-            else
-            {
-                int node=Math.min(node_1,node_2);
-                line = ". PLOT A "+name+" "+node;
-            }
+            
+            line = ". PLOT "+type+" "+name+" "+node_1+" "+node_2;
             
             //writer.print(line);
             if(i!=(sources.size()-1))
@@ -165,7 +190,7 @@ public class Circuit
                 //writer.println();
             }
             System.out.println("Linha: "+line);
-        }
+        }*/
         writer.close();
     }
 }

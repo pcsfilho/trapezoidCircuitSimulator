@@ -26,6 +26,8 @@ public abstract class CircuitElement implements Editable {
     public static NumberFormat showFormat, shortFormat, noCommaFormat;
     public static final double pi = 3.14159265358979323846;
     protected String name;
+    protected boolean plot_voltage;
+    protected boolean plot_current;
 
     protected int x_1, y_1, x_2, y_2, flags, nodes[], voltSource;
     int dx, dy, dsign;
@@ -46,6 +48,16 @@ public abstract class CircuitElement implements Editable {
     public void set_value(double v)
     {
         this.value=v;
+    }
+    
+    public boolean getPlotVoltage()
+    {
+        return plot_voltage;
+    }
+        
+    public boolean getPlotCurrent()
+    {
+        return plot_current;
     }
     
     public double get_value()

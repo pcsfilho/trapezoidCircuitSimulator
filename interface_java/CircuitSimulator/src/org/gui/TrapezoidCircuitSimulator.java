@@ -1,7 +1,5 @@
 package org.gui;
 
-import javax.swing.JTextPane;
-
 public class TrapezoidCircuitSimulator{
 
     private static final long serialVersionUID = 1L;
