@@ -17,7 +17,8 @@ import java.util.ArrayList;
 public class Circuit
 {
     private ArrayList<CircuitElement> elements;    
-    private ArrayList<CircuitElement> sources;    
+    private ArrayList<CircuitElement> sources;  
+    private ArrayList<CircuitElement> measuring_elements;  
     private String circuit_name;
     private String path_circuit_name;
     private int elmCount;
@@ -26,6 +27,7 @@ public class Circuit
     {
         elements=new  ArrayList<>();
         sources=new  ArrayList<>();
+        measuring_elements=new  ArrayList<>();
         circuit_name="";
         path_circuit_name="";
         elmCount=0;
@@ -34,18 +36,20 @@ public class Circuit
     public void add_element(CircuitElement elm)
     {
         String type = ""+(char)elm.getType();
-        if(type.equals("V"))
-        {
-            sources.add(elm);
-            elements.add(elm);
+        switch (type) {
+            case "V":
+                sources.add(elm);
+                elements.add(elm);
+                break;
+            case "M":
+            case "A":
+                measuring_elements.add(elm);
+                break;
+            default:
+                elements.add(elmCount,elm);
+                elmCount++;
+                break;
         }
-        else
-        {
-            elements.add(elmCount,elm);
-            elmCount++;
-        }
-        
-        
     }
     
     public void set_circuit_name(String n)
@@ -108,7 +112,7 @@ public class Circuit
             {
                 writer.println();
             }
-            //System.out.println("Linha: "+line);
+            System.out.println("Linha: "+line);
         }
         writer.println();
         for(int i=0;i<sources.size();i++)
@@ -132,7 +136,35 @@ public class Circuit
             {
                 writer.println();
             }
-            //System.out.println("Linha: "+line);
+            System.out.println("Linha: "+line);
+        }
+        
+        
+        for(int i=0;i<measuring_elements.size();i++)
+        {
+            //writer.println();
+            CircuitElement ce=measuring_elements.get(i);
+            String type = ""+(char)ce.getType();
+            int node_1=ce.nodes[0];
+            int node_2=ce.nodes[1];
+            String name = ce.get_name();
+            String line;
+            if(type.equals("M"))
+            {
+                line = ". PLOT V "+name+" "+node_1+" "+node_2;
+            }
+            else
+            {
+                int node=Math.min(node_1,node_2);
+                line = ". PLOT A "+name+" "+node;
+            }
+            
+            //writer.print(line);
+            if(i!=(sources.size()-1))
+            {
+                //writer.println();
+            }
+            System.out.println("Linha: "+line);
         }
         writer.close();
     }

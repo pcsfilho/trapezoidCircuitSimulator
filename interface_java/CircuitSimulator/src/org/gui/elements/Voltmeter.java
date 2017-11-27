@@ -8,7 +8,6 @@ package org.gui.elements;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-import static org.gui.elements.CircuitElement.countammeters;
 import static org.gui.elements.CircuitElement.drawThickCircle;
 
 /**
@@ -43,8 +42,8 @@ public class Voltmeter extends CircuitElement
         
         public void set_name()
         {
-            countammeters++;
-            name = "V"+countammeters;
+            countVoltmeters++;
+            name = "V"+countVoltmeters;
         }
         
 	public void draw(Graphics g) {
@@ -62,6 +61,7 @@ public class Voltmeter extends CircuitElement
 		//String s = getShortUnitText(value, "A");
 		//if (dx == 0 || dy == 0)
 		  //  drawValues(g, s, cr);
+            drawValues(g, name, cr);
 	    drawPosts(g);
 	}
 }

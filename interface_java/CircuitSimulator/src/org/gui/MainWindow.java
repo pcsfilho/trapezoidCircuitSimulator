@@ -375,11 +375,11 @@ public class MainWindow extends JFrame implements ActionListener {
                     String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
                     if(path_circuit!=null)
                     {
-                        InterfaceJNI jni=new InterfaceJNI();
+                        /*InterfaceJNI jni=new InterfaceJNI();
                         String path_out = jni.run_analysis(path_circuit);
                         PlotFile pf = new PlotFile("Circuito", this);
                         pf.open_chart(path_out);
-                        System.out.println(path_out);
+                        System.out.println(path_out);*/
                     }
                 }
                 else
