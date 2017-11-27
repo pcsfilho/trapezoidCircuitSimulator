@@ -1075,7 +1075,7 @@ boolean dragging;
         }
         //      System.out.println("No minimo: "+min_node_local);
         //    System.out.println("No maximo: "+max_node_local);
-        String key = Integer.toString((max_node_local+groundCount)-1);
+        String key = Integer.toString(max_node_local);
         CircuitNode c_n = nodes.get(key);
         //  System.out.println("No recuperado: "+c_n.getNum());
         for(int g=0;g<c_n.getElements().size();g++)
@@ -1175,16 +1175,16 @@ boolean dragging;
     private void adjustment_nodes()
     {
         int n_maior=0;
-        int pos=0;
-        while(pos<circuit.get_elements().size())
+        int pos=groundCount;
+        while(pos<elmList.size())
         {
 //            System.out.println("POS: "+pos);
             int temp_node_value=0;
             int temp_node_num=1;
             n_maior++;
-            for(int i=pos;i<circuit.get_elements().size();i++)
+            for(int i=pos;i<elmList.size();i++)
             {
-                CircuitElement ce = circuit.get_elements().get(i);
+                CircuitElement ce = elmList.get(i);
   //              System.out.println("Elemento: "+ce.get_name());
                 for(int j=0;j<ce.getNodesCount();j++)
                 {
@@ -1246,7 +1246,7 @@ boolean dragging;
                     circuit = new Circuit();
                     //Mapeia nos de referencia
                     define_nodes(0,groundCount,nodes, groundList);
-                /*    System.out.println("ANALIZE TERRA");
+                    /*System.out.println("ANALIZE TERRA");
                     for(i=0;i<groundCount;i++)
                     {
                         CircuitElement ce=elmList.get(i);
@@ -1255,11 +1255,11 @@ boolean dragging;
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }
-                */  
+                    }*/
+                  
                     //Mapeia elementos exceto conexoes e nos de referencia
                     define_nodes(groundCount,groundCount+elmCount,nodes, groundList);
-                /*    System.out.println("ANALIZE ELEMENTOS E FIOS");
+                    /*System.out.println("ANALIZA ELEMENTOS E FIOS");
                     for(i=0;i<elmList.size();i++)
                     {
                         CircuitElement ce=elmList.get(i);
@@ -1268,13 +1268,13 @@ boolean dragging;
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }
-                  */  
+                    }*/
+                    
                     //Se existir conexoes no circuito
                     if(wireCount>0)
                     {
                         define_nodes(groundCount+elmCount,groundCount+elmCount+wireCount,nodes, groundList);
-                /*        System.out.println("CONECTA FIOS");
+                        /*System.out.println("CONECTA FIOS");
                         for(i=0;i<elmList.size();i++)
                         {
                             CircuitElement ce=elmList.get(i);
@@ -1286,7 +1286,7 @@ boolean dragging;
                         }*/
                     }                  
                     adjustment_nodes();  
-                    /*System.out.println("ANALIZE ELEMENTOS E FIOS CORRETOS");
+                    /*System.out.println("CORRIGE NUMERAÇAO");
                     for(i=0;i<circuit.get_elements().size();i++)
                     {
                         CircuitElement ce=circuit.get_elements().get(i);
