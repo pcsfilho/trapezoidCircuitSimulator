@@ -1059,164 +1059,144 @@ boolean dragging;
     public void keyReleased(KeyEvent e){}
     //endregion
     
-    private void connect_elements_with_wires(CircuitElement ce,Map<String, CircuitNode> nodes)
+    private void connect_elements_with_wires(Map<String, CircuitNode> nodes)
     {
-        int min_node_local;
-        int max_node_local;
-        if(ce.getNode(0)>ce.getNode(1))
+        //System.out.println("CONEXOES");
+        for(int i=(groundCount+elmCount);i<elmList.size();i++)
         {
-            min_node_local=ce.getNode(1);
-            max_node_local=ce.getNode(0);
-        }
-        else
-        {
-            max_node_local=ce.getNode(1);
-            min_node_local=ce.getNode(0);
-        }
-        //      System.out.println("No minimo: "+min_node_local);
-        //    System.out.println("No maximo: "+max_node_local);
-        String key = Integer.toString((max_node_local+groundCount)-1);
-        CircuitNode c_n = nodes.get(key);
-        //  System.out.println("No recuperado: "+c_n.getNum());
-        for(int g=0;g<c_n.getElements().size();g++)
-        {
-            CircuitElement c_e = c_n.getElements().get(g);
-            if(!(c_e instanceof Wire) && !(c_e instanceof Ammeter))
+            CircuitElement ce = elmList.get(i);
+            if(ce instanceof Wire || ce instanceof Ammeter)
             {
-            //System.out.println("Elemento: "+ (char)c_e.getType());
-                for(int p=0;p < c_e.getNodes().length;p++)
+                int min_node_local;
+                int max_node_local;
+                if(ce.getNode(0)>ce.getNode(1))
                 {
-                    //System.out.println("No "+ (p+1)+" "+c_e.getNodes()[p]);
-                    if(c_e.getNodes()[p]==max_node_local)
-                    {
-                        //System.out.println("Troca no"+(c_e.getNodes()[p])+" por: "+ min_node_local);
-                        c_e.setNode(p,min_node_local);
-                    }
-                }
-            }
-        }
-    }
-    /**
-     * 
-     * @param start
-     * @param limit
-     * @param nodes
-     * @param groundList 
-    */
-    private void define_nodes(int start, int limit,Map<String, CircuitNode> nodes, ArrayList<Integer> groundList)
-    {
-        for (int i = start; i < limit; i++)
-        {
-            CircuitElement ce = getElm(i);
-            int posts = ce.getNodesCount();
-            for(int j = 0; j < posts; j++)
-            {
-                Point pt = ce.getPost(j);
-                int k;
-                for (k = 0; k < nodeList.size(); k++)
-                {
-                    CircuitNode cn = getCircuitNode(k);
-                    if (pt.x == cn.getX() && pt.y == cn.getY())
-                    {
-                        break;
-                    }
-                }
-                CircuitNode cn;
-                if (k == nodeList.size())
-                {
-                    cn = new CircuitNode();
-                    cn.setX(pt.x);
-                    cn.setY(pt.y);
-                    CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
-                    cn.getElements().add(ce);
-                    cn.getLinks().add(cnl);
-                    cn.setNum(k);
-                    nodeList.add(cn);
-                    nodes.put(Integer.toString(k),cn);
-                    if(ce instanceof Ground)
-                    {
-                        groundList.add(k);
-                    }
+                    min_node_local=ce.getNode(1);
+                    max_node_local=ce.getNode(0);
                 }
                 else
                 {
-                    cn=getCircuitNode(k);
-                    cn.getElements().add(ce);
-                    CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
-                    cn.getLinks().add(cnl);
+                    max_node_local=ce.getNode(1);
+                    min_node_local=ce.getNode(0);
                 }
-                ce.setNode(j, k);
-                if(!(ce instanceof Ground))
+          //      System.out.println("No minimo: "+min_node_local);
+            //    System.out.println("No maximo: "+max_node_local);
+                String key = Integer.toString((max_node_local+groundCount)-1);
+                
+                CircuitNode c_n = nodes.get(key);
+              //  System.out.println("No recuperado: "+c_n.getNum());
+                for(int g=0;g<c_n.getElements().size();g++)
                 {
-                    if(groundList.contains(k))
+                    CircuitElement c_e = c_n.getElements().get(g);
+                    if(!(c_e instanceof Wire) && !(c_e instanceof Ammeter))
                     {
-                        ce.setNode(j, 0);
-                    }
-                    else
-                    {
-                        ce.setNode(j, k);
-                    }
-                }
-            }
-            if(ce instanceof Wire || ce instanceof Ammeter)
-            {
-                connect_elements_with_wires(ce, nodes);
-            }
-            //add elementos que descrevem o circuito
-            if(!(ce instanceof Wire) && !(ce instanceof Ground))
-            {
-                circuit.add_element(ce);
-            }
+                //        System.out.println("Elemento: "+ (char)c_e.getType());
+                        for(int p=0;p < c_e.getNodes().length;p++)
+                        {
+                  //              System.out.println("No "+ (p+1)+" "+c_e.getNodes()[p]);
+                                            if(c_e.getNodes()[p]==max_node_local)
+                                            {
+                    //                            System.out.println("Troca no"+(c_e.getNodes()[p])+" por: "+ min_node_local);
+                                                c_e.setNode(p,min_node_local);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
         }
     }
-    /**
-     * 
-     */
+    
+    private void define_nodes(int start, int limit,Map<String, CircuitNode> nodes, ArrayList<Integer> groundList)
+    {
+        for (int i = start; i < limit; i++)
+                    {
+                        CircuitElement ce = getElm(i);
+                        int posts = ce.getNodesCount();
+                        // 
+                        for(int j = 0; j < posts; j++)
+                        {
+                            Point pt = ce.getPost(j);
+                            int k;
+                            for (k = 0; k < nodeList.size(); k++)
+                            {
+                                CircuitNode cn = getCircuitNode(k);
+                                if (pt.x == cn.getX() && pt.y == cn.getY())
+                                {
+                                    break;
+                                }
+                            }
+                            CircuitNode cn;
+                            if (k == nodeList.size())
+                            {
+                                cn = new CircuitNode();
+                                cn.setX(pt.x);
+                                cn.setY(pt.y);
+                		CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
+                                cn.getElements().add(ce);
+                                cn.getLinks().add(cnl);
+                                cn.setNum(k);
+                                nodeList.add(cn);
+                      //          System.out.println("CHAVE: "+k);
+                                nodes.put(Integer.toString(k),cn);
+                                
+                                if(ce instanceof Ground)
+                                {
+                                    groundList.add(k);
+                                }
+                            }
+                            else
+                            {
+                                cn=getCircuitNode(k);
+                                cn.getElements().add(ce);
+                                CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
+                                cn.getLinks().add(cnl);
+                            }
+                            ce.setNode(j, k);
+                            if(!(ce instanceof Ground))
+                                {
+                                    if(groundList.contains(k))
+                                    {
+                                        ce.setNode(j, 0);
+                                    }
+                                    else
+                                    {
+                                        ce.setNode(j, k);
+                                    }
+                                }
+                        }
+                        
+                            //add elementos que descrevem o circuito
+                            if(!(ce instanceof Wire) && !(ce instanceof Ground))
+                            {
+                                circuit.add_element(ce);
+                            }
+                    }
+    }
+    
     private void adjustment_nodes()
     {
-        int n_maior=0;
-        int pos=0;
-        while(pos<circuit.get_elements().size())
+        //System.out.println("Ajuste");
+        for(int i=groundCount;i<groundCount+wireCount+elmCount;i++)
         {
-//            System.out.println("POS: "+pos);
-            int temp_node_value=0;
-            int temp_node_num=1;
-            n_maior++;
-            for(int i=pos;i<circuit.get_elements().size();i++)
+            CircuitElement ce = elmList.get(i);
+          //  System.out.println("Elemento: "+(char)ce.getType());
+            for(int j=0;j<ce.getNodesCount();j++)
             {
-                CircuitElement ce = circuit.get_elements().get(i);
-  //              System.out.println("Elemento: "+ce.get_name());
-                for(int j=0;j<ce.getNodesCount();j++)
+            //    System.out.println("No: "+(j+1)+" = "+ce.getNodes()[j]);
+                if(ce.getNodes()[j]>=groundCount)
                 {
-    //                System.out.println("No: "+(j+1));
-                    if(ce.getNodes()[j]>n_maior)
+                    int temp_num_node=0;
+                    int value_node=(ce.getNodes()[j]-groundCount)+1;
+                    if(j==0)
                     {
-      //                  System.out.println("Valor: "+ce.getNodes()[j]);
-                        temp_node_num=j;
-                        if(temp_node_value==0)
-                        {
-        //                    System.out.println("TEMP ZERO");
-                            temp_node_value = ce.getNodes()[j];
-                            ce.setNode(j,n_maior);
-                            pos=i;
-          //                  System.out.println("Substituiu por: "+ce.getNodes()[j]);
-                            break;
-                        }
-                        else
-                        {
-            //                System.out.println("TEMP N ZERO");
-                            if(ce.getNodes()[j]==temp_node_value)
-                            {
-                                ce.setNode(j,n_maior);
-              //                  System.out.println("Substituiu por: "+ce.getNodes()[j]);
-                            }
-                        }
+                        temp_num_node=1;
                     }
+                    if(value_node!=ce.getNodes()[temp_num_node])
+                    {
+                        ce.setNode(j,value_node);
+                    }
+              //      System.out.println("Substitui por: "+value_node);
                 }
-            }
-            if(temp_node_num==1)
-            {
-                pos++;
             }
         }
     }
@@ -1257,8 +1237,10 @@ boolean dragging;
                         }
                     }
                 */  
-                    //Mapeia elementos exceto conexoes e nos de referencia
-                    define_nodes(groundCount,groundCount+elmCount,nodes, groundList);
+             
+                    
+                    //Mapeia demais elementos
+                    define_nodes(groundCount,elmList.size(),nodes, groundList);
                 /*    System.out.println("ANALIZE ELEMENTOS E FIOS");
                     for(i=0;i<elmList.size();i++)
                     {
@@ -1270,11 +1252,24 @@ boolean dragging;
                         }
                     }
                   */  
+                    //Ajusta a numeraçao dos nos na ordem correta
+                    adjustment_nodes();  
+                   /* System.out.println("AJUSTE NOS");
+                    for(i=0;i<elmList.size();i++)
+                    {
+                        CircuitElement ce=elmList.get(i);
+                        System.out.println("Elemento: "+ (char)ce.getType());
+                        for(int k=0;k<ce.getNodes().length;k++)
+                        {
+                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
+                        }
+                    }
+                    */
                     //Se existir conexoes no circuito
                     if(wireCount>0)
                     {
-                        define_nodes(groundCount+elmCount,groundCount+elmCount+wireCount,nodes, groundList);
-                /*        System.out.println("CONECTA FIOS");
+                        connect_elements_with_wires(nodes);
+                           System.out.println("CONECTA FIOS");
                         for(i=0;i<elmList.size();i++)
                         {
                             CircuitElement ce=elmList.get(i);
@@ -1283,19 +1278,9 @@ boolean dragging;
                             {
                                 System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                             }
-                        }*/
-                    }                  
-                    adjustment_nodes();  
-                    /*System.out.println("ANALIZE ELEMENTOS E FIOS CORRETOS");
-                    for(i=0;i<circuit.get_elements().size();i++)
-                    {
-                        CircuitElement ce=circuit.get_elements().get(i);
-                        System.out.println("Elemento: "+ (char)ce.getType());
-                        for(int k=0;k<ce.getNodes().length;k++)
-                        {
-                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }*/
+                    }                  
+                    
                     //Cria arquivo 
                     try
                     {   
@@ -1331,7 +1316,7 @@ boolean dragging;
                 }
             }
         }
-        //System.out.println("create "+circuitChanged);
+        System.out.println("create "+circuitChanged);
     }
     
     /**
