@@ -26,11 +26,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class PlotFile extends JFrame
 {
     private ChartPanel graphicsArea;
-    public PlotFile(String title, JFrame parent)
+    private int numPlots;
+    
+    public PlotFile(String title, int numPlots)
     {
         super(title);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        this.numPlots=numPlots;
         
         graphicsArea = new ChartPanel(null);
         graphicsArea.setBorder(BorderFactory.createCompoundBorder(
@@ -48,6 +50,7 @@ public class PlotFile extends JFrame
     public void open_chart(String path_file)
     {
         File file = new File(path_file);
+        
         graphicsArea.setChart(creatChart(file));
     }
     

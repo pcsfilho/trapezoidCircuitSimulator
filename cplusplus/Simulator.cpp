@@ -11,10 +11,7 @@
 
 using namespace std;
 
-Simulator::Simulator()
-{
-
-}
+Simulator::Simulator(){}
 
 
 Simulator::Simulator(ifstream &netlistFile, Simulation* sim)

@@ -1177,17 +1177,17 @@ boolean dragging;
         int n_maior=0;
         while(pos<circuit.get_elements().size())
         {
-            System.out.println("POS: "+pos);
+            //System.out.println("POS: "+pos);
             int temp_node_value=0;
             int temp_node_num=1;
             n_maior++;
             for(int i=pos;i<elmList.size();i++)
             {
                 CircuitElement ce = elmList.get(i);
-                System.out.println("Elemento: "+ce.get_name());
+                //System.out.println("Elemento: "+ce.get_name());
                 for(int j=0;j<ce.getNodesCount();j++)
                 {
-                    System.out.println("No: "+(j+1));
+                  //  System.out.println("No: "+(j+1));
                     boolean compare=false;
                     /*if(wireCount>0)
                     {
@@ -1200,24 +1200,24 @@ boolean dragging;
                                     
                                     if(ce.getNodes()[j]>n_maior)
                                     {
-                                        System.out.println("Valor: "+ce.getNodes()[j]);
+                    //                    System.out.println("Valor: "+ce.getNodes()[j]);
                                         temp_node_num=j;
                                         if(temp_node_value==0)
                                         {
-                                            System.out.println("TEMP ZERO");
+                      //                      System.out.println("TEMP ZERO");
                                             temp_node_value = ce.getNodes()[j];
                                             ce.setNode(j,n_maior);
                                             pos=i;
-                                            System.out.println("Substituiu por: "+ce.getNodes()[j]);
+                        //                    System.out.println("Substituiu por: "+ce.getNodes()[j]);
                                             break;
                                         }
                                         else
                                         {
-                                            System.out.println("TEMP N ZERO");
+                          //                  System.out.println("TEMP N ZERO");
                                             if(ce.getNodes()[j]==temp_node_value)
                                             {
                                                 ce.setNode(j,n_maior);
-                                                System.out.println("Substituiu por: "+ce.getNodes()[j]);
+                            //                    System.out.println("Substituiu por: "+ce.getNodes()[j]);
                                             }
                                         }
                                     }
@@ -1255,7 +1255,7 @@ boolean dragging;
                     circuit = new Circuit();
                     //Mapeia nos de referencia
                     define_nodes(0,groundCount,nodes, groundList);
-                    System.out.println("ANALIZE TERRA");
+                    /*System.out.println("ANALIZE TERRA");
                     for(i=0;i<groundCount;i++)
                     {
                         CircuitElement ce=elmList.get(i);
@@ -1264,11 +1264,11 @@ boolean dragging;
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }
+                    }*/
                   
                     //Mapeia elementos exceto conexoes e nos de referencia
                     define_nodes(groundCount,groundCount+elmCount+wireCount,nodes, groundList);
-                    System.out.println("ANALIZA ELEMENTOS E FIOS");
+                    /*System.out.println("ANALIZA ELEMENTOS E FIOS");
                     for(i=0;i<elmList.size();i++)
                     {
                         CircuitElement ce=elmList.get(i);
@@ -1277,7 +1277,7 @@ boolean dragging;
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }
+                    }*/
                     
                     //Se existir conexoes no circuito
                     /*
@@ -1296,7 +1296,7 @@ boolean dragging;
                         }
                     } */                 
                     adjustment_nodes();  
-                    System.out.println("CORRIGE NUMERAÇAO");
+                    /*System.out.println("CORRIGE NUMERAÇAO");
                     for(i=0;i<circuit.get_elements().size();i++)
                     {
                         CircuitElement ce=circuit.get_elements().get(i);
@@ -1305,7 +1305,7 @@ boolean dragging;
                         {
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
-                    }
+                    }*/
                     //Cria arquivo 
                     try
                     {   
@@ -1395,6 +1395,11 @@ boolean dragging;
             return true;
         }
         return false;
+    }
+    
+    public Simulation getSimulation()
+    {
+        return sim;
     }
     /**
      *Retorna elemento de circuito na lista de elementos de circuito pelo indice

@@ -121,3 +121,23 @@ double Element::get_parsed_value(string s)
     os >> d;
     return d;
 }
+
+bool Element::getPlotCurrent()
+{
+    return plot_current;
+}
+
+bool Element::getPlotVoltage()
+{
+    return plot_voltage;
+}
+
+void Element::setPlotCurrent()
+{
+    plot_current=true;
+}
+
+void Element::setPlotVoltage()
+{
+    plot_voltage=true;;
+}

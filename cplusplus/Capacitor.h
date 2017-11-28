@@ -26,6 +26,7 @@ public:
 private:
     double current_historic;
     double current;
+    
     //Methods
     void update_current(double** Yn_solution,int num_vars);
 };

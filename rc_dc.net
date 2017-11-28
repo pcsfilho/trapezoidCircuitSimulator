@@ -2,4 +2,8 @@ circuito
 R R1 1 2 500.0
 C C1 2 0 1.0E-6
 V F1 DC 1 0 100.0
-. TRAN 1.0E-5 0.0 0.02
+. PLOT A R1
+. PLOT V R1
+. PLOT A C1
+. PLOT V C1
+. TRAN 1.0E-5 0.0 0.003

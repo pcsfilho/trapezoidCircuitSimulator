@@ -22,6 +22,7 @@ public class Circuit
     private String circuit_name;
     private String path_circuit_name;
     private int elmCount;
+    private int plotCount;
     
     public Circuit()
     {
@@ -31,6 +32,7 @@ public class Circuit
         circuit_name="";
         path_circuit_name="";
         elmCount=0;
+        plotCount=0;
     }
     
     public void add_element(CircuitElement elm)
@@ -50,6 +52,11 @@ public class Circuit
                 elmCount++;
                 break;
         }
+    }
+    
+    public int getNumPlots()
+    {
+        return plotCount;
     }
     
     public void set_circuit_name(String n)
@@ -112,7 +119,6 @@ public class Circuit
             {
                 writer.println();
             }
-            System.out.println("Linha: "+line);
         }
         writer.println();
         for(int i=0;i<sources.size();i++)
@@ -136,7 +142,6 @@ public class Circuit
             {
                 writer.println();
             }
-            System.out.println("Linha: "+line);
         }
         
         for(int i=0;i<elmCount;i++)
@@ -147,24 +152,18 @@ public class Circuit
             String line;
             if(ce.getPlotCurrent())
             {
+                plotCount++;
+                writer.println();
                 line = ". PLOT A "+name;
                 writer.print(line);
             }
             
-            if(ce.getPlotCurrent())
+            if(ce.getPlotVoltage())
             {
-                if(ce.getPlotCurrent())
-                {
-                    writer.println();
-                }
+                plotCount++;
+                writer.println();
                 line = ". PLOT V "+name;
                 writer.print(line);
-            }
-                        
-            
-            if(i!=(elmCount-1))
-            {
-                writer.println();
             }
         }
         

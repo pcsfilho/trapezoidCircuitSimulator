@@ -33,7 +33,7 @@ class Circuit{
         void add_node(string var);
         string set_node_values(double** matrix_solution, double time);        
         void print_nodes_solutions();
-        string calculate_voltages_elements(double** matrix_solution, double time);
+        string calculate_plot_elements(double** matrix_solution, double time);
         //bool get_event();
         //void set_event();
         //void add_time_event(double time);

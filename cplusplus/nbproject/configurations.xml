@@ -13,7 +13,6 @@
       <in>Simulator.cpp</in>
       <in>Source.cpp</in>
       <in>Switch.cpp</in>
-      <in>main.cpp</in>
       <in>matrix.cpp</in>
       <in>modified_nodal_analysis.m</in>
     </df>
@@ -72,8 +71,6 @@
       <item path="Source.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Switch.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="matrix.cpp" ex="false" tool="1" flavor2="0">
       </item>

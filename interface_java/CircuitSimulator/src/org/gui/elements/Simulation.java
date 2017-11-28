@@ -6,11 +6,9 @@
 package org.gui.elements;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
 
 /**
  *
@@ -46,5 +44,10 @@ public class Simulation
         out.print(". "+type+" "+step+" "+start_time+" "+end_time);
         out.close();
         return circuit.get_path_circuit_name();
+    }
+    
+    public Circuit getCircuit()
+    {
+        return circuit;
     }
 }

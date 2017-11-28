@@ -26,13 +26,35 @@ Simulation::Simulation(Circuit circuit, double init_time, double end_time,double
 
 void Simulation::set_config_simulation(vector<string> data)
 {
-    type_simulation=data[1];
-
-    if(type_simulation=="TRAN")
+    if(data[1].compare("TRAN")==0)
     {
+        type_simulation=data[1];
         step_time = get_parsed_value(data[2]);
         initial_time = get_parsed_value(data[3]);
         end_time = get_parsed_value(data[4]);
+    }
+    else if(data[1].compare("PLOT")==0)
+    {
+        Element* element;
+        for(int i=0; i<circuit.get_num_elements();i++)
+        {
+            element = circuit.get_element_by_index(i);
+
+            if(element->get_type().compare("C") ==0 || element->get_type().compare("L")==0 || element->get_type().compare("R")==0)
+            {
+                if(element->get_name().compare(data[3]))
+                {
+                    if(data[2].compare("A")==0)
+                    {
+                        element->setPlotCurrent();
+                    }
+                    else
+                    {
+                        element->setPlotVoltage();
+                    }
+                }
+            }        
+        }
     }
 }
 
@@ -181,9 +203,9 @@ bool Simulation::run_analysis()
         {
     //        cout<<"Converge"<<endl;
            // print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
-            write_in_file(output_file_name,get_circuit()->calculate_voltages_elements(matrix_mna_aux, current_time));
+            write_in_file(output_file_name, get_circuit()->calculate_plot_elements(matrix_mna_aux, current_time));
             //printf("escreveu");
-            //cout<<get_circuit()->calculate_voltages_elements(matrix_mna_aux, current_time)<<endl;
+            //cout<<get_circuit()->calculate_plot_elements(matrix_mna_aux, current_time)<<endl;
             //plot 'SWITCH_AC.dat' using 1:2 with lines, 'SWITCH_AC.dat' using 1:3 with lines, 'SWITCH_AC.dat' using 1:4 with lines
                 //plot 'SWITCH_AC.dat' using 1:2 title "Corrente em L1" with lines
             //set xrange [0:0.15]
