@@ -20,6 +20,8 @@ Element::Element()
     this->node_2=0;
     this->var=0;
     this->resistance=0;
+    this->plot_current=false;
+    this->plot_voltage=false;
 }
 
 Element::Element(vector<string> element,int num_var)
@@ -29,6 +31,8 @@ Element::Element(vector<string> element,int num_var)
   set_nodes(element[2],element[3]);
   set_value(element[4]);
   var=num_var;
+  plot_current=false;
+  plot_voltage=false;
 }
 
 Element::Element(vector<string> element)
@@ -39,6 +43,8 @@ Element::Element(vector<string> element)
   set_value(element[4]);
   var=0;
   resistance=get_value();
+  plot_current=false;
+  plot_voltage=false;
 }
 double Element:: get_voltage(double** Yn_original, int num_vars)
 {

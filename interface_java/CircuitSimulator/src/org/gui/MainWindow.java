@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
+import org.gui.plot.ManagePlot;
 import org.gui.plot.PlotFile;
 import org.jni.InterfaceJNI;
 
@@ -23,6 +24,7 @@ public class MainWindow extends JFrame implements ActionListener {
     private JPanel principalPanel;
     private SideBar sideBar;
     private PanelCircuitArea canvas_panel;
+    private ManagePlot manage_plots;
     
     TrapezoidCircuitSimulator circuit_simulator;
 
@@ -372,15 +374,13 @@ public class MainWindow extends JFrame implements ActionListener {
             {
                 if (Double.parseDouble(timeSimulationtxt.getText())>0)
                 {
-                    String path_circuit=canvas_panel.analysis_circuit(get_time_simulation());
+                    manage_plots =new ManagePlot();
+                    String path_circuit=canvas_panel.analysis_circuit(get_time_simulation(), manage_plots);
                     if(path_circuit!=null)
                     {
                         InterfaceJNI jni=new InterfaceJNI();
                         String path_out = jni.run_analysis(path_circuit);
-                        int numPlots=canvas_panel.getSimulation().getCircuit().getNumPlots();
-                        PlotFile pf = new PlotFile("Circuito", numPlots);
-                        pf.open_chart(path_out);
-                        //System.out.println(path_out);
+                        manage_plots.open_chart(path_out);
                     }
                 }
                 else
@@ -415,7 +415,8 @@ public class MainWindow extends JFrame implements ActionListener {
         {
             if(canvas_panel.getChanged() || !(canvas_panel.get_circuit().get_path_circuit_name().equals("")))
             {
-                canvas_panel.create_circuit_description();
+                manage_plots =new ManagePlot();
+                canvas_panel.create_circuit_description(manage_plots);
             }
             else
             {

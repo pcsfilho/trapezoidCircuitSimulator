@@ -15,10 +15,15 @@
 
 Resistor::Resistor() 
 {
+    plot_current=false;
+    plot_voltage=false;
 }
 
 Resistor::Resistor(vector<string> element):Element(element)
-{}
+{
+    plot_current=false;
+    plot_voltage=false;
+}
 
 void Resistor::set_resistance(double r)
 {

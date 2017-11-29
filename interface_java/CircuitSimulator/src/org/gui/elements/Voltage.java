@@ -84,10 +84,10 @@ public class Voltage extends CircuitElement {
 	if (waveform == DC) {
 	    setPowerColor(g, false);
 	    setVoltageColor(g, volts[0]);
-	    interpPoint2(lead1, lead2, ps1, ps2, 0, 10);
+	    interpPoint2(lead1, lead2, ps1, ps2, 0, 16);
 	    drawThickLine(g, ps1, ps2);
 	    setVoltageColor(g, volts[1]);
-	    int hs = 16;
+	    int hs = 10;
 	    setBbox(point1, point2, hs);
 	    interpPoint2(lead1, lead2, ps1, ps2, 1, hs);
 	    drawThickLine(g, ps1, ps2);

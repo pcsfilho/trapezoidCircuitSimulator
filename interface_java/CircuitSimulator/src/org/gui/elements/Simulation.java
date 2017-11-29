@@ -36,7 +36,7 @@ public class Simulation
     */
     public String create_simulation_file() throws IOException
     {
-        circuit.create_netlist_circuit();
+        //circuit.create_netlist_circuit();
         FileWriter fw = new FileWriter(circuit.get_path_circuit_name(), true);
         BufferedWriter bw = new BufferedWriter(fw);
         PrintWriter out = new PrintWriter(bw);        

@@ -185,16 +185,9 @@ string Circuit::calculate_plot_elements(double** matrix_solution, double time)
             if(e->get_type().compare("L")==0 || e->get_type().compare("C")==0 || e->get_type().compare("R")==0)
             {
                 //cout<<"ELEMENTO: "<<e->get_name()<<endl;
+                //cout<<"PLOT CORRENTE?: "<<e->getPlotCurrent()<<" "<< true <<endl;
                 double value;
-                if(e->getPlotVoltage())
-                {
-                    value=e->get_voltage(matrix_solution, get_num_vars());
-                    ss << value;
-                    temp +=" "+ss.str();
-                  //  cout<<"TENSAO: "<<temp<<endl;
-                }
-                ss.str(std::string());
-                if(e->getPlotCurrent())
+                if(e->getPlotCurrent()==true)
                 {
                     if(e->get_type().compare("L")==0)
                     {
@@ -214,12 +207,22 @@ string Circuit::calculate_plot_elements(double** matrix_solution, double time)
                     
                     ss << value;
                     temp +=" "+ss.str();
-                    //cout<<"CORRENTE: "<<temp<<endl;
+                  //  cout<<"CORRENTE ELEMENTO: " << e->get_name() <<" "<< temp<<endl;
+                }
+                //cout<<"PLOT TENSAO?: "<<e->getPlotVoltage()<<" "<< true <<endl;
+                ss.str(std::string());
+                if(e->getPlotVoltage()==true)
+                {
+                    value=e->get_voltage(matrix_solution, get_num_vars());
+                    ss << value;
+                    temp +=" "+ss.str();                    
+                    //cout<<"TENSAO ELEMENTO: " << e->get_name() <<" "<< temp<<endl;
                 }
             }
         }
     }
     //temp = temp.substr(0, temp.size()-1);
+   // cout<<"LINHA: " <<temp<<endl;
     return temp;
 }
 

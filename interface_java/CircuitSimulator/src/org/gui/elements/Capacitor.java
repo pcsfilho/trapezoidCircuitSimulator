@@ -84,13 +84,13 @@ import org.gui.canvas.EditInfo;
             else if (n == 1)
             {
 		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR TENSAO", false);
+		ei.checkbox = new Checkbox("PLOTAR TENSAO", plot_voltage);
 		return ei;
 	    }
             else if (n == 2)
             {
 		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR CORRENTE", false);
+		ei.checkbox = new Checkbox("PLOTAR CORRENTE", plot_current);
 		return ei;
 	    }
             return null;

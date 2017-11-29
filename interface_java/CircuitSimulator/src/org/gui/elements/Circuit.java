@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import org.gui.plot.ManagePlot;
 
 /**
  *
@@ -23,8 +24,9 @@ public class Circuit
     private String path_circuit_name;
     private int elmCount;
     private int plotCount;
+    private ManagePlot manage_plot;
     
-    public Circuit()
+    public Circuit(ManagePlot mp)
     {
         elements=new  ArrayList<>();
         sources=new  ArrayList<>();
@@ -33,6 +35,7 @@ public class Circuit
         path_circuit_name="";
         elmCount=0;
         plotCount=0;
+        this.manage_plot=mp;
     }
     
     public void add_element(CircuitElement elm)
@@ -98,7 +101,6 @@ public class Circuit
     
     public void create_netlist_circuit() throws FileNotFoundException, UnsupportedEncodingException
     {
-        //System.out.println("Nome Circuito: "+path_circuit_name);
         PrintWriter writer = new PrintWriter(path_circuit_name,"UTF-8");
         writer.println("circuito");        
         for(int i=0;i<elmCount;i++)
@@ -156,6 +158,7 @@ public class Circuit
                 writer.println();
                 line = ". PLOT A "+name;
                 writer.print(line);
+                manage_plot.add_plot(name,"Corrente (A)");
             }
             
             if(ce.getPlotVoltage())
@@ -164,6 +167,7 @@ public class Circuit
                 writer.println();
                 line = ". PLOT V "+name;
                 writer.print(line);
+                manage_plot.add_plot(name,"Tensao (V)");
             }
         }
         

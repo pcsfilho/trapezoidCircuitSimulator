@@ -54,6 +54,7 @@ import org.gui.elements.Ammeter;
 import org.gui.elements.Circuit;
 import org.gui.elements.Simulation;
 import org.gui.elements.Voltmeter;
+import org.gui.plot.ManagePlot;
 
 
 /**
@@ -138,7 +139,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     public void init() {
         
 	CircuitElement.initClass(this);
-	circuit = new Circuit();
+//	circuit = new Circuit();
 	setLayout(new CircuitLayout());
 	cv = new CircuitCanvas(this);
 	cv.addComponentListener(this);
@@ -1164,6 +1165,7 @@ boolean dragging;
             //add elementos que descrevem o circuito
             if(!(ce instanceof Wire) && !(ce instanceof Ground))
             {
+                System.out.println("ADD: "+ce.get_name());
                 circuit.add_element(ce);
             }
         }
@@ -1232,7 +1234,7 @@ boolean dragging;
     /**
      * Faz análise do circuito desenhado no canvas e mapeia os elementos para análise.
     */
-    public void create_circuit_description()
+    public void create_circuit_description(ManagePlot mp)
     {
 	if (elmList.isEmpty())
         {
@@ -1252,7 +1254,7 @@ boolean dragging;
                     ArrayList<Integer> groundList = new ArrayList<>();
                     Map<String, CircuitNode> nodes = new HashMap<>();
                     int i, j;
-                    circuit = new Circuit();
+                    circuit = new Circuit(mp);
                     //Mapeia nos de referencia
                     define_nodes(0,groundCount,nodes, groundList);
                     /*System.out.println("ANALIZE TERRA");
@@ -1349,11 +1351,11 @@ boolean dragging;
      * @param time 
      * @return  
      */
-    public String analysis_circuit(String time)
+    public String analysis_circuit(String time, ManagePlot mp)
     {
         if(getChanged())
         {
-            create_circuit_description();
+            create_circuit_description(mp);
         }
         
         if(circuit.get_path_circuit_name()!=null && !circuit.get_path_circuit_name().equals(""))

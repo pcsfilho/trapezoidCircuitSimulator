@@ -91,7 +91,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                     nodes.push_back(node_2);
                 }
             }
-            else if(tokens[0]==".")
+            else if(tokens[0].compare(".")==0)
             {
                 simulation->set_config_simulation(tokens);
             }
@@ -124,7 +124,6 @@ void Simulator::parser_simulator(ifstream &netlistFile)
         cout<<"No 1: "<<circuit->get_elements()[i]->get_node_1()<<"No 2: "<<circuit->get_elements()[i]->get_node_2()<<endl;
         cout<<"Valor: "<<circuit->get_elements()[i]->get_value()<<endl;
         cout<<"Var: "<<circuit->get_elements()[i]->get_var()<<endl;
-
     }
 }
 

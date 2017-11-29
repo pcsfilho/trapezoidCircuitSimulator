@@ -113,8 +113,7 @@ public class PlotFileDemo extends JFrame
                         System.out.println(count+" "+data_line[1]);                      
                         dataset.add(Double.valueOf(data_line[0]).doubleValue(), Double.valueOf(data_line[1]).doubleValue());
                         count++;
-                        textArea.append(line + "\n");
-                        
+                        textArea.append(line + "\n");                        
                     }
                     return ChartFactory.createXYLineChart(title,xAxisLabel, yAxisLabel, new XYSeriesCollection(dataset),PlotOrientation.VERTICAL,true,true,false);
                 } catch (IOException ex) {

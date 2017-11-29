@@ -26,6 +26,7 @@ Simulation::Simulation(Circuit circuit, double init_time, double end_time,double
 
 void Simulation::set_config_simulation(vector<string> data)
 {
+    
     if(data[1].compare("TRAN")==0)
     {
         type_simulation=data[1];
@@ -39,11 +40,12 @@ void Simulation::set_config_simulation(vector<string> data)
         for(int i=0; i<circuit.get_num_elements();i++)
         {
             element = circuit.get_element_by_index(i);
-
             if(element->get_type().compare("C") ==0 || element->get_type().compare("L")==0 || element->get_type().compare("R")==0)
             {
-                if(element->get_name().compare(data[3]))
+                //cout<< "ELEMENTO: " << element->get_name() << "=> DATA[3]: "<< data[3]<<endl;
+                if(element->get_name().compare(data[3])==0)
                 {
+                    //cout<<"TIPO PLOT: "<< data[2]<<endl;
                     if(data[2].compare("A")==0)
                     {
                         element->setPlotCurrent();

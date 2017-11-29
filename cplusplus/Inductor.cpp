@@ -18,12 +18,16 @@ Inductor::Inductor()
 {
     current=0;
     current_historic=0;
+    plot_current=false;
+    plot_voltage=false;
 }
 
 Inductor::Inductor(vector<string> element, int nv):Element(element,nv)
 {
     current=0;
     current_historic=0;
+    plot_current=false;
+    plot_voltage=false;
 }
 
 void Inductor::set_resistance(double step)
