@@ -87,7 +87,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     static EditDialog editDialog;
     int mousePost = -1;
     Rectangle circuitArea;
-    private int gridSize, gridMask, gridRound, groundCount=0, wirePos=0,wireCount=0, elmCount=0;
+    private int gridSize, gridMask, gridRound, groundCount=0, elmCount=0;
     private ArrayList<CircuitElement> elmList;
     public CircuitElement dragElm;
     public CircuitElement menuElm, mouseElm, stopElm;
@@ -842,37 +842,14 @@ boolean dragging;
                     elmList.add(0,dragElm);
                     groundCount++;
                 }
-                else if((dragElm instanceof Wire) || (dragElm instanceof Ammeter))
-                {
-                    if(wireCount==0)
-                    {
-                        wirePos=elmList.size();
-                    }
-                    elmList.add(dragElm);
-                    wireCount++;
-                    if(dragElm instanceof Ammeter)
-                    {
-                        dragElm.set_name();
-                    }
-                }
                 else
                 {
-                    if(wireCount>0)
-                    {
-                        elmList.add(wirePos, dragElm);
-                    }
-                    else
-                    {
-                        elmList.add(dragElm);
-                    }
+                    elmList.add(dragElm);
                     elmCount++;
-                    wirePos++;
                     dragElm.set_name();
                 }
-                
 		circuitChanged = true;
 	    }
-            
 	    dragElm = null;
 	}
 	if (circuitChanged)
@@ -884,7 +861,6 @@ boolean dragging;
 	dragElm = null;
 	cv.repaint();
     }
-
     @Override
     public void mouseEntered(MouseEvent e) {
     }
@@ -997,16 +973,10 @@ boolean dragging;
                 if(ce instanceof Ground)
                 {
                     groundCount--;
-                    wirePos--;
-                }
-                else if((ce instanceof Wire) || (ce instanceof Ammeter))
-                {
-                    wireCount--;
                 }
                 else
                 {
                     elmCount--;
-                    wirePos--;
                 }
                 
 	    }
@@ -1023,16 +993,10 @@ boolean dragging;
                 if(ce instanceof Ground)
                 {
                     groundCount--;
-                    wirePos--;
-                }
-                else if((ce instanceof Wire) || (ce instanceof Ammeter))
-                {
-                    wireCount--;
                 }
                 else
                 {
                     elmCount--;
-                    wirePos--;
                 }
 		    mouseElm = null;
 		    break;
@@ -1059,44 +1023,6 @@ boolean dragging;
     @Override
     public void keyReleased(KeyEvent e){}
     //endregion
-    
-    private void connect_elements_with_wires(CircuitElement ce,Map<String, CircuitNode> nodes)
-    {
-        int min_node_local;
-        int max_node_local;
-        if(ce.getNode(0)>ce.getNode(1))
-        {
-            min_node_local=ce.getNode(1);
-            max_node_local=ce.getNode(0);
-        }
-        else
-        {
-            max_node_local=ce.getNode(1);
-            min_node_local=ce.getNode(0);
-        }
-        //      System.out.println("No minimo: "+min_node_local);
-        //    System.out.println("No maximo: "+max_node_local);
-        String key = Integer.toString(max_node_local);
-        CircuitNode c_n = nodes.get(key);
-        //  System.out.println("No recuperado: "+c_n.getNum());
-        for(int g=0;g<c_n.getElements().size();g++)
-        {
-            CircuitElement c_e = c_n.getElements().get(g);
-            if(!(c_e instanceof Wire) && !(c_e instanceof Ammeter))
-            {
-            //System.out.println("Elemento: "+ (char)c_e.getType());
-                for(int p=0;p < c_e.getNodes().length;p++)
-                {
-                    //System.out.println("No "+ (p+1)+" "+c_e.getNodes()[p]);
-                    if(c_e.getNodes()[p]==max_node_local)
-                    {
-                        //System.out.println("Troca no"+(c_e.getNodes()[p])+" por: "+ min_node_local);
-                        c_e.setNode(p,min_node_local);
-                    }
-                }
-            }
-        }
-    }
     /**
      * 
      * @param start
@@ -1104,7 +1030,7 @@ boolean dragging;
      * @param nodes
      * @param groundList 
     */
-    private void define_nodes(int start, int limit,Map<String, CircuitNode> nodes, ArrayList<Integer> groundList)
+    private void define_nodes(int start, int limit, ArrayList<Integer> groundList)
     {
         for (int i = start; i < limit; i++)
         {
@@ -1133,7 +1059,6 @@ boolean dragging;
                     cn.getLinks().add(cnl);
                     cn.setNum(k);
                     nodeList.add(cn);
-                    nodes.put(Integer.toString(k),cn);
                     if(ce instanceof Ground)
                     {
                         groundList.add(k);
@@ -1159,14 +1084,9 @@ boolean dragging;
                     }
                 }
             }
-            if(ce instanceof Wire || ce instanceof Ammeter)
-            {
-                connect_elements_with_wires(ce, nodes);
-            }
             //add elementos que descrevem o circuito
-            if(!(ce instanceof Wire) && !(ce instanceof Ground))
+            if(!(ce instanceof Ground))
             {
-                System.out.println("ADD: "+ce.get_name());
                 circuit.add_element(ce);
             }
         }
@@ -1253,13 +1173,12 @@ boolean dragging;
                 {
                     nodeList = new ArrayList<>();
                     ArrayList<Integer> groundList = new ArrayList<>();
-                    Map<String, CircuitNode> nodes = new HashMap<>();
+//                    Map<String, CircuitNode> nodes = new HashMap<>();
                     int i, j;
                     circuit = new Circuit(mp);
                     //Mapeia nos de referencia
-                    define_nodes(0,groundCount,nodes, groundList);
+                    define_nodes(0,groundCount,groundList);
                     /*System.out.println("ANALIZE TERRA");
-                    for(i=0;i<groundCount;i++)
                     {
                         CircuitElement ce=elmList.get(i);
                         System.out.println("Elemento: "+ (char)ce.getType());
@@ -1270,7 +1189,7 @@ boolean dragging;
                     }*/
                   
                     //Mapeia elementos exceto conexoes e nos de referencia
-                    define_nodes(groundCount,groundCount+elmCount+wireCount,nodes, groundList);
+                    define_nodes(groundCount,groundCount+elmCount, groundList);
                     /*System.out.println("ANALIZA ELEMENTOS E FIOS");
                     for(i=0;i<elmList.size();i++)
                     {
@@ -1281,23 +1200,7 @@ boolean dragging;
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
                     }*/
-                    
                     //Se existir conexoes no circuito
-                    /*
-                    if(wireCount>0)
-                    {
-                        define_nodes(groundCount+elmCount,groundCount+elmCount+wireCount,nodes, groundList);
-                        System.out.println("CONECTA FIOS");
-                        for(i=0;i<elmList.size();i++)
-                        {
-                            CircuitElement ce=elmList.get(i);
-                            System.out.println("Elemento: "+ (char)ce.getType());
-                            for(int k=0;k<ce.getNodes().length;k++)
-                            {
-                                System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
-                            }
-                        }
-                    } */                 
                     adjustment_nodes();  
                     /*System.out.println("CORRIGE NUMERAÇAO");
                     for(i=0;i<circuit.get_elements().size();i++)

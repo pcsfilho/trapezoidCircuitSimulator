@@ -17,6 +17,7 @@ public abstract class CircuitElement implements Editable {
     public static int countCurrentSources = 0;
     public static int countAmmeters = 0;
     public static int countVoltmeters = 0;
+    public static int countWires = 0;
     public static Color colorScale[];
     public static double currentMult, powerMult;
     public static Point ps1, ps2;

@@ -130,8 +130,6 @@ public class Circuit
                 double value=ce.get_value();
                 line = type+" "+name+" "+node_1+" "+node_2+" "+value;
             }
-            
-            
             writer.print(line);
             if(i!=(elmCount-1))
             {
