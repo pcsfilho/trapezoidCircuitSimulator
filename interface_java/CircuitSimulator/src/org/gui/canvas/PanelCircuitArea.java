@@ -748,6 +748,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	if (mouseElm == null || !(mouseElm instanceof Switch))
 	    return false;
         
+        System.out.println("MUDOU CHAVE");
 	Switch se = (Switch) mouseElm;
         se.changeState();
         heldSwitchElm = se;

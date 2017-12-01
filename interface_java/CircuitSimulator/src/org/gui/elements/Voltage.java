@@ -9,6 +9,7 @@ public class Voltage extends CircuitElement {
     static final int DC = 0;
     static final int AC = 1;
     static final int WF_VAR = 6;
+    final int circleSize = 17;
     protected double frequency, freqTimeZero, bias,phaseShift, dutyCycle;
     
     Voltage(int xx, int yy, int wf)
@@ -16,12 +17,13 @@ public class Voltage extends CircuitElement {
 	super(xx, yy);
 	waveform = wf;
 	value = 100;
-	frequency = 40;
+	frequency = 60;
 	dutyCycle = .5;
     }
     
     public double get_frequency()
     {
+        System.out.println("Frequencia: "+frequency);
         return frequency;
     }
     
@@ -62,17 +64,6 @@ public class Voltage extends CircuitElement {
         return null;
     }
 
-    double getVoltage() {
-	//double w = 2*pi*(sim.t-freqTimeZero)*frequency + phaseShift;
-        double w=0;
-	switch (waveform) {
-	case DC: return value+bias;
-	case AC: return Math.sin(w)*value+bias;
-	default: return 0;
-	}
-    }
-    final int circleSize = 17;
-    
     public void setPoints()
     {
 	super.setPoints();
@@ -142,19 +133,15 @@ public class Voltage extends CircuitElement {
         
     }
 	
-    public int getVoltageSourceCount() {
-	return 1;
-    }
-    double getPower() { return -getVoltageDiff()*current; }
-    public double getVoltageDiff() { return volts[1] - volts[0]; }
+    
     void getInfo(String arr[]) {
 	switch (waveform)
         {
             case DC: case WF_VAR:
-                arr[0] = "fonte de tensão";
+                arr[0] = "Fonte de tensão";
                 break;
             case AC:       
-                arr[0] = "fonte A/C"; 
+                arr[0] = "Fonte A/C"; 
                 break;
 	}
 	arr[1] = "I = " + getCurrentText(getCurrent());
@@ -169,12 +156,13 @@ public class Voltage extends CircuitElement {
 	    arr[i++] = "P = " + getUnitText(getPower(), "W");
 	}
     }
+
     public EditInfo getEditInfo(int n) {
 	if (n == 0)
 	    return new EditInfo(waveform == DC ? "Tensão" :
 				"Amplitude", value, -20, 20);
 	if (n == 1) {
-	    EditInfo ei =  new EditInfo("Waveform", waveform, -1, -1);
+	    EditInfo ei =  new EditInfo("Forma de Onda", waveform, -1, -1);
 	    ei.choice = new Choice();
 	    ei.choice.add("D/C");
 	    ei.choice.add("A/C");
@@ -184,31 +172,17 @@ public class Voltage extends CircuitElement {
 	    return null;
 	if (n == 2)
 	    return new EditInfo("Frequência (Hz)", frequency, 4, 500);
-	if (n == 3)
-	    return new EditInfo("Deslocamento DC (V)", bias, -20, 20);
-	if (n == 4)
-	    return new EditInfo("Deslocamento de fase (graus)", phaseShift*180/pi,
-				-180, 180).setDimensionless();
+	
 	
 	return null;
     }
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
 	    value = ei.value;
-	if (n == 3)
-	    bias = ei.value;
-	if (n == 2) {
-	    // adjust time zero to maintain continuity ind the waveform
-	    // even though the frequency has changed.
-	    double oldfreq = frequency;
+	if (n == 2) 
+        {
 	    frequency = ei.value;
-	    //double maxfreq = 1/(8*sim.timeStep);
-            double maxfreq = 0;
-	    if (frequency > maxfreq)
-		frequency = maxfreq;
-	    double adj = frequency-oldfreq;
-	    //freqTimeZero = sim.t-oldfreq*(sim.t-freqTimeZero)/frequency;
-            freqTimeZero = 0;
+            System.out.println("SET FREQ: "+frequency);
 	}
 	if (n == 1) {
 	    int ow = waveform;
@@ -223,9 +197,6 @@ public class Voltage extends CircuitElement {
 	    }
 	    setPoints();
 	}
-	if (n == 4)
-	    phaseShift = ei.value*pi/180;
-	if (n == 5)
-	    dutyCycle = ei.value*.01;
+
     }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.gui.plot;
 
 import java.awt.BorderLayout;
@@ -13,6 +8,9 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.plot.XYPlot;
 
 /**
  *
@@ -51,5 +49,12 @@ public class WindowPlot extends JFrame
     public void open_chart()
     {
         graphicsArea.setChart(ChartFactory.createXYLineChart(title,"tempo (s)", yAxisLabel, new XYSeriesCollection(dataset),PlotOrientation.VERTICAL,true,true,false));
+        /* Create an NumberAxis
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setTickUnit(new NumberTickUnit(2));
+
+        // Assign it to the chart
+        XYPlot plot = (XYPlot) graphicsArea.getChart().getPlot();
+        plot.setDomainAxis(xAxis);*/
     }
 }

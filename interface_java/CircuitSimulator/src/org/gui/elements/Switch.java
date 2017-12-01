@@ -12,7 +12,7 @@ public class Switch extends CircuitElement {
     public Switch(int xx, int yy)
     {
 	super(xx, yy);
-	state = false;
+	state = true;
         time_commutations= new ArrayList<>();
     }
     
@@ -23,19 +23,30 @@ public class Switch extends CircuitElement {
         time_commutations= new ArrayList<>();
     }
     
+    public void add_time_commutation(double time)
+    {
+        
+    }
+    
+    public ArrayList<Double> get_time_coomutations()
+    {
+        return time_commutations;
+    }
+    
     public Switch(int xa, int ya, int xb, int yb, int f,
 		     StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
-	String str = st.nextToken();
     }
     
     public void changeState()
     {
         state =!state;
+        System.out.println("ESTADO: "+state);
     }
     
     public void addTimeCommutations(double time)
     {
+        System.out.println("Add tempo de comutaçao: "+time);
         time_commutations.add(time);
     }
     public boolean getState()
@@ -64,8 +75,8 @@ public class Switch extends CircuitElement {
 	
     public void draw(Graphics g) {
 	int openhs = 16;
-	int hs1 = (state) ? 0 : 2;
-	int hs2 = (state) ? openhs : 2;
+	int hs1 = (!state) ? 0 : 2;
+	int hs2 = (!state) ? openhs : 2;
 	setBbox(point1, point2, openhs);
 
 	draw2Leads(g);

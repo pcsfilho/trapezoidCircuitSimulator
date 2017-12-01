@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.gui.elements.Switch;
@@ -18,6 +19,7 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
     int einfocount;
     final int barmax = 1000;
     NumberFormat noCommaFormat;
+    ArrayList<JTextField> text_array_switch;
 
     EditDialog(Editable ce, PanelCircuitArea p,MainWindow f) {
         
@@ -26,6 +28,7 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
 	cframe = f;
         this.panel_circuit = p;
 	elm = ce;
+        text_array_switch = new ArrayList<>();
         
 	setLayout(new EditDialogLayout());
 	einfos = new EditInfo[10];
@@ -59,29 +62,40 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
         
         if(elm instanceof Switch)
         {
-            System.out.println("Chave");
-            JTextField numCom = new JTextField();
-            Object[] message = {"Numero de Comutaçoes", numCom.getText()};
-            String option = JOptionPane.showInputDialog(null, message, "Numero de Comutaçoes da Chave", JOptionPane.OK_CANCEL_OPTION);
-            System.out.println("OPTION: "+option);
-            if (option == null)
+            
+            String option=null;
+            int rowCnt=((Switch)elm).get_time_coomutations().size();
+            
+            if(rowCnt==0)
             {
-                this.closeDialog();
-            }
-            else
-            {
-                int rowCnt=Integer.parseInt(option);
-                JTextField g = new JTextField("Tempos de Comutaçao");
-                g.setEditable(false);
-                JTextField sp=new JTextField();
-                add(g);
-                
-                for(int j=0;j<rowCnt;j++)
+                JTextField numCom = new JTextField();
+                Object[] message = {"Numero de Comutaçoes", numCom.getText()};
+                option = JOptionPane.showInputDialog(null, message, "Numero de Comutaçoes da Chave", JOptionPane.OK_CANCEL_OPTION);
+                if (option == null)
                 {
-                        g =new JTextField(5);
-                        add(new Label("Tempo "+(j+1)+": "));
-                        add(g);
+                    this.closeDialog();
                 }
+                else
+                {
+                    rowCnt=Integer.parseInt(option);
+                }
+            }
+            
+            
+            JTextField g = new JTextField("Tempos de Comutaçao");
+            g.setEditable(false);
+            JTextField sp=new JTextField();
+            add(g);
+            for(int j=0;j<rowCnt;j++)
+            {
+                g = new JTextField(5);
+                text_array_switch.add(g);
+                add(new Label("Tempo "+(j+1)+": "));
+                if(((Switch)elm).get_time_coomutations().size()>0)
+                {
+                    g.setText(""+((Switch)elm).get_time_coomutations().get(j));
+                }
+                add(g);
             }
         }
         
@@ -152,7 +166,8 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
 	
     void apply() {
 	int i;
-	for (i = 0; i != einfocount; i++) {
+	for (i = 0; i != einfocount; i++) 
+        {
 	    EditInfo ei = einfos[i];
 	    if (ei.textf == null)
 		continue;
@@ -163,7 +178,27 @@ public class EditDialog extends Dialog implements AdjustmentListener, ActionList
 		} catch (Exception ex) { /* ignored */ }
 	    }
 	    elm.setEditValue(i, ei);
+            
+            
 	}
+        if(elm instanceof Switch)
+            {
+                System.out.println("E chave");
+                ((Switch)elm).get_time_coomutations().clear();
+                
+                int num_size = text_array_switch.size();
+                System.out.println("Numero de tempos: "+num_size);
+                for(int j=0;j<num_size;j++)
+                {
+                    String temp = text_array_switch.get(j).getText();
+                    System.out.println("Tempo: "+temp);
+                    if(!temp.equals(""))
+                    {
+                        double time = Double.parseDouble(text_array_switch.get(j).getText());
+                        ((Switch)elm).addTimeCommutations(time);
+                    }
+                }
+            }
     }
 	
     public void actionPerformed(ActionEvent e) {

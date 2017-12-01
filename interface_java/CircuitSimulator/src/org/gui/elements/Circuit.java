@@ -112,9 +112,25 @@ public class Circuit
             int node_2=ce.nodes[1];
             String name = ce.get_name();
             
-            double value=ce.get_value();
+            
             String line;
-            line = type+" "+name+" "+node_1+" "+node_2+" "+value;
+            if(ce instanceof Switch)
+            {
+                int num_c = ((Switch)ce).get_time_coomutations().size();
+                int state = (((Switch)ce).getState()) ? 1 : 0;
+                line = type+" "+name+" "+node_1+" "+node_2+" "+state+" "+num_c;
+                for(int j=0;j<num_c;j++)
+                {
+                    line+=" "+((Switch)ce).get_time_coomutations().get(j);
+                }
+                
+            }
+            else
+            {
+                double value=ce.get_value();
+                line = type+" "+name+" "+node_1+" "+node_2+" "+value;
+            }
+            
             
             writer.print(line);
             if(i!=(elmCount-1))
@@ -137,7 +153,7 @@ public class Circuit
             line = type+" "+name+" "+((Voltage)ce).get_type_current()+" "+node_1+" "+node_2+" "+value;
             if(((Voltage)ce).get_type_current().equals("AC"))
             {
-                line+=" "+((Voltage)ce).get_frequency();
+                line+=" "+((ACVoltageSource)ce).get_frequency();
             }
             writer.print(line);
             if(i!=(sources.size()-1))
