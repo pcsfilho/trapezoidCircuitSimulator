@@ -69,6 +69,7 @@ public class Voltage extends CircuitElement {
 	super.setPoints();
 	calcLeads((waveform == DC || waveform == WF_VAR) ? 8 : circleSize*2);
     }
+    
     public void draw(Graphics g) {
 	setBbox(x_1, y_1, x_2, y_2);
 	draw2Leads(g);
@@ -131,72 +132,5 @@ public class Voltage extends CircuitElement {
             }
 	}
         
-    }
-	
-    
-    void getInfo(String arr[]) {
-	switch (waveform)
-        {
-            case DC: case WF_VAR:
-                arr[0] = "Fonte de tensão";
-                break;
-            case AC:       
-                arr[0] = "Fonte A/C"; 
-                break;
-	}
-	arr[1] = "I = " + getCurrentText(getCurrent());
-	if (waveform != DC && waveform != WF_VAR) {
-	    arr[3] = "f = " + getUnitText(frequency, "Hz");
-	    arr[4] = "Vmax = " + getVoltageText(value);
-	    int i = 5;
-	    if (bias != 0)
-		arr[i++] = "Voff = " + getVoltageText(bias);
-	    else if (frequency > 500)
-		arr[i++] = "wavelength = " + getUnitText(2.9979e8/frequency, "m");
-	    arr[i++] = "P = " + getUnitText(getPower(), "W");
-	}
-    }
-
-    public EditInfo getEditInfo(int n) {
-	if (n == 0)
-	    return new EditInfo(waveform == DC ? "Tensão" :
-				"Amplitude", value, -20, 20);
-	if (n == 1) {
-	    EditInfo ei =  new EditInfo("Forma de Onda", waveform, -1, -1);
-	    ei.choice = new Choice();
-	    ei.choice.add("D/C");
-	    ei.choice.add("A/C");
-	    return ei;
-	}
-	if (waveform == DC)
-	    return null;
-	if (n == 2)
-	    return new EditInfo("Frequência (Hz)", frequency, 4, 500);
-	
-	
-	return null;
-    }
-    public void setEditValue(int n, EditInfo ei) {
-	if (n == 0)
-	    value = ei.value;
-	if (n == 2) 
-        {
-	    frequency = ei.value;
-            System.out.println("SET FREQ: "+frequency);
-	}
-	if (n == 1) {
-	    int ow = waveform;
-	    waveform = ei.choice.getSelectedIndex();
-	    if (waveform == DC && ow != DC)
-            {
-		ei.newDialog = true;
-		bias = 0;
-	    } else if (waveform != DC && ow == DC) 
-            {
-		ei.newDialog = true;
-	    }
-	    setPoints();
-	}
-
     }
 }

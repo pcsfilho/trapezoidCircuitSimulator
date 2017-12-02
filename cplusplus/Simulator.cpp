@@ -7,12 +7,8 @@
 #include "Simulator.h"
 #include "matrix.h"
 
-
-
 using namespace std;
-
 Simulator::Simulator(){}
-
 
 Simulator::Simulator(ifstream &netlistFile, Simulation* sim)
 {
@@ -38,7 +34,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
     getline(netlistFile, netlistLine);
     Circuit* circuit = simulation->get_circuit();
     circuit->set_name(netlistLine);
-
+    
     //string delimiter = " ";
     vector<string> nodes;
     vector<string> vars;
@@ -62,7 +58,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                     tokens.push_back(token);
                 }
             }
-            if(tokens[0]=="R" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
+            if(tokens[0]=="R" || tokens[0]=="W" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
             {
                 circuit->add_element(tokens);
 
@@ -96,10 +92,8 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                 simulation->set_config_simulation(tokens);
             }
         }
-
     }
     netlistFile.close();
-
     cout<< "Nome do circuito: "<< circuit->get_name() <<endl;
     cout<< "Número de Elementos:"<< circuit->get_num_elements() <<endl;
     cout<< "Numero de Nos: "<< circuit->get_num_nodes() <<endl;
@@ -126,7 +120,6 @@ void Simulator::parser_simulator(ifstream &netlistFile)
         cout<<"Var: "<<circuit->get_elements()[i]->get_var()<<endl;
     }
 }
-
 
 bool Simulator::run_mna_analysis()
 {

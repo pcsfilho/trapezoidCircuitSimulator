@@ -46,7 +46,7 @@ void Circuit::add_element(vector<string> tokens)
     //double rl =  temp/step_time;
     //element->set_resistance(rl);
   }
-  else if(tokens[0]=="R")
+  else if(tokens[0]=="R" || tokens[0]=="W")
   {
     element = new Resistor(tokens);
   }
