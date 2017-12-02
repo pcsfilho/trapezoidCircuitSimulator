@@ -20,14 +20,15 @@ public class Simulation
     private double start_time;
     private double end_time;
     private Circuit circuit;
-    public static final double step = 1e-5;
+    private double step;
     
-    public Simulation(String type, double s_t, double e_t, Circuit c)
+    public Simulation(String type, double s_t, double e_t, double st,Circuit c)
     {
         this.type=type;
         this.start_time=s_t;
         this.end_time=e_t;
         this.circuit=c;
+        this.step = st;
     }
     /**
     * 
@@ -49,5 +50,15 @@ public class Simulation
     public Circuit getCircuit()
     {
         return circuit;
+    }
+    
+    public void set_step_size(double step)
+    {
+        this.step=step;
+    }
+    
+    public double get_step_size()
+    {
+        return this.step;
     }
 }

@@ -7,8 +7,8 @@ import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
+import org.gui.elements.Simulation;
 import org.gui.plot.ManagePlot;
-import org.gui.plot.PlotFile;
 import org.jni.InterfaceJNI;
 
 public class MainWindow extends JFrame implements ActionListener {
@@ -18,7 +18,7 @@ public class MainWindow extends JFrame implements ActionListener {
     private  JMenu menuFile, menuEdit, menuAbout;
     private  JMenuItem newFile, openFile, saveFile, close, cut, copy, paste, clearFile, aboutMe, aboutSoftware;
     private  JToolBar mainToolbar;
-    private JTextField timeSimulationtxt;
+    private JTextField timeSimulationtxt, stepSizetxt;
     JButton newButton, openButton, saveButton, clearButton, aboutMeButton, aboutButton,runButton,timeButton, pointerButton;
     private JTabbedPane tabbedPane;
     private JPanel principalPanel;
@@ -180,12 +180,13 @@ public class MainWindow extends JFrame implements ActionListener {
         mainToolbar.addSeparator();
         
         
-        JLabel timeLabel = new JLabel(timeIcon);
-        timeLabel.setToolTipText("Tempo de simulação");
-        mainToolbar.add(timeLabel);
+        //JLabel timeLabel = new JLabel(timeIcon);
+        //timeLabel.setToolTipText("Tempo de simulação");
+        //mainToolbar.add(timeLabel);
+        mainToolbar.add(new JLabel("Tempo"));
         mainToolbar.addSeparator();
         
-        timeSimulationtxt = new JTextField(8);
+        timeSimulationtxt = new JTextField(6);
         timeSimulationtxt.setText("0.0");
         timeSimulationtxt.setMaximumSize(timeSimulationtxt.getPreferredSize());
         timeSimulationtxt.setToolTipText("Tempo de simulação");
@@ -194,7 +195,7 @@ public class MainWindow extends JFrame implements ActionListener {
         {
             private void updateTime()
             {
-                canvas_panel.setTimeChanged(true);
+                canvas_panel.setChanged(true);
             }
             @Override
             public void insertUpdate(DocumentEvent e)
@@ -216,6 +217,44 @@ public class MainWindow extends JFrame implements ActionListener {
         });
         
         mainToolbar.add(timeSimulationtxt);
+        mainToolbar.addSeparator();
+        
+        
+        
+        mainToolbar.add(new JLabel("Passo"));
+        mainToolbar.addSeparator();
+        
+        stepSizetxt = new JTextField(6);
+        stepSizetxt.setText("1E-5");
+        stepSizetxt.setMaximumSize(stepSizetxt.getPreferredSize());
+        stepSizetxt.setToolTipText("Passo de Integraçao");
+        
+        stepSizetxt.getDocument().addDocumentListener(new DocumentListener()
+        {
+            private void updateSize()
+            {
+                canvas_panel.setChanged(true);                
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e)
+            {
+                updateSize();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e)
+            {
+                updateSize();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e)
+            {
+                updateSize();
+            }
+        });
+        
+        mainToolbar.add(stepSizetxt);
         mainToolbar.addSeparator();
         
         runButton = new JButton(goIcon);
@@ -271,6 +310,11 @@ public class MainWindow extends JFrame implements ActionListener {
     public String get_time_simulation()
     {
         return timeSimulationtxt.getText();
+    }
+    
+    public String get_step_simulation()
+    {
+        return stepSizetxt.getText();
     }
     
     private void addComponentsEletrics(JPanel panel, int i)
@@ -372,15 +416,35 @@ public class MainWindow extends JFrame implements ActionListener {
         {
          try
             {
+                
                 if (Double.parseDouble(timeSimulationtxt.getText())>0)
                 {
-                    manage_plots =new ManagePlot();
-                    String path_circuit=canvas_panel.analysis_circuit(get_time_simulation(), manage_plots);
-                    if(path_circuit!=null)
+                    if(Double.parseDouble(stepSizetxt.getText())>0)
                     {
-                        InterfaceJNI jni=new InterfaceJNI();
-                        String path_out = jni.run_analysis(path_circuit);
-                        manage_plots.open_chart(path_out);
+                        if(Double.parseDouble(timeSimulationtxt.getText())>Double.parseDouble(stepSizetxt.getText()))
+                        {
+                            manage_plots =new ManagePlot();
+                            String path_circuit=canvas_panel.analysis_circuit(get_time_simulation(), get_step_simulation(),manage_plots);
+                            if(path_circuit!=null)
+                            {
+                                InterfaceJNI jni=new InterfaceJNI();
+                                String path_out = jni.run_analysis(path_circuit);
+                                manage_plots.open_chart(path_out);
+                            }
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(this,
+                            "Pro favor digite um tempo de simulaçao menor que o passo de integraçao", "Erro de passo de simulação",
+                            JOptionPane.ERROR_MESSAGE);
+                        }
+                        
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(this,
+                            "Pro favor digite um passo de integraçao válido", "Erro de passo de simulação",
+                            JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 else
@@ -392,7 +456,7 @@ public class MainWindow extends JFrame implements ActionListener {
             }
             catch (NumberFormatException ex)
             {
-                JOptionPane.showMessageDialog(this, "Verifique se o valor no tempo de simulação é válido","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Verifique se o valor no tempo e passo de simulação sao válidos","Análise do circuito",JOptionPane.ERROR_MESSAGE);
             }
         }
         // If the source was the "open" option

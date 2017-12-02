@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -97,7 +95,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     private boolean circuitChanged;
     //endregion
     private Simulation sim;
-    private boolean timeChanged;
     
     /**
      * Contrutor que recebe o Frame principal
@@ -1040,6 +1037,7 @@ boolean dragging;
             {
                 Point pt = ce.getPost(j);
                 int k;
+                int node;
                 for (k = 0; k < nodeList.size(); k++)
                 {
                     CircuitNode cn = getCircuitNode(k);
@@ -1071,85 +1069,28 @@ boolean dragging;
                     CircuitNodeLink cnl = new CircuitNodeLink(j,ce);
                     cn.getLinks().add(cnl);
                 }
+                node=k;                
                 ce.setNode(j, k);
-                if(!(ce instanceof Ground))
+                node=k;
+                if(k==groundCount)
                 {
-                    if(groundList.contains(k))
-                    {
-                        ce.setNode(j, 0);
-                    }
-                    else
-                    {
-                        ce.setNode(j, k);
-                    }
+                    node=1;
                 }
+                else if(k<groundCount)
+                {
+                    node=0;
+                }
+                else if(k>groundCount)
+                {
+                    node=k-(groundCount-1);
+                }
+                ce.setNode(j, node);
             }
             //add elementos que descrevem o circuito
             if(!(ce instanceof Ground))
             {
                 circuit.add_element(ce);
             }
-        }
-    }
-    /**
-     * 
-     */
-    private void adjustment_nodes()
-    {
-        int pos=groundCount;
-        int n_maior=0;
-        while(pos<circuit.get_elements().size())
-        {
-            //System.out.println("POS: "+pos);
-            int temp_node_value=0;
-            int temp_node_num=1;
-            n_maior++;
-            for(int i=pos;i<elmList.size();i++)
-            {
-                CircuitElement ce = elmList.get(i);
-                //System.out.println("Elemento: "+ce.get_name());
-                for(int j=0;j<ce.getNodesCount();j++)
-                {
-                  //  System.out.println("No: "+(j+1));
-                    boolean compare=false;
-                    /*if(wireCount>0)
-                    {
-                        compare = (ce.getNodes()[j]>=wireCount) && (ce.getNodes()[j]>0);
-                    }
-                    else
-                    {
-                        compare = (ce.getNodes()[j]>groundCount) && (ce.getNodes()[j]>0);
-                    }*/
-                                    
-                                    if(ce.getNodes()[j]>n_maior)
-                                    {
-                    //                    System.out.println("Valor: "+ce.getNodes()[j]);
-                                        temp_node_num=j;
-                                        if(temp_node_value==0)
-                                        {
-                      //                      System.out.println("TEMP ZERO");
-                                            temp_node_value = ce.getNodes()[j];
-                                            ce.setNode(j,n_maior);
-                                            pos=i;
-                        //                    System.out.println("Substituiu por: "+ce.getNodes()[j]);
-                                            break;
-                                        }
-                                        else
-                                        {
-                          //                  System.out.println("TEMP N ZERO");
-                                            if(ce.getNodes()[j]==temp_node_value)
-                                            {
-                                                ce.setNode(j,n_maior);
-                            //                    System.out.println("Substituiu por: "+ce.getNodes()[j]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if(temp_node_num==1)
-                            {
-                                pos++;
-                            }
         }
     }
     /**
@@ -1200,18 +1141,6 @@ boolean dragging;
                             System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
                         }
                     }*/
-                    //Se existir conexoes no circuito
-                    adjustment_nodes();  
-                    /*System.out.println("CORRIGE NUMERAÇAO");
-                    for(i=0;i<circuit.get_elements().size();i++)
-                    {
-                        CircuitElement ce=circuit.get_elements().get(i);
-                        System.out.println("Elemento: "+ (char)ce.getType());
-                        for(int k=0;k<ce.getNodes().length;k++)
-                        {
-                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
-                        }
-                    }*/
                     //Cria arquivo 
                     try
                     {   
@@ -1255,32 +1184,31 @@ boolean dragging;
      * @param time 
      * @return  
      */
-    public String analysis_circuit(String time, ManagePlot mp)
+    public String analysis_circuit(String time, String step,ManagePlot mp)
     {
         if(getChanged())
         {
             create_circuit_description(mp);
-        }
-        
-        if(circuit.get_path_circuit_name()!=null && !circuit.get_path_circuit_name().equals(""))
-        {
-            try
+            if(circuit.get_path_circuit_name()!=null && !circuit.get_path_circuit_name().equals(""))
             {
-                sim = new Simulation("TRAN",0.0,Double.parseDouble(time), circuit);
-                timeChanged=false;
-                return sim.create_simulation_file();
-            }
-            catch (IOException ex)
-            {
-                JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+                try
+                {
+                    sim = new Simulation("TRAN",0.0, Double.parseDouble(time), Double.parseDouble(step), circuit);
+                    circuitChanged=false;
+                    return sim.create_simulation_file();
+                }
+                catch (IOException ex)
+                {
+                    JOptionPane.showMessageDialog(frame_parent, "Houve algum erro na análise do circuito","Análise do circuito",JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
         return null;
     }
     
-    public void setTimeChanged(boolean s)
+    public void setChanged(boolean s)
     {
-        this.timeChanged=s;
+        this.circuitChanged =s;
     }
     /**
      * Requisita um caminho ao usuário para salvar o circuito presente no canvas
