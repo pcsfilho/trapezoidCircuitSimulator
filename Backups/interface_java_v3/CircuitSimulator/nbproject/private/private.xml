@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/MainWindow.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/Simulation.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/Wire.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/plot/WindowPlot.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/canvas/PanelCircuitArea.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/ACVoltageSource.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/Circuit.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/DCVoltageSource.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/elements/Capacitor.java</file>
+            <file>file:/home/paulo/Documentos/UEFS/TCC/Código/trapezoidCircuitSimulator/interface_java/CircuitSimulator/src/org/gui/plot/ManagePlot.java</file>
+        </group>
+    </open-files>
+</project-private>

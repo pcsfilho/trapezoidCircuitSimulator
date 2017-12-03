@@ -8,6 +8,8 @@
       <in>Inductor.cpp</in>
       <in>InterfaceJNI.cpp</in>
       <in>Node.cpp</in>
+      <in>Output.cpp</in>
+      <in>Output.h</in>
       <in>Resistor.cpp</in>
       <in>Simulation.cpp</in>
       <in>Simulator.cpp</in>
@@ -61,6 +63,10 @@
       <item path="InterfaceJNI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Node.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Output.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Output.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Resistor.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -331,7 +331,7 @@ public class MainWindow extends JFrame implements ActionListener {
             addComponentsOnSideBar(panel, new JButton(switchIcon) ,"Switch","Chave");
             addComponentsOnSideBar(panel, new JButton(wireIcon) ,"Wire","Conexão");
             addComponentsOnSideBar(panel, new JButton(voltmeterIcon) ,"Voltmeter","Voltimetro");
-            addComponentsOnSideBar(panel, new JButton(ammeterIcon) ,"Ammeter","Amperimentro");
+            addComponentsOnSideBar(panel, new JButton(ammeterIcon) ,"Ammeter","Amperimetro");
             addComponentsOnSideBar(panel, new JButton(groundIcon) ,"Ground","Terra");
         }
         else
@@ -427,9 +427,9 @@ public class MainWindow extends JFrame implements ActionListener {
                             String path_circuit=canvas_panel.analysis_circuit(get_time_simulation(), get_step_simulation(),manage_plots);
                             if(path_circuit!=null)
                             {
-                                InterfaceJNI jni=new InterfaceJNI();
-                                String path_out = jni.run_analysis(path_circuit);
-                                manage_plots.open_chart(path_out);
+                                //InterfaceJNI jni=new InterfaceJNI();
+                                //String path_out = jni.run_analysis(path_circuit);
+                                //manage_plots.open_chart(path_out);
                             }
                         }
                         else

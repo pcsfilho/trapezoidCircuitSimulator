@@ -13,14 +13,21 @@ import java.util.StringTokenizer;
  *
  * @author paulo
  */
-public class Ammeter extends CircuitElement
+public class Ammeter extends Wire
 {
+    public static boolean ideal = false;
+    private static final double defaultResistance = 1E-06;
+    
+    public Ammeter(int xa, int ya, int xb, int yb, int f,
+		    StringTokenizer st) 
+        {
+	    super(xa, ya, xb, yb, f, new StringTokenizer("0.0"));
+	    value = defaultResistance;
+	}
+    
     public Ammeter(int xx, int yy) {
 	    super(xx, yy);
-	}
-	public Ammeter(int xa, int ya, int xb, int yb, int f,
-		   StringTokenizer st) {
-	    super(xa, ya, xb, yb, f);
+            value = defaultResistance;
 	}
 	
 	public int getType()

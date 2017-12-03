@@ -518,7 +518,13 @@ public abstract class CircuitElement implements Editable {
 	g.setFont(unitsFont);
 	FontMetrics fm = g.getFontMetrics();
 	int w = fm.stringWidth(s);
-	g.setColor(whiteColor);
+        if(this instanceof Voltmeter || this instanceof Ammeter)
+        {
+            Font myFont = new Font ("Arial Black", 1, 12);
+            g.setFont (myFont);
+            g.setColor(Color.BLACK);
+        }
+	
 	int ya = fm.getAscent()/2;
 	int xc, yc;
 	    xc = (x_2+x_1)/2;

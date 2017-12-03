@@ -14,6 +14,8 @@
       <in>InterfaceJNI.cpp</in>
       <in>Node.cpp</in>
       <in>Node.h</in>
+      <in>Output.cpp</in>
+      <in>Output.h</in>
       <in>Resistor.cpp</in>
       <in>Resistor.h</in>
       <in>Simulation.cpp</in>

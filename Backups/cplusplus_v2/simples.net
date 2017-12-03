@@ -1,0 +1,12 @@
+circuito teste
+R R0102 1 2 1
+* Comentario
+R R0301 3 1 1
+R R0403 4 3 1
+R R0004 0 4 1
+R R0502 5 2 1
+R R0605 6 5 1
+C O0300 3 0 1 0
+C O0600 6 0 5 4
+V V0200 2 0 1
+. TRAN 

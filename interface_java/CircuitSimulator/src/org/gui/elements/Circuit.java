@@ -172,7 +172,7 @@ public class Circuit
                 writer.println();
                 line = ". PLOT A "+name;
                 writer.print(line);
-                manage_plot.add_plot(name,"Corrente (A)");
+                //manage_plot.add_plot(name,"Corrente (A)");
             }
             
             if(ce.getPlotVoltage())
@@ -181,13 +181,13 @@ public class Circuit
                 writer.println();
                 line = ". PLOT V "+name;
                 writer.print(line);
-                manage_plot.add_plot(name,"Tensao (V)");
+                //manage_plot.add_plot(name,"Tensao (V)");
             }
         }
         
-        /*for(int i=0;i<measuring_elements.size();i++)
+        for(int i=0;i<measuring_elements.size();i++)
         {
-            //writer.println();
+            writer.println();
             CircuitElement ce=measuring_elements.get(i);
             String type = ""+(char)ce.getType();
             int node_1=ce.nodes[0];
@@ -197,17 +197,18 @@ public class Circuit
             if(type.equals("M"))
             {
                 type="V";
+                manage_plot.add_plot(name,"Tensao (V)");
             }
-            
-            line = ". PLOT "+type+" "+name+" "+node_1+" "+node_2;
-            
-            //writer.print(line);
-            if(i!=(sources.size()-1))
+            else
             {
-                //writer.println();
+                manage_plot.add_plot(name,"Corrente (A)");
             }
-            System.out.println("Linha: "+line);
-        }*/
+            
+            line = ". PLOT "+type+" "+node_1+" "+node_2;
+            
+            writer.print(line);
+            //System.out.println("Linha: "+line);
+        }
         writer.close();
     }
 }

@@ -63,7 +63,7 @@ import org.gui.canvas.EditInfo;
 		}
 		interpPoint2(lead1, lead2, ps1, ps2, 1, hs);
 		drawThickLine(g, ps1, ps2);
-                drawValues(g, name, 12);
+                drawValues(g, name, 10);
                 doDots(g);
                 drawPosts(g);
                 
