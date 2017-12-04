@@ -12,15 +12,13 @@ using namespace std;
 class Output{
     public:
         Output();
-        Output(vector<string> nodes, string type);
-        Element(vector<string> nodes);
+        Output(string node_1,string node_2 ,string type);
         string get_type();
         double get_value(double** Yn_original, int num_vars);
         int get_node_1();
         int get_node_2();
     protected:
         string type;
-        double value;
         int node_1;
         int node_2;
     private:

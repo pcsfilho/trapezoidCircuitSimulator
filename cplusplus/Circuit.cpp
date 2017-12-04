@@ -46,10 +46,11 @@ void Circuit::add_element(vector<string> tokens)
     //double rl =  temp/step_time;
     //element->set_resistance(rl);
   }
-  else if(tokens[0]=="R" || tokens[0]=="W")
+  else if(tokens[0]=="R" || tokens[0]=="W" || tokens[0]=="A" || tokens[0]=="M")
   {
     element = new Resistor(tokens);
   }
+  
   else
   {
     Switch* s=new Switch(tokens);
@@ -169,62 +170,7 @@ string Circuit::set_node_values(double** matrix_solution, double time)
     return temp;
 }
 
-string Circuit::calculate_plot_elements(double** matrix_solution, double time)
-{
-    Element* e;
-    stringstream ss (stringstream::in | stringstream::out);
-    ss << time;
-    string temp="";
-    temp=ss.str();
-    for(int i=0;i<get_num_elements();i++)
-    {
-        e=get_element_by_index(i);
-        if((e->get_type().compare("V") !=0) && (e->get_type().compare("I")!=0) && (e->get_type().compare("S")!=0))
-        {
-            stringstream ss (stringstream::in | stringstream::out);
-            if(e->get_type().compare("L")==0 || e->get_type().compare("C")==0 || e->get_type().compare("R")==0)
-            {
-                //cout<<"ELEMENTO: "<<e->get_name()<<endl;
-                //cout<<"PLOT CORRENTE?: "<<e->getPlotCurrent()<<" "<< true <<endl;
-                double value;
-                if(e->getPlotCurrent()==true)
-                {
-                    if(e->get_type().compare("L")==0)
-                    {
-                        Inductor* l = dynamic_cast<Inductor*>(e);
-                        value=l->get_current();
-                    }
-                    else if(e->get_type().compare("C")==0)
-                    {
-                        Capacitor* c = dynamic_cast<Capacitor*>(e);
-                        value=c->get_current();
-                    }
-                    else
-                    {
-                        Resistor* r = dynamic_cast<Resistor*>(e);
-                        value=(r->get_voltage(matrix_solution, get_num_vars())/r->get_resistance());
-                    }
-                    
-                    ss << value;
-                    temp +=" "+ss.str();
-                  //  cout<<"CORRENTE ELEMENTO: " << e->get_name() <<" "<< temp<<endl;
-                }
-                //cout<<"PLOT TENSAO?: "<<e->getPlotVoltage()<<" "<< true <<endl;
-                ss.str(std::string());
-                if(e->getPlotVoltage()==true)
-                {
-                    value=e->get_voltage(matrix_solution, get_num_vars());
-                    ss << value;
-                    temp +=" "+ss.str();                    
-                    //cout<<"TENSAO ELEMENTO: " << e->get_name() <<" "<< temp<<endl;
-                }
-            }
-        }
-    }
-    //temp = temp.substr(0, temp.size()-1);
-   // cout<<"LINHA: " <<temp<<endl;
-    return temp;
-}
+
 
 /**
  */

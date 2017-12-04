@@ -1,8 +1,10 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
+
 #include <string>
 #include <vector>
 #include "Circuit.h"
+#include "Output.h"
 
 using namespace std;
 
@@ -41,11 +43,13 @@ private:
   double** matrix_mna;
   double** matrix_mna_aux;
   vector<double> nodal_solution;
+  vector<Output*> outputs;
   double get_parsed_value(string s);
   void build_matriz_mna();
   void update_matriz_mna();
   void init_nodal_solution();
   void write_in_file(string file_path, string line);
+  string calculate_plot_outputs();
 };
 
 #endif

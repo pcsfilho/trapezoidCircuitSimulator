@@ -58,7 +58,7 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                     tokens.push_back(token);
                 }
             }
-            if(tokens[0]=="R" || tokens[0]=="W" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V")
+            if(tokens[0]=="R" || tokens[0]=="W" || tokens[0]=="L" || tokens[0]=="C" ||tokens[0]=="S" ||tokens[0]=="I" || tokens[0]=="V" ||tokens[0]=="A" || tokens[0]=="M")
             {
                 circuit->add_element(tokens);
 
@@ -85,6 +85,12 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                 {
                     circuit->add_node(node_2);
                     nodes.push_back(node_2);
+                }
+                
+                if(tokens[0]=="M" || tokens[0]=="A")
+                {
+                    cout<<"Configuraçao plot"<<endl;
+                    simulation->set_config_simulation(tokens);
                 }
             }
             else if(tokens[0].compare(".")==0)

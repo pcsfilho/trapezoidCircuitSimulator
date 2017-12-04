@@ -9,7 +9,8 @@ static const int MAX_NAME = 11;
 static const int MAX_NODES = 50;
 static const int MAX_ELEMENTS = 50;
 static const int REFERENCIA =0;
-static const int RS=1e9;
+static const int RS=1e6;
+static const double W=1e-6;
 static const double TOLG = 1e-9;
 
 

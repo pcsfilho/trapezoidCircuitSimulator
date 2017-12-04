@@ -6,27 +6,31 @@
 package org.gui.elements;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-import static org.gui.elements.CircuitElement.drawThickCircle;
-
 /**
- *
- * @author paulo
- */
-public class Voltmeter extends CircuitElement
+* @author paulo
+*/
+public class Voltmeter extends Resistor
 {
     final int filament_len = 40;        
     Point filament[],  center;
-    public Voltmeter(int xx, int yy) {
-	    super(xx, yy);
-	}
-	public Voltmeter(int xa, int ya, int xb, int yb, int f,
-		   StringTokenizer st) {
-	    super(xa, ya, xb, yb, f);
-	}
+    public static boolean ideal = false;
+    private static final double defaultResistance = 1E9;
+    
+    public Voltmeter(int xx, int yy) 
+    {
+        super(xx, yy);
+        value = defaultResistance;
+    }
+        
+    public Voltmeter(int xa, int ya, int xb, int yb, int f,
+		    StringTokenizer st) 
+    {
+        super(xa, ya, xb, yb, f, new StringTokenizer("0.0"));
+        value = defaultResistance;
+    }
 	
 	public int getType()
         {

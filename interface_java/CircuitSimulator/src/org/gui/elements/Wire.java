@@ -8,7 +8,8 @@ import java.util.StringTokenizer;
         
 	public Wire(int xx, int yy) 
         {
-            super(xx, yy); value = defaultResistance;
+            super(xx, yy);
+            value = defaultResistance;
         }
         
 	public Wire(int xa, int ya, int xb, int yb, int f,

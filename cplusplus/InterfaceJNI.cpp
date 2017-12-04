@@ -34,12 +34,11 @@ JNIEXPORT jstring JNICALL Java_org_jni_InterfaceJNI_run_1analysis
       simulator.init_matrix_mna();
       if(simulator.run_mna_analysis())
       {
-          printf("Retornou");
           return env->NewStringUTF(path.c_str());
       }
       else
       {
-        printf("N Retornou");
+        printf("Ocorreu algum erro durante a analise do circuito.");
       }
   }
   else

@@ -19,7 +19,7 @@ public class Circuit
 {
     private ArrayList<CircuitElement> elements;    
     private ArrayList<CircuitElement> sources;  
-    private ArrayList<CircuitElement> measuring_elements;  
+//    private ArrayList<CircuitElement> measuring_elements;  
     private String circuit_name;
     private String path_circuit_name;
     private int elmCount;
@@ -30,7 +30,7 @@ public class Circuit
     {
         elements=new  ArrayList<>();
         sources=new  ArrayList<>();
-        measuring_elements=new  ArrayList<>();
+        //measuring_elements=new  ArrayList<>();
         circuit_name="";
         path_circuit_name="";
         elmCount=0;
@@ -46,10 +46,10 @@ public class Circuit
                 sources.add(elm);
                 elements.add(elm);
                 break;
-            case "M":
-            case "A":
-                measuring_elements.add(elm);
-                break;
+            //case "M":
+            //case "A":
+                //measuring_elements.add(elm);
+              //  break;
             default:
                 elements.add(elmCount,elm);
                 elmCount++;
@@ -127,6 +127,18 @@ public class Circuit
             }
             else
             {
+                if(ce instanceof Voltmeter || ce instanceof Ammeter)
+                {
+                    if(type.equals("M"))
+                    {
+                        manage_plot.add_plot(name,"Tensao (V)");
+                    }
+                    else
+                    {
+                        manage_plot.add_plot(name,"Corrente (A)");
+                    }
+                }
+                
                 double value=ce.get_value();
                 line = type+" "+name+" "+node_1+" "+node_2+" "+value;
             }
@@ -160,43 +172,18 @@ public class Circuit
             }
         }
         
-        for(int i=0;i<elmCount;i++)
-        {
-            CircuitElement ce=elements.get(i);
-            String name = ce.get_name();
-            
-            String line;
-            if(ce.getPlotCurrent())
-            {
-                plotCount++;
-                writer.println();
-                line = ". PLOT A "+name;
-                writer.print(line);
-                //manage_plot.add_plot(name,"Corrente (A)");
-            }
-            
-            if(ce.getPlotVoltage())
-            {
-                plotCount++;
-                writer.println();
-                line = ". PLOT V "+name;
-                writer.print(line);
-                //manage_plot.add_plot(name,"Tensao (V)");
-            }
-        }
-        
-        for(int i=0;i<measuring_elements.size();i++)
+        /*for(int i=0;i<measuring_elements.size();i++)
         {
             writer.println();
             CircuitElement ce=measuring_elements.get(i);
             String type = ""+(char)ce.getType();
+            double value = ce.get_value();
             int node_1=ce.nodes[0];
             int node_2=ce.nodes[1];
             String name = ce.get_name();
             String line;
             if(type.equals("M"))
             {
-                type="V";
                 manage_plot.add_plot(name,"Tensao (V)");
             }
             else
@@ -204,11 +191,11 @@ public class Circuit
                 manage_plot.add_plot(name,"Corrente (A)");
             }
             
-            line = ". PLOT "+type+" "+node_1+" "+node_2;
+            line = type+" "+name+" "+node_1+" "+node_2+" "+value;
             
             writer.print(line);
             //System.out.println("Linha: "+line);
-        }
+        }*/
         writer.close();
     }
 }

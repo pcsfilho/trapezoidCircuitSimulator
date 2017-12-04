@@ -25,16 +25,16 @@ Circuit::Circuit(string name, int numElements, int numNodes, vector<Element*> el
 void Circuit::add_element(vector<string> tokens)
 {
   Element *element;
-  
+
   if(tokens[0]=="V"||tokens[0]=="I")
   {
     element= new Source(tokens);
     element->set_resistance(0);
-    
+
   }
   else if(tokens[0]=="C")
   {
-    element = new Capacitor(tokens,numVars);    
+    element = new Capacitor(tokens,numVars);
     //double temp=2*(element->get_value());
     //double rc = step_time/temp;
     //element->set_resistance(rc);
@@ -58,7 +58,7 @@ void Circuit::add_element(vector<string> tokens)
   }
   elements.push_back(element);
   numElements++;
-  
+
   if(tokens[0]=="V")
   {
       add_var("I_"+element->get_name());
@@ -145,7 +145,7 @@ vector<Node*> Circuit::get_nodes()
     return nodes;
 }
 /**
- * 
+ *
  * @param matrix_solution
  */
 string Circuit::set_node_values(double** matrix_solution, double time)
@@ -160,9 +160,9 @@ string Circuit::set_node_values(double** matrix_solution, double time)
         stringstream ss (stringstream::in | stringstream::out);
         ss << matrix_solution[i][get_num_vars()];
         temp +=" "+ss.str();
-        
+
         node = get_nodes()[i];
-        
+
         node->add_solution(matrix_solution[i][get_num_vars()]);
     }
     temp = temp.substr(0, temp.size()-1);

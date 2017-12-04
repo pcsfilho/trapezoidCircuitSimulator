@@ -7,7 +7,6 @@ import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
-import org.gui.elements.Simulation;
 import org.gui.plot.ManagePlot;
 import org.jni.InterfaceJNI;
 
@@ -427,9 +426,9 @@ public class MainWindow extends JFrame implements ActionListener {
                             String path_circuit=canvas_panel.analysis_circuit(get_time_simulation(), get_step_simulation(),manage_plots);
                             if(path_circuit!=null)
                             {
-                                //InterfaceJNI jni=new InterfaceJNI();
-                                //String path_out = jni.run_analysis(path_circuit);
-                                //manage_plots.open_chart(path_out);
+                                InterfaceJNI jni=new InterfaceJNI();
+                                String path_out = jni.run_analysis(path_circuit);
+                                manage_plots.open_chart(path_out);
                             }
                         }
                         else

@@ -7,6 +7,7 @@
 #include "CONSTANTES.h"
 #include "matrix.h"
 #include "Switch.h"
+#include "Output.h"
 //#include "utils.h"
 
 using namespace std;
@@ -17,11 +18,15 @@ Simulation::Simulation()
   end_time=0;
   step_time=0;
   current_time=0;
+  
 }
 
-Simulation::Simulation(Circuit circuit, double init_time, double end_time,double step_time)
+Simulation::Simulation(Circuit circuit, double init_t, double end_t,double step_t)
 {
-
+    initial_time=init_t;
+    end_time=end_t;
+    step_time=step_t;
+    current_time=0;
 }
 
 void Simulation::set_config_simulation(vector<string> data)
@@ -34,29 +39,10 @@ void Simulation::set_config_simulation(vector<string> data)
         initial_time = get_parsed_value(data[3]);
         end_time = get_parsed_value(data[4]);
     }
-    else if(data[1].compare("PLOT")==0)
+    else if(data[0].compare("M") == 0 || data[0].compare("A")==0)
     {
-        Element* element;
-        for(int i=0; i<circuit.get_num_elements();i++)
-        {
-            element = circuit.get_element_by_index(i);
-            if(element->get_type().compare("C") ==0 || element->get_type().compare("L")==0 || element->get_type().compare("R")==0)
-            {
-                //cout<< "ELEMENTO: " << element->get_name() << "=> DATA[3]: "<< data[3]<<endl;
-                if(element->get_name().compare(data[3])==0)
-                {
-                    //cout<<"TIPO PLOT: "<< data[2]<<endl;
-                    if(data[2].compare("A")==0)
-                    {
-                        element->setPlotCurrent();
-                    }
-                    else
-                    {
-                        element->setPlotVoltage();
-                    }
-                }
-            }        
-        }
+        Output* out = new Output(data[2], data[3] ,data[0]);
+        outputs.push_back(out);
     }
 }
 
@@ -70,7 +56,7 @@ void Simulation::create_matrix_mna()
 void Simulation::build_matriz_mna()
 {
     Element* element;
-    cout<<"BUILD"<<endl;
+    //cout<<"BUILD"<<endl;
 
     for(int i=0; i<circuit.get_num_elements();i++)
     {
@@ -100,7 +86,7 @@ void Simulation::build_matriz_mna()
         //cout<<"Elemento: "<<element->get_name()<<endl;
         //print_matrix(get_circuit()->get_num_vars(), matrix_mna);
     }
-    print_matrix(get_circuit()->get_num_vars(), matrix_mna);
+    //print_matrix(get_circuit()->get_num_vars(), matrix_mna);
 }
 
 void Simulation::update_matriz_mna()
@@ -164,8 +150,9 @@ void Simulation::update_matriz_mna()
         {
     //        cout<<"RESISTOR"<<endl;
         }
-        //print_matrix(get_circuit()->get_num_vars(),matrix_mna);
+        
     }
+    //print_matrix(get_circuit()->get_num_vars(),matrix_mna);
 }
 /**
  * Funçao que faz iteraçoes a partir do netlist para obter a soluçao do sistema de acordo com as
@@ -205,9 +192,9 @@ bool Simulation::run_analysis()
         {
     //        cout<<"Converge"<<endl;
            // print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
-            write_in_file(output_file_name, get_circuit()->calculate_plot_elements(matrix_mna_aux, current_time));
+            write_in_file(output_file_name,calculate_plot_outputs());
             //printf("escreveu");
-            //cout<<get_circuit()->calculate_plot_elements(matrix_mna_aux, current_time)<<endl;
+            //cout<<calculate_plot_outputs()<<endl;
             //plot 'SWITCH_AC.dat' using 1:2 with lines, 'SWITCH_AC.dat' using 1:3 with lines, 'SWITCH_AC.dat' using 1:4 with lines
                 //plot 'SWITCH_AC.dat' using 1:2 title "Corrente em L1" with lines
             //set xrange [0:0.15]
@@ -239,9 +226,30 @@ plot [0:0.15] [-1:1] 'SWITCH_AC.dat' using 1:4  with lines
         current_time = current_time + step_time;
         iteration++;
     }
-    cout<<"Resultado Final"<<endl;
-    print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
+    //cout<<"Resultado Final"<<endl;
+    //print_matrix(get_circuit()->get_num_vars(),matrix_mna_aux);
     return true;
+}
+
+string Simulation::calculate_plot_outputs()
+{
+    Output* o;
+    stringstream ss (stringstream::in | stringstream::out);
+    ss << current_time;
+    string temp="";
+    temp=ss.str();
+    for(int i=0;i<outputs.size();i++)
+    {
+        o=outputs[i];
+        stringstream ss (stringstream::in | stringstream::out);
+        double value;
+        value = o->get_value(matrix_mna_aux, circuit.get_num_vars());
+        ss << value;
+        temp +=" "+ss.str();
+    }
+    temp = temp.substr(0, temp.size()-1);
+    //cout<<"LINHA: " <<temp<<endl;
+    return temp;
 }
 
 void Simulation::set_output_file_name(string name)
