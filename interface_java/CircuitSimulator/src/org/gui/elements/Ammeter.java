@@ -54,7 +54,7 @@ public class Ammeter extends Wire
         }
         
 	public void draw(Graphics g) {
-	    	    int cr = 15;
+	    int cr = 15;
 	    draw2Leads(g);
 	    setVoltageColor(g, (volts[0]+volts[1])/2);
 	    setPowerColor(g, false);

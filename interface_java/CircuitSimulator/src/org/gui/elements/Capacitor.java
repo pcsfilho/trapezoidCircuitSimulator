@@ -79,20 +79,8 @@ import org.gui.canvas.EditInfo;
         {
             if(n==0)
             {
-                return new EditInfo("Capacitância (F)", value, 0, 0);
+                return new EditInfo("Capacitância (F)", this.value, 0, 0);
             }
-            else if (n == 1)
-            {
-		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR TENSAO", plot_voltage);
-		return ei;
-	    }
-            else if (n == 2)
-            {
-		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR CORRENTE", plot_current);
-		return ei;
-	    }
             return null;
 	}
         
@@ -101,23 +89,7 @@ import org.gui.canvas.EditInfo;
         {
             if (n == 0 && ei.value > 0)
             {
-		value = ei.value;
+		this.value = ei.value;
             }
-            else if (n == 1) 
-            {
-                plot_voltage=false;
-		if (ei.checkbox.getState())
-                {
-                    plot_voltage=true;
-                }
-	    }
-            else if (n == 2) 
-            {
-                plot_current=false;
-		if (ei.checkbox.getState())
-                {
-                    plot_current=true;
-                }
-	    }
 	}
     }

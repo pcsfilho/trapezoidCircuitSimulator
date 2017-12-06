@@ -13,12 +13,12 @@ public class Inductor extends CircuitElement{
     public Inductor(int xx, int yy) 
     {
 	    super(xx, yy);
-	    value = 1;
+	    value = 1e-6;
     }
     public Inductor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
     {
         super(xa, ya, xb, yb, f);
-        value = 1;
+        value = 1e-6;
     }
         
     /**
@@ -65,20 +65,9 @@ public class Inductor extends CircuitElement{
         {
             if(n==0)
             {
-                return new EditInfo("Indutância (H)", value, 0, 0);
+                return new EditInfo("Indutância (H)", this.value, 0, 0);
             }
-            else if (n == 1)
-            {
-		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR TENSAO", plot_voltage);
-		return ei;
-	    }
-            else if (n == 2)
-            {
-		EditInfo ei = new EditInfo("", 0, -1, -1);
-		ei.checkbox = new Checkbox("PLOTAR CORRENTE", plot_current);
-		return ei;
-	    }
+            
             return null;
 	}
         
@@ -86,24 +75,9 @@ public class Inductor extends CircuitElement{
         {
             if (n == 0 && ei.value > 0)
             {
-		value = ei.value;
+		this.value = ei.value;
             }
-            else if (n == 1) 
-            {
-                plot_voltage=false;
-		if (ei.checkbox.getState())
-                {
-                    plot_voltage=true;
-                }
-	    }
-            else if (n == 2) 
-            {
-                plot_current=false;
-		if (ei.checkbox.getState())
-                {
-                    plot_current=true;
-                }
-	    }
+            
 	}
     
 }

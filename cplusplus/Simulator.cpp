@@ -89,7 +89,6 @@ void Simulator::parser_simulator(ifstream &netlistFile)
                 
                 if(tokens[0]=="M" || tokens[0]=="A")
                 {
-                    cout<<"Configuraçao plot"<<endl;
                     simulation->set_config_simulation(tokens);
                 }
             }
