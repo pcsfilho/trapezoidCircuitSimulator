@@ -56,7 +56,7 @@ import org.gui.canvas.EditInfo;
 	    doDots(g);
 		String s = getShortUnitText(value, "A");
 		if (dx == 0 || dy == 0)
-		    drawValues(g, s, cr);
+                    drawValues(g, name, cr);
 	    drawPosts(g);
 	}
 	void stamp() {

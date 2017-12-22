@@ -47,4 +47,4 @@ class CircuitCanvas extends Canvas {
         for (k = 0; k < columns; k++)
           g.drawLine(k*wdOfRow , 0, k*wdOfRow , height);
     }
-};
+}

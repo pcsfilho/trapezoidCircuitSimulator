@@ -14,6 +14,7 @@ public class Switch extends CircuitElement {
 	super(xx, yy);
 	state = true;
         time_commutations= new ArrayList<>();
+        value = 1E-6;
     }
     
     Switch(int xx, int yy, boolean mm) 
@@ -21,6 +22,7 @@ public class Switch extends CircuitElement {
 	super(xx, yy);
 	state = mm;
         time_commutations= new ArrayList<>();
+        value = 1E-6;
     }
     
     public void add_time_commutation(double time)
@@ -41,12 +43,10 @@ public class Switch extends CircuitElement {
     public void changeState()
     {
         state =!state;
-        System.out.println("ESTADO: "+state);
     }
     
     public void addTimeCommutations(double time)
     {
-        System.out.println("Add tempo de comutaçao: "+time);
         time_commutations.add(time);
     }
     public boolean getState()
@@ -101,8 +101,12 @@ public class Switch extends CircuitElement {
         {
 	    EditInfo ei = new EditInfo("Estado Inicial: ", 0, -1, -1);
 	    ei.checkbox = new Checkbox("Fechado", state);
+            ei.value = this.value;
 	    return ei;
 	}
+        
+        if (n == 1)
+	    return new EditInfo("Resistencia aberto (OHMS)", value, 0, 0);
         
 	return null;
     }
@@ -111,6 +115,12 @@ public class Switch extends CircuitElement {
     public void setEditValue(int n, EditInfo ei)
     {
 	if (n == 0)
-	    state = ei.checkbox.getState();
+        {
+	    this.state = ei.checkbox.getState();
+        }
+        if (n == 1) 
+        {
+	    this.value = ei.value;
+	}
     }
 }

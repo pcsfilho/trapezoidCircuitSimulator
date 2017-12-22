@@ -344,7 +344,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
         if (editDialog != null && editDialog.elm instanceof CircuitElement)
         {
 	    mouseElm = (CircuitElement) (editDialog.elm);
-        }        
+        }
+        
         Graphics2D g = null;
 	g = (Graphics2D)dbimage.getGraphics();
 	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
@@ -370,7 +371,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		ce.drawPost(g, ce.getX2(), ce.getY2());
 	    }
         }
-	if (dragElm != null && (dragElm.getX1() != dragElm.getX2() || dragElm.getY1() != dragElm.getY2()))
+	
+        if (dragElm != null && (dragElm.getX1() != dragElm.getX2() || dragElm.getY1() != dragElm.getY2()))
         {
             dragElm.draw(g);
         }
@@ -574,7 +576,10 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	if (!circuitArea.contains(e.getX(), e.getY()))
 	    return;
 	if (dragElm != null)
+        {
 	    dragElm.drag(e.getX(), e.getY());
+        }
+        
 	boolean success = true;
 	switch (tempMouseMode) {
 	case MODE_DRAG_ALL:
@@ -622,8 +627,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
     
        
     @Override
-    public void mouseMoved(MouseEvent e) {
-        if(getElm(0)!=null)
+    public void mouseMoved(MouseEvent e) {    
         
         
         if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0)
@@ -634,9 +638,8 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	draggingPost = -1;
 	int i;
 	CircuitElement origMouse = mouseElm;
-        if(origMouse!=null)
-        
-	mouseElm = null;
+        if(origMouse!=null)        
+            mouseElm = null;
 	plotXElm = plotYElm = null;
 	int bestDist = 100000;
 	int bestArea = 100000;
@@ -653,10 +656,6 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		    Point pt = ce.getPost(j);
 		    int dist = distanceSq(x, y, pt.x, pt.y);
 
-		    // if multiple elements have overlapping bounding boxes,
-		    // we prefer selecting elements that have posts close
-		    // to the mouse pointer and that have a small bounding
-		    // box area.
 		    if (dist <= bestDist && area <= bestArea) {
 			bestDist = dist;
 			bestArea = area;
@@ -664,10 +663,14 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		    }
 		}
 		if (ce.getNodesCount() == 0)
+                {
 		    mouseElm = ce;
+                }
 	    }
 	}
-	if (mouseElm == null){
+	if (mouseElm == null)
+        {            
+            
 	    // the mouse pointer was not in any of the bounding boxes, but we
 	    // might still be close to a post
 	    for (i = 0; i != elmList.size(); i++) {
@@ -683,6 +686,7 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 		}
 	    }
 	} 
+        
 	if (mouseElm != origMouse)
 	    cv.repaint();
         
@@ -745,14 +749,13 @@ public class PanelCircuitArea extends JPanel implements ComponentListener, Actio
 	if (mouseElm == null || !(mouseElm instanceof Switch))
 	    return false;
         
-        System.out.println("MUDOU CHAVE");
 	Switch se = (Switch) mouseElm;
         se.changeState();
         heldSwitchElm = se;
 	
 	return true;
     }
-boolean dragging;
+    boolean dragging;
     int locateElm(CircuitElement elm) {
         
 	int i;
@@ -1047,7 +1050,8 @@ boolean dragging;
                     }
                 }
                 CircuitNode cn;
-                if (k == nodeList.size())
+                
+                if(k == nodeList.size())
                 {
                     cn = new CircuitNode();
                     cn.setX(pt.x);
@@ -1119,28 +1123,8 @@ boolean dragging;
                     circuit = new Circuit(mp);
                     //Mapeia nos de referencia
                     define_nodes(0,groundCount,groundList);
-                    /*System.out.println("ANALIZE TERRA");
-                    {
-                        CircuitElement ce=elmList.get(i);
-                        System.out.println("Elemento: "+ (char)ce.getType());
-                        for(int k=0;k<ce.getNodes().length;k++)
-                        {
-                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
-                        }
-                    }*/
-                  
                     //Mapeia elementos exceto conexoes e nos de referencia
                     define_nodes(groundCount,groundCount+elmCount, groundList);
-                    /*System.out.println("ANALIZA ELEMENTOS E FIOS");
-                    for(i=0;i<elmList.size();i++)
-                    {
-                        CircuitElement ce=elmList.get(i);
-                        System.out.println("Elemento: "+ (char)ce.getType());
-                        for(int k=0;k<ce.getNodes().length;k++)
-                        {
-                            System.out.println("No "+(k+1)+" "+ce.getNodes()[k]);
-                        }
-                    }*/
                     //Cria arquivo 
                     try
                     {   

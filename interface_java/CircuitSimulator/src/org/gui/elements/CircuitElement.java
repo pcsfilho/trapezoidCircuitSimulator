@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import org.gui.canvas.EditInfo;
 import org.gui.canvas.PanelCircuitArea;
 
-public abstract class CircuitElement implements Editable {
+public abstract class CircuitElement implements Editable{
     public static double voltageRange = 5;
     public static int colorScaleCount = 32;
     public static int countCapacitors = 0;
@@ -210,14 +210,18 @@ public abstract class CircuitElement implements Editable {
 	calculateCurrent();
     }
     public void calculateCurrent() {}
-    public void setPoints() {
-	dx = x_2-x_1; dy = y_2-y_1;
+    
+    public void setPoints() 
+    {
+	dx = x_2-x_1;
+        dy = y_2-y_1;
 	dn = Math.sqrt(dx*dx+dy*dy);
 	dpx1 = dy/dn;
 	dpy1 = -dx/dn;
 	dsign = (dy == 0) ? sign(dx) : sign(dy);
 	point1 = new Point(x_1 , y_1 );
 	point2 = new Point(x_2, y_2);
+        
     }
     public void calcLeads(int len) {
 	if (dn < len || len == 0) {
@@ -360,10 +364,12 @@ public abstract class CircuitElement implements Editable {
 	    p.addPoint(a[i].x, a[i].y);
 	return p;
     }
+    
     public void drag(int xx, int yy) {
 	xx = sim.snapGrid(xx);
 	yy = sim.snapGrid(yy);
-	if (noDiagonal) {
+	
+        if (noDiagonal) {
 	    if (Math.abs(x_1-xx) < Math.abs(y_1-yy)) {
 		xx = x_1;
 	    } else {
@@ -472,8 +478,18 @@ public abstract class CircuitElement implements Editable {
     }
     void setBbox(int x1, int y1, int x2, int y2)
     {
-	if (x1 > x2) { int q = x1; x1 = x2; x2 = q; }
-	if (y1 > y2) { int q = y1; y1 = y2; y2 = q; }
+	if (x1 > x2)
+        {
+            int q = x1;
+            x1 = x2;
+            x2 = q;
+        }
+	if (y1 > y2)
+        {
+            int q = y1;
+            y1 = y2;
+            y2 = q; 
+        }
 	boundingBox.setBounds(x1, y1, x2-x1+1, y2-y1+1);
     }
     void setBbox(Point p1, Point p2, double w)
