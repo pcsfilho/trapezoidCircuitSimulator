@@ -5,12 +5,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -49,12 +50,15 @@ public class WindowPlot extends JFrame
     public void open_chart()
     {
         graphicsArea.setChart(ChartFactory.createXYLineChart(title,"tempo (s)", yAxisLabel, new XYSeriesCollection(dataset),PlotOrientation.VERTICAL,true,true,false));
-        /* Create an NumberAxis
-        NumberAxis xAxis = new NumberAxis();
-        xAxis.setTickUnit(new NumberTickUnit(2));
-
-        // Assign it to the chart
-        XYPlot plot = (XYPlot) graphicsArea.getChart().getPlot();
-        plot.setDomainAxis(xAxis);*/
+        /*XYPlot xyPlot = graphicsArea.getChart().getXYPlot();
+        NumberAxis rangeAxis = (NumberAxis) xyPlot.getRangeAxis();       
+        if(title.equals("V1"))
+        {
+            rangeAxis.setTickUnit(new NumberTickUnit(20));
+        }
+        else
+        {
+            rangeAxis.setTickUnit(new NumberTickUnit(4));
+        }*/
     }
 }

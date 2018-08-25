@@ -238,6 +238,7 @@ string Simulation::calculate_plot_outputs()
     ss << current_time;
     string temp="";
     temp=ss.str();
+    //cout<<"Tempo: " <<temp<<endl;
     for(int i=0;i<outputs.size();i++)
     {
         o=outputs[i];
@@ -245,9 +246,19 @@ string Simulation::calculate_plot_outputs()
         double value;
         value = o->get_value(matrix_mna_aux, circuit.get_num_vars());
         ss << value;
-        temp +=" "+ss.str();
+        
+        if(value==0)
+        {
+            temp +=" 0";
+        }
+        else
+        {
+            temp +=" "+ss.str();
+        }
+        //cout<<"Valor: " <<value<<endl;
+        //cout<<"ss: " <<ss.str().empty()<<endl;
     }
-    temp = temp.substr(0, temp.size()-1);
+    //temp = temp.substr(0, temp.size()-1);
     //cout<<"LINHA: " <<temp<<endl;
     return temp;
 }

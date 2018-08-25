@@ -9,12 +9,14 @@ import org.gui.canvas.EditInfo;
 	public Capacitor(int xx, int yy) 
         {
 	    super(xx, yy);
-	    value = 1e-6;
+	    this.value = 1e-6;
+            System.out.println("Construtor cap");
 	}
 	public Capacitor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
         {
 	    super(xa, ya, xb, yb, f);
-            value=1e-6;
+            this.value=1e-6;
+            System.out.println("Construtor fonte");
 	}
 	
         

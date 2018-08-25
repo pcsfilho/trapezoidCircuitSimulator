@@ -83,11 +83,14 @@ public class PlotFileDemo extends JFrame
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (arg0.getSource().equals(openAction)) {
-                    JFileChooser fileChooser = new JFileChooser(new File("."));
+                    File file = new File("/home/paulo/Documentos/UEFS/TCC/Código/Cplusplus/circuit.dat");
+                    graphicsArea.setChart(creatChart(file));
+                    /*JFileChooser fileChooser = new JFileChooser(new File("."));
                     if (fileChooser.showOpenDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
+                        System.out.println(file.getAbsolutePath());
                         graphicsArea.setChart(creatChart(file));
-                    }
+                    }*/
                 }
             }
 
@@ -110,7 +113,7 @@ public class PlotFileDemo extends JFrame
                     {
                         String[] data_line;
                         data_line = line.split(" ");
-                        System.out.println(count+" "+data_line[1]);                      
+                        //System.out.println(count+" "+data_line[1]);                      
                         dataset.add(Double.valueOf(data_line[0]).doubleValue(), Double.valueOf(data_line[1]).doubleValue());
                         count++;
                         textArea.append(line + "\n");                        
@@ -149,6 +152,8 @@ public class PlotFileDemo extends JFrame
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        
     }
 
     public static void main(String[] args) {

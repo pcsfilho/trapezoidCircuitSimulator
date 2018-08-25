@@ -1,6 +1,4 @@
 package org.gui.elements;
-
-import java.awt.Checkbox;
 import java.awt.Graphics;
 import java.util.StringTokenizer;
 import org.gui.canvas.EditInfo;
@@ -13,12 +11,14 @@ public class Inductor extends CircuitElement{
     public Inductor(int xx, int yy) 
     {
 	    super(xx, yy);
-	    value = 1e-6;
+	    this.value = 1e-6;
+            System.out.println("Construtor ind");
     }
     public Inductor(int xa, int ya, int xb, int yb, int f,StringTokenizer st)
     {
         super(xa, ya, xb, yb, f);
-        value = 1e-6;
+        this.value = 1e-6;
+        System.out.println("Construtor ind");
     }
         
     /**
@@ -53,7 +53,7 @@ public class Inductor extends CircuitElement{
 	    draw2Leads(g);
 	    setPowerColor(g, false);
 	    drawCoil(g, 8, lead1, lead2, v1, v2);
-		String s = getShortUnitText(value, "H");
+		String s = getShortUnitText(this.value, "H");
 		drawValues(g, name, hs);
 	    doDots(g);
 	    drawPosts(g);

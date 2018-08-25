@@ -8,12 +8,17 @@ import org.gui.canvas.EditInfo;
        
         Point ps3, ps4;
         
-	public Resistor(int xx, int yy) { super(xx, yy); value = 500; }
+	public Resistor(int xx, int yy)
+        {
+            super(xx, yy); value = 500; 
+            System.out.println("Construtor res");
+        }
 	public Resistor(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) 
         {
 	    super(xa, ya, xb, yb, f);
             value=500;
+            System.out.println("Construtor res");
 	}
         @Override
 	public int getType() 
@@ -73,7 +78,7 @@ import org.gui.canvas.EditInfo;
         {
             if(n==0)
             {
-                return new EditInfo("Resistencia (OHMS)", value, 0, 0);
+                return new EditInfo("Resistencia (OHMS)", this.value, 0, 0);
             }
             return null;
 	}

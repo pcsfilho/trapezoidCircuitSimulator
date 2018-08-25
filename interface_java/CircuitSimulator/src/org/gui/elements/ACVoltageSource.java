@@ -33,9 +33,9 @@ public class ACVoltageSource extends Voltage {
         public EditInfo getEditInfo(int n) {
 	if (n == 0)
 	    return new EditInfo(waveform == DC ? "Tensão" :
-				"Amplitude", value, -20, 20);
+				"Amplitude", this.value, -20, 20);
 	if (n == 1)
-	    return new EditInfo("Frequência (Hz)", frequency, 4, 500);
+	    return new EditInfo("Frequência (Hz)", this.frequency, 4, 500);
 	
 	
 	return null;
@@ -43,11 +43,11 @@ public class ACVoltageSource extends Voltage {
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
         {
-	    value = ei.value;
+	    this.value = ei.value;
         }
 	if (n == 1) 
         {
-	    frequency = ei.value;
+	    this.frequency = ei.value;
 	}
     }
     }

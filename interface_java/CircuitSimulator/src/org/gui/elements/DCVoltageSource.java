@@ -35,13 +35,13 @@ public class DCVoltageSource extends Voltage
         public EditInfo getEditInfo(int n) {
 	if (n == 0)
 	    return new EditInfo(waveform == DC ? "Tensão" :
-				"Amplitude", value, -20, 20);
+				"Amplitude", this.value, -20, 20);
 	return null;
     }
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
         {
-	    value = ei.value;
+	    this.value = ei.value;
         }
     }
 }

@@ -46,7 +46,7 @@ double Output::get_value(double** Yn_original, int num_vars)
     
     if(type.compare("A")==0)
     {
-       // cout<<"no 1: " <<get_node_1() <<endl <<"no 1: " <<get_node_2()<< endl <<"CORRENTE: " << (voltage_node_starting-voltage_node_ending)/(1e-6) <<endl;
+        //cout<<"no 1: " <<get_node_1() <<endl <<"no 1: " <<get_node_2()<< endl <<"CORRENTE: " << (voltage_node_starting-voltage_node_ending)/(1e-6) <<endl;
         return (voltage_node_starting-voltage_node_ending)/W;
     }
     //cout<<"no 1: " <<get_node_1() <<endl <<"no 1: " <<get_node_2()<< endl <<"DDP: " << (voltage_node_starting-voltage_node_ending) <<endl;

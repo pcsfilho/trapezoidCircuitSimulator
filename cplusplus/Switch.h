@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Switch.h
  * Author: paulo
  *
@@ -14,7 +14,7 @@
 #ifndef SWITCH_H
 #define SWITCH_H
 #include "Element.h"
-class Switch:public Element{
+class Switch: public Element{
 public:
     Switch();
     Switch(vector<string> element);

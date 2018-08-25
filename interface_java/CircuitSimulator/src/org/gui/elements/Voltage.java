@@ -19,6 +19,7 @@ public class Voltage extends CircuitElement {
 	value = 100;
 	frequency = 60;
 	dutyCycle = .5;
+        System.out.println("Construtor fonte");
     }
     
     public double get_frequency()

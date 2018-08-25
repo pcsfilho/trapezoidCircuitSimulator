@@ -38,7 +38,7 @@ public class ManagePlot
         try
         {
             in = new BufferedReader(new FileReader(file));
-            line = in.readLine();
+            //line = in.readLine();
             while ((line = in.readLine()) != null)
             {
                 String[] data_line;
@@ -53,6 +53,7 @@ public class ManagePlot
             {
                 windows_plots.get(i).open_chart();
             }
+            in.close();
         }
         catch (IOException ex)
         {
